@@ -1,0 +1,15 @@
+html
+  head
+    title= 'CMS'
+  body
+    h1= 'TEST'
+    select(id='apps-select')
+        each item, key in apps
+            option(value=key)=item
+    button(onclick='quitApp()') quit
+    script.
+        function quitApp() {
+            fetch("http://localhost:3000/api/quit");
+        }
+
+    iframe(width='100%', height='100%', src='http://localhost:3000/cms')

@@ -1,0 +1,26 @@
+{
+  "name": "el-api",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "bootstrap": "lerna bootstrap --no-ci --hoist",
+    "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
+    "start": "nodemon ./packages/init/app.js",
+    "postinstall": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3"
+  },
+  "version": "0.0.2",
+  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
+  "license": "MIT"
+}

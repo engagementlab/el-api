@@ -1,0 +1,30 @@
+{
+  "name": "@engagement-lab/api-init",
+  "description": "Content API for Engagement Lab web apps.",
+  "version": "0.0.2",
+  "private": false,
+  "scripts": {
+    "start": "node app.js",
+    "clean": "kill -9 $(lsof -t -i:3000)"
+  },
+  "dependencies": {
+    "@engagement-lab/homepage": "^2.4.0",
+    "@keystonejs/app-admin-ui": "^5.9.3",
+    "@keystonejs/app-static": "^5.1.1",
+    "@keystonejs/build-field-types": "^5.2.4",
+    "@keystonejs/file-adapters": "^6.0.0",
+    "@keystonejs/keystone": "^7.0.0",
+    "colors": "^1.4.0",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "elasticsearch": "^16.6.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "mongoose": "^5.9.3",
+    "morgan": "~1.9.1",
+    "pug": "^2.0.4",
+    "validator": "^12.2.0",
+    "winston": "^3.2.1"
+  }
+}
