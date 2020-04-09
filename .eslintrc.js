@@ -1,9 +1,10 @@
-module.exports =  {
+module.exports = {
     env: {
         es6: true,
     },
     extends: [
         'airbnb',
+        'eslint-config-prettier'
     ],
     globals: {
         Atomics: 'readonly',

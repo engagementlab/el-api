@@ -1,4 +1,3 @@
-
 /**
  * Engagement Lab Website v2.x content API
  * Developed by Engagement Lab, 2020
@@ -8,9 +7,15 @@
  * ==========
  */
 
+const fs = require('fs');
 const routes = require('./routes');
-// const models = require('./models');
+const models = require('./models');
 
 module.exports = {
   Routes: routes,
+  Models: models,
+  Config: () => {
+    const data = fs.readFileSync(`${__dirname}/config.json`);
+    return JSON.parse(data);
+  }
 };

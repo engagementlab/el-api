@@ -1,8 +1,18 @@
-const { Keystone } = require('@keystonejs/keystone');
-const { MongooseAdapter } = require('@keystonejs/adapter-mongoose');
-const { GraphQLApp } = require('@keystonejs/app-graphql');
-const { AdminUIApp } = require('@keystonejs/app-admin-ui');
-const { CloudinaryAdapter } = require('@keystonejs/file-adapters');
+const {
+  Keystone,
+} = require('@keystonejs/keystone');
+const {
+  MongooseAdapter,
+} = require('@keystonejs/adapter-mongoose');
+const {
+  GraphQLApp,
+} = require('@keystonejs/app-graphql');
+const {
+  AdminUIApp,
+} = require('@keystonejs/app-admin-ui');
+const {
+  CloudinaryAdapter,
+} = require('@keystonejs/file-adapters');
 
 const cloudinaryAdapter = new CloudinaryAdapter({
   cloudName: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,26 +21,37 @@ const cloudinaryAdapter = new CloudinaryAdapter({
   folder: process.env.CLOUDINARY_DIR,
 });
 
-const KeystoneApp = (callback) => {
+const KeystoneApp = (config, callback) => {
   // The core `keystone` instance is always required.
   // Here you can setup the database adapter, set the name used throughout the
   // application (Admin UI, database name, etc), and other core config options.
   const keystone = new Keystone({
-    name: process.env.APP_NAME,
-    adapter: new MongooseAdapter(),
+    name: config.package.name,
+    adapter: new MongooseAdapter({
+      mongoUri: `mongodb://localhost/${config.package.database}`
+    }),
   });
 
-  // TODO: Load all ./models in one call
+  // Initialize all models (lists) for this app
   // All models need access to KS Instance and cloudinary adapter
-  require('@engagement-lab/homepage/models/all/About')(keystone, cloudinaryAdapter);
-  require('@engagement-lab/homepage/models/all/Image')(keystone, cloudinaryAdapter);
+  config.models.forEach((model) => {
+    model(keystone, cloudinaryAdapter);
+  });
 
   keystone
     .prepare({
-      apps: [new GraphQLApp({ graphiqlPath: '/api/graphiql', adminPath: '/cms' }), new AdminUIApp({ adminPath: '/cms', graphiqlPath: '/api/graphiql' })],
+      apps: [new GraphQLApp({
+        graphiqlPath: '/api/graphiql',
+        adminPath: '/cms',
+      }), new AdminUIApp({
+        adminPath: '/cms',
+        graphiqlPath: '/api/graphiql',
+      })],
       dev: process.env.NODE_ENV !== 'production',
     })
-    .then(async ({ middlewares }) => {
+    .then(async ({
+      middlewares,
+    }) => {
       await keystone.connect();
       callback(middlewares, keystone);
     });

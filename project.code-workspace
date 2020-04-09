@@ -1,25 +1,22 @@
 {
-    "settings": {
-      "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        {
-          "language": "typescript"
-        },
-        {
-          "language": "typescriptreact"
-        }
-      ],
-      "editor.formatOnSave": true,
-      "eslint.linkTask.enabled": true,
-      "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-      },
-      "[javascript]": {
-        "editor.formatOnSave": true
-      },
-      "[javascriptreact]": {
-        "editor.formatOnSave": false
-      },
-    }
+  "folders": [{
+    "path": "./",
+    "name": "All"
+  }],
+  "settings": {
+    "eslint.validate": [
+      "javascript"
+    ],
+    "editor.formatOnSave": true,
+    "eslint.linkTask.enabled": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "[javascript]": {
+      "editor.formatOnSave": true
+    },
+    "[javascriptreact]": {
+      "editor.formatOnSave": false
+    },
   }
+}

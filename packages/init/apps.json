@@ -1,6 +1,6 @@
 {
-    "apps": {
-        "engagement-lab": "Engagement Lab Home",
-        "beta-blocks": "Beta Blocks"
-    }
+    "apps": [
+        "homepage",
+        "test-app"
+    ]
 }

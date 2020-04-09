@@ -17,24 +17,33 @@
  * Module dependencies.
  */
 // Load .env vars
-require('dotenv').config();
+require('dotenv').config({
+  path: `${__dirname}/.env`
+});
 
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const winston = require('winston');
 const colors = require('colors');
 const elasticsearch = require('elasticsearch');
 const ServerUtils = require('./utils');
 
+const appsJson = path.join(__dirname, 'apps.json');
+
 const keystone = require('./keystone');
 
 const start = (currentApp) => {
-  if (!currentApp) currentApp = 'homepage';
 
   /**
    *  Load all possible apps from sibling packages (config defined in app.json)
    */
-  const appConfig = require('fs').readFileSync('./apps.json');
-  const { apps } = JSON.parse(appConfig);
+  const appConfigs = fs.readFileSync(appsJson);
+  const {
+    apps,
+  } = JSON.parse(appConfigs);
+
+  if (!currentApp) currentApp = 'homepage';
 
   /**
    * Get port from environment and store in Express.
@@ -48,7 +57,10 @@ const start = (currentApp) => {
     winston.format.align(),
     winston.format.printf((info) => {
       const {
-        timestamp, level, message, ...args
+        timestamp,
+        level,
+        message,
+        ...args
       } = info;
 
       const ts = timestamp.slice(0, 19).replace('T', ' ');
@@ -66,32 +78,51 @@ const start = (currentApp) => {
   global.elasti = undefined;
 
   app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
+  app.use(express.urlencoded({
+    extended: false,
+  }));
   app.set('view engine', 'pug');
 
   app.get('/', (req, res) => {
-    res.render('index', { apps });
+    res.render('index', {
+      apps,
+    });
   });
 
+  // Load all routes for API of currently used package
+  const packagePath = `@engagement-lab/${currentApp}`;
+  const packageModule = require(packagePath);
+  const packageConfig = packageModule.Config();
+  const routes = packageModule.Routes;
+  const packageApiRoutes = routes(app);
 
-  // Load all routes for API of currently used app
-  const appPath = `@engagement-lab/${currentApp}`;
-  console.log(appPath)
-  const routes = require(appPath).Routes;
-  const apiRoutes = routes(app);
-
+  const bootConfig = {
+    app,
+    package: packageConfig,
+    path: packagePath,
+    routes: packageApiRoutes,
+    production: productionMode,
+  };
   if (process.env.SEARCH_ENABLED === 'true') searchBoot(app);
-  else boot(app, apiRoutes, productionMode);
+  else boot(bootConfig);
 };
 
-const boot = (app, routes, productionMode) => {
-  keystone((middleware, keystoneInstance) => {
+const boot = (config) => {
+  // Export all models for current app
+  const models = require(config.path).Models();
+  const ksConfig = {
+    models,
+    package: config.package
+  }
+
+  // Initialize keystone instance
+  keystone(ksConfig, (middleware, keystoneInstance) => {
     const port = ServerUtils.normalizePort(process.env.PORT || '3000');
 
-    app.get('/api/reload', (req, res) => {
-      console.logo();
+    config.app.get('/api/reload', (req, res) => {
+
     });
-    app.use((req, res, next) => {
+    config.app.use((req, res, next) => {
       res.locals.db = keystoneInstance;
       next();
     });
@@ -99,14 +130,16 @@ const boot = (app, routes, productionMode) => {
     /**
      * Listen on provided port w/ both keystone instance and API
      */
-    app.use([middleware, routes]).listen(port);
+    config.app.use([middleware, config.routes]).listen(port);
 
-    global.logger.info(colors.bgCyan.bold.black(`Content API started (${productionMode ? 'Production' : 'Development'} Mode).`));
+    global.logger.info(colors.bgCyan.bold.black(`Content API for "${config.package.name}" started (${config.production ? 'Production' : 'Development'} Mode).`));
   });
 };
 
 const searchBoot = (app) => {
-  global.elasti = new elasticsearch.Client({ node: process.env.ELASTISEARCH_NODE_URL });
+  global.elasti = new elasticsearch.Client({
+    node: process.env.ELASTISEARCH_NODE_URL,
+  });
   global.elasti.ping((error) => {
     if (error) {
       global.logger.error('Elasticsearch ERROR!', error);
