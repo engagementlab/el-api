@@ -7,8 +7,8 @@ html
       option(selected=true) load other app
         each item, key in apps
             option(value=item)=item
-
-    iframe(width='100%', height='100%', style='border:none;' src='http://localhost:3000/cms')
+    unless loading
+      iframe(id='frame' width='100%', height='100%', style='border:none;' src='http://localhost:3000/cms')
 
     //- Logic
     script.
@@ -21,10 +21,18 @@ html
           }
           connection.addEventListener('message', function (evt) {
               console.log(`[Websocket] ${evt.data}`);
+              if(evt.data === 'loaded') {
+                let frame = document.getElementById('frame');
+                frame.contentWindow.location.reload();
+                frame.style.visibility = 'visible';
+              }
           });
+        
         }
 
         function changePackage(evt) {
           connection.send(JSON.stringify({evt: 'reload', id: evt.target.value}));
+          document.getElementById('frame').style.visibility = 'hidden';
+
             //- fetch(`http://localhost:3000/api/reload/?packageid=${evt.target.value}`);
         }

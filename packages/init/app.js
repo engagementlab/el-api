@@ -37,6 +37,7 @@ const keystone = require('./keystone');
 let productionMode;
 let app;
 let wss;
+let socket;
 let server;
 
 const start = (productionMode, currentApp) => {
@@ -95,6 +96,8 @@ const boot = config => {
         } Mode).`
       )
     );
+
+    if (socket) socket.send('loaded');
   });
 };
 
@@ -135,7 +138,10 @@ const init = () => {
       );
 
       // Event for server close and reboot w/ new package
-      if (data.evt === 'reload') start(productionMode, data.id);
+      if (data.evt === 'reload') {
+        socket = ws;
+        start(productionMode, data.id);
+      }
     });
 
     ws.send('Connected.');
