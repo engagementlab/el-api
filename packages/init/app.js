@@ -34,15 +34,31 @@ const WebSocket = require('ws');
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
 
-let productionMode;
 let app;
-let wss;
-let socket;
+let packages;
 let server;
+let socket;
+let wss;
 
 const start = (productionMode, currentApp) => {
   // If server defined, close current one
   if (server) server.close();
+
+  app = express();
+  app.use(express.json());
+  app.use(
+    express.urlencoded({
+      extended: false
+    })
+  );
+  app.set('view engine', 'pug');
+  app.set('views', `${__dirname}/views`);
+
+  app.get('/', (req, res) => {
+    res.render('index', {
+      packages
+    });
+  });
 
   if (!currentApp) currentApp = 'homepage';
 
@@ -78,8 +94,6 @@ const boot = config => {
      * Get port from environment and store in Express.
      */
     const port = ServerUtils.normalizePort(process.env.PORT || '3000');
-
-    keystoneInstance = null;
 
     config.app.use((req, res, next) => {
       res.locals.db = keystoneInstance;
@@ -133,7 +147,7 @@ const init = () => {
     global.logger.info(`${'Websockets:'.magenta} server listening.`);
   });
   wss.on('connection', ws => {
-    ws.on('message', message => {
+    ws.on('message', async message => {
       const data = JSON.parse(message);
       global.logger.info(
         `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`
@@ -153,10 +167,7 @@ const init = () => {
    *  Load all possible apps from sibling packages (config defined in app.json)
    */
   const appConfigs = fs.readFileSync(appsJson);
-  const {
-    apps
-  } = JSON.parse(appConfigs);
-  app = express();
+  packages = JSON.parse(appConfigs);
 
   const logFormat = winston.format.combine(
     winston.format.colorize(),
@@ -183,21 +194,6 @@ const init = () => {
     transports: [new winston.transports.Console()]
   });
   global.elasti = undefined;
-
-  app.use(express.json());
-  app.use(
-    express.urlencoded({
-      extended: false
-    })
-  );
-  app.set('view engine', 'pug');
-  app.set('views', `${__dirname}/views`);
-
-  app.get('/', (req, res) => {
-    res.render('index', {
-      apps
-    });
-  });
 
   start(productionMode);
 };
