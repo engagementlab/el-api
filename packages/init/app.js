@@ -103,17 +103,18 @@ const boot = config => {
     /**
      * Listen on provided port w/ both keystone instance and API
      */
-    server = config.app.use([middleware, config.routes]).listen(port);
+    server = config.app.use([middleware, config.routes]).listen(port, () => {
 
-    global.logger.info(
-      colors.bgCyan.bold.black(
-        `Content API for "${config.package.name}" started (${
-          config.production ? 'Production' : 'Development'
-        } Mode).`
-      )
-    );
+      global.logger.info(
+        colors.bgCyan.bold.black(
+          `Content API for "${config.package.name}" started (${
+            config.production ? 'Production' : 'Development'
+          } Mode).`
+        )
+      );
 
-    if (socket) socket.send('loaded');
+      if (socket) socket.send('loaded');
+    });
   });
 };
 

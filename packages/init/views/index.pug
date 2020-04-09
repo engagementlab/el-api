@@ -7,11 +7,15 @@ html
       option(selected=true) load other app
         each item in packages
             option(value=item)=item
-    unless loading
+
+    
+
+    div(id='wrapper')
       iframe(id='frame' width='100%', height='100%', style='border:none;' src='http://localhost:3000/cms')
 
     //- Logic
     script.
+        let frameDom;
         function onload() {
           
           const url = 'ws://localhost:3001';
@@ -22,9 +26,10 @@ html
           connection.addEventListener('message', function (evt) {
               console.log(`[Websocket] ${evt.data}`);
               if(evt.data === 'loaded') {
-                let frame = document.getElementById('frame');
-                frame.contentWindow.location.reload();
-                frame.style.visibility = 'visible';
+                //- A bit hacky but we have to wait for all files to be served
+                setTimeout(() =>{
+                  document.getElementById('wrapper').appendChild(frameDom);
+                }, 5000);
               }
           });
         
@@ -32,7 +37,10 @@ html
 
         function changePackage(evt) {
           connection.send(JSON.stringify({evt: 'reload', id: evt.target.value}));
-          document.getElementById('frame').style.visibility = 'hidden';
+          //- Delete frame for now
+          frameDom = document.getElementById('frame');
+          frameDom.remove();
+          //- Show loading indicator
 
             //- fetch(`http://localhost:3000/api/reload/?packageid=${evt.target.value}`);
         }
