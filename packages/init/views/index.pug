@@ -1,15 +1,30 @@
 html
   head
-    title= 'CMS'
-  body
-    h1= 'TEST'
-    select(id='apps-select')
+    title= 'Engagement Lab CMS'
+
+  body(style='background:#FAFBFB' onload='onload()')
+    select(id='package-select', onchange=`changePackage(event)`)
+      option(selected=true) load other app
         each item, key in apps
-            option(value=key)=item
-    button(onclick='quitApp()') quit
+            option(value=item)=item
+
+    iframe(width='100%', height='100%', style='border:none;' src='http://localhost:3000/cms')
+
+    //- Logic
     script.
-        function quitApp() {
-            fetch("http://localhost:3000/api/quit");
+        function onload() {
+          
+          const url = 'ws://localhost:3001';
+          connection = new WebSocket(url); 
+          connection.onerror = error => {
+            console.log(`WebSocket error: ${error}`)
+          }
+          connection.addEventListener('message', function (evt) {
+              console.log(`[Websocket] ${evt.data}`);
+          });
         }
 
-    iframe(width='100%', height='100%', src='http://localhost:3000/cms')
+        function changePackage(evt) {
+          connection.send(JSON.stringify({evt: 'reload', id: evt.target.value}));
+            //- fetch(`http://localhost:3000/api/reload/?packageid=${evt.target.value}`);
+        }
