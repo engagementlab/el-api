@@ -22,9 +22,6 @@ const cloudinaryAdapter = new CloudinaryAdapter({
 });
 
 const KeystoneApp = (config, callback) => {
-  // The core `keystone` instance is always required.
-  // Here you can setup the database adapter, set the name used throughout the
-  // application (Admin UI, database name, etc), and other core config options.
   const keystone = new Keystone({
     name: config.package.name,
     adapter: new MongooseAdapter({

@@ -1,4 +1,3 @@
-
 /**
  * Engagement Lab Website v2.x
  *
@@ -9,7 +8,10 @@
  * ==========
  */
 
-const { Text, Relationship } = require('@keystonejs/fields');
+const {
+  Text,
+  Relationship
+} = require('@keystonejs/fields');
 
 const About = (keystone, cloudinary) => {
   /**
@@ -18,33 +20,65 @@ const About = (keystone, cloudinary) => {
    */
   const fields = {
     name: {
-      type: String, default: 'About Page', hidden: true, isRequired: true, initial: true,
+      type: String,
+      default: 'About Page',
+      hidden: true,
+      isRequired: true,
+      initial: true,
     },
-    tagline: { type: String, isRequired: true, initial: true },
+    tagline: {
+      type: String,
+      isRequired: true,
+      initial: true
+    },
     missionStatement: {
-      type: String, label: 'Mission Statement', isRequired: true, initial: true, isMultiline: true,
+      type: String,
+      label: 'Mission Statement',
+      isRequired: true,
+      initial: true,
+      isMultiline: true,
     },
 
     summary1: {
-      type: Text, label: 'Summary Paragraph 1', isRequired: true, isMultiline: true, note: 'First (required) paragraph',
+      type: Text,
+      label: 'Summary Paragraph 1',
+      isRequired: true,
+      isMultiline: true,
+      note: 'First (required) paragraph',
     },
     summary2: {
-      type: Text, label: 'Summart Paragraph 2', isRequired: true, isMultiline: true, note: 'Second (required) paragraph',
+      type: Text,
+      label: 'Summart Paragraph 2',
+      isRequired: true,
+      isMultiline: true,
+      note: 'Second (required) paragraph',
     },
 
-    // TODO: Custom multi-image field
-    images: {
-      type: Relationship,
-      label: 'Summary Images (Requires EXACTLY 2)',
-      ref: 'Image',
-      many: true,
+    research: {
+      type: Text,
+      label: 'Research Text',
+      isRequired: true
     },
-
-    research: { type: Text, label: 'Research Text', isRequired: true },
-    workshops: { type: Text, label: 'Workshops Text', isRequired: true },
-    tools: { type: Text, label: 'Tools Text', isRequired: true },
-    teaching: { type: Text, label: 'Teaching Text', isRequired: true },
-    design: { type: Text, label: 'Design Text', isRequired: true },
+    workshops: {
+      type: Text,
+      label: 'Workshops Text',
+      isRequired: true
+    },
+    tools: {
+      type: Text,
+      label: 'Tools Text',
+      isRequired: true
+    },
+    teaching: {
+      type: Text,
+      label: 'Teaching Text',
+      isRequired: true
+    },
+    design: {
+      type: Text,
+      label: 'Design Text',
+      isRequired: true
+    },
 
   };
 
@@ -65,7 +99,10 @@ const About = (keystone, cloudinary) => {
       delete: false,
     },
   };
-  keystone.createList('About', { fields, ...options });
+  keystone.createList('About', {
+    fields,
+    ...options
+  });
 };
 
 /**

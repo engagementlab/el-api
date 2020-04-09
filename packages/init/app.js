@@ -79,6 +79,8 @@ const boot = config => {
      */
     const port = ServerUtils.normalizePort(process.env.PORT || '3000');
 
+    keystoneInstance = null;
+
     config.app.use((req, res, next) => {
       res.locals.db = keystoneInstance;
       next();
@@ -151,7 +153,9 @@ const init = () => {
    *  Load all possible apps from sibling packages (config defined in app.json)
    */
   const appConfigs = fs.readFileSync(appsJson);
-  const { apps } = JSON.parse(appConfigs);
+  const {
+    apps
+  } = JSON.parse(appConfigs);
   app = express();
 
   const logFormat = winston.format.combine(
@@ -159,7 +163,12 @@ const init = () => {
     winston.format.timestamp(),
     winston.format.align(),
     winston.format.printf(info => {
-      const { timestamp, level, message, ...args } = info;
+      const {
+        timestamp,
+        level,
+        message,
+        ...args
+      } = info;
 
       const ts = timestamp.slice(0, 19).replace('T', ' ');
       return `${ts} [${level}]: ${message} ${
