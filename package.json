@@ -22,5 +22,10 @@
   },
   "version": "0.0.2",
   "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.1.1",
+    "supertest": "^4.0.2"
+  }
 }

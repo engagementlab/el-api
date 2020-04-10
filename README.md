@@ -14,7 +14,7 @@ Get Lerna:
 
 Install all dependencies and link any cross-dependencies:
 
-`lerna bootstrap`
+`npm run bootstrap`
 
 Run:
 
