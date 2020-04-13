@@ -1,4 +1,3 @@
-
 /**
  * @fileoverview Engagement Lab Website v2.x content service
  * @copyright Engagement Lab at Emerson College, 2020
@@ -9,7 +8,9 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const { db } = res.locals;
+  const {
+    db
+  } = res.locals;
 
   // const person = db.list('Person').model;
   // const partner = db.list('Partner').model;
@@ -36,15 +37,10 @@ const BuildData = async (req, res) => {
 
     const data = await db.executeQuery(`
       query {
-        allAbouts {
+        allAboutPages {
           missionStatement
           summary1
           summary2
-          images {
-            image {
-              publicUrl
-            }
-          }
           research
           workshops
           tools
@@ -53,7 +49,13 @@ const BuildData = async (req, res) => {
         }
       }`);
 
-    res.json(data.data.allAbouts[0]);
+    if (data.errors) {
+
+      res.status(500).send(data.errors);
+      return;
+    }
+
+    res.json(data.data.allAboutPages[0]);
   } catch (e) {
     res.status(500).send(e.toString());
   }

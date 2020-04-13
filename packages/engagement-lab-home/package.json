@@ -4,7 +4,7 @@
   "description": "Engagement Lab home CMS models/lists and content API routes.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "../../node_modules/.bin/mocha ./tests/*.js"
   },
   "author": "",
   "license": "ISC"

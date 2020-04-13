@@ -1,23 +1,16 @@
-const request = require('supertest');
+const request = require('supertest')('http://localhost:3000');
 const {
-    assert
+    expect
 } = require('chai');
 
-const server = require('../server')
-
-let agent;
-before(done => {
-    // 'app' is express instance return by server init
-    server((app) => {
-        agent = request.agent(app);
-        done();
-    });
-});
-
-describe('App starts and agent can load index.', () => {
-    it('Retrieve CMS index,', (done) => {
-        agent.get('/')
+describe('App starts and agent can load index.', function () {
+    it('CMS index is valid html, status 200,', function (done) {
+        request.get('/get/about')
             .expect('Content-Type', /html/)
-            .expect(200, done());
+            .end(function (err, res) {
+                expect(res.statusCode).to.equal(200);
+                // expect(res.body.thing).be.
+                done()
+            });
     });
 });

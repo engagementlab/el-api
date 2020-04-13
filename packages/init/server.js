@@ -116,7 +116,7 @@ const boot = (config) => {
             if (socket) socket.send('loaded');
 
             // Call class callback if defined (for tests)
-            if (startCallback) startCallback(express);
+            if (startCallback) startCallback(app);
         });
     });
 };
