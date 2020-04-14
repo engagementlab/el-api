@@ -9,12 +9,26 @@
  * ==========
  */
 const request = require('supertest')('http://localhost:3000');
+const {
+    expect
+} = require('chai');
 
-describe('Get all route content.', () => {
-    it('Retrieve about content and ensure JSON response with required keys.', done => {
+describe('Get all route content and ensure JSON response with required keys.', () => {
+    it('About content', done => {
         request
-            .get('/get/about')
-            .expect('Content-Type', /json/)
-            .expect(200, done());
+            .get('/get/about').end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                expect(res.body).to.contain.keys(
+                    'images',
+                    'missionStatement',
+                    'summary1',
+                    'summary2',
+                    'research',
+                    'workshops',
+                    'tools',
+                    'teaching',
+                    'design');
+                done(err);
+            });
     });
 });
