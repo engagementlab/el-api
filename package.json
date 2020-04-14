@@ -8,9 +8,9 @@
     "bootstrap": "lerna bootstrap",
     "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
     "start": "nodemon ./packages/init/app.js",
-    "test": "lerna run test;",
-    "ci": "start-server-and-test start http://localhost:3000 test",
-    "postinstall": "lerna bootstrap"
+    "start-ci": "node ./packages/init/app.js",
+    "test": "lerna run test",
+    "ci": "start-server-and-test start http://localhost:3000 test"
   },
   "devDependencies": {
     "lerna": "^3.20.2",
