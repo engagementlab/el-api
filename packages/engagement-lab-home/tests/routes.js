@@ -1,3 +1,13 @@
+/**
+ * Engagement Lab Content and Data API
+ * Developed by Engagement Lab, 2020
+ * ==============
+ * Homepage v2.x route tests
+ *
+ * @author Johnny Richardson
+ *
+ * ==========
+ */
 const request = require('supertest')('http://localhost:3000');
 
 describe('Get all route content.', () => {

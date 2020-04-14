@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -13,8 +12,7 @@ const GetAdjacent = async (list, results, res) => {
   const fields = 'name key sortOrder -_id';
   // Get one next/prev project from selected project's sortorder
   const nextProject = list
-    .findOne(
-      {
+    .findOne({
         enabled: true,
         sortOrder: {
           $gt: results.sortOrder,
@@ -24,8 +22,7 @@ const GetAdjacent = async (list, results, res) => {
     )
     .limit(1);
   const prevProject = list
-    .findOne(
-      {
+    .findOne({
         enabled: true,
         sortOrder: {
           $lt: results.sortOrder,
@@ -33,7 +30,9 @@ const GetAdjacent = async (list, results, res) => {
       },
       fields,
     )
-    .sort({ sortOrder: -1 })
+    .sort({
+      sortOrder: -1
+    })
     .limit(1);
 
   const nextPrevResults = {
@@ -43,7 +42,9 @@ const GetAdjacent = async (list, results, res) => {
 
   // Poplulate next/prev and output response
   try {
-    const output = Object.assign(nextPrevResults, { project: results });
+    const output = Object.assign(nextPrevResults, {
+      project: results
+    });
     return output;
   } catch (err) {
     res.status(500).send(err);
@@ -52,12 +53,16 @@ const GetAdjacent = async (list, results, res) => {
 
 const BuildData = async (req, res) => {
   const list = res.locals.db.list('Project').model;
-  const options = { id: req.params.key };
+  const options = {
+    id: req.params.key
+  };
   const archived = req.params.key === 'archive';
 
   let fields = 'key image.public_id byline name featured archived projectType customUrl sortOrder';
 
-  if (archived) { fields = 'key name archived projectType sortOrder'; }
+  if (archived) {
+    fields = 'key name archived projectType sortOrder';
+  }
   let data;
 
   try {
@@ -65,8 +70,8 @@ const BuildData = async (req, res) => {
     if (options.id && !archived) {
       const addtlFields = '_id description challengeTxt strategyTxt resultsTxt externalLinkUrl githubUrl projectImages.public_id files showFiles';
       data = list.findOne({
-        key: options.id,
-      }, `${fields} ${addtlFields}`)
+          key: options.id,
+        }, `${fields} ${addtlFields}`)
         .populate({
           path: 'principalInvestigator',
           select: 'name -_id',
@@ -81,14 +86,20 @@ const BuildData = async (req, res) => {
         });
     } else if (archived) {
       data = list.find({
-        enabled: true,
-        archived: true,
-      },
-      `${fields} -_id`)
-        .sort([['sortOrder', 'ascending']]);
+            enabled: true,
+            archived: true,
+          },
+          `${fields} -_id`)
+        .sort([
+          ['sortOrder', 'ascending']
+        ]);
     } else {
-      data = list.find({ enabled: true }, `${fields} -_id`)
-        .sort([['sortOrder', 'ascending']]);
+      data = list.find({
+          enabled: true
+        }, `${fields} -_id`)
+        .sort([
+          ['sortOrder', 'ascending']
+        ]);
     }
 
     const results = await data.exec();

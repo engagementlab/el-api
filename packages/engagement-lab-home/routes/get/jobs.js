@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -9,14 +8,18 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const { db } = res.locals;
+  const {
+    db
+  } = res.locals;
 
   const jobs = db.list('Job').model;
   const fields = 'title description url -_id';
 
   try {
     // Get enabled jobs
-    const data = await jobs.find({ enabled: true }, fields).sort([
+    const data = await jobs.find({
+      enabled: true
+    }, fields).sort([
       ['createdAt', 'descending'],
     ]).exec();
 

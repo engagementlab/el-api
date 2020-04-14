@@ -1,7 +1,7 @@
 #!/usr/bin/env node;
 
 /**
- * Engagement Lab Website v2.x content service
+ * Engagement Lab Content and Data API
  * Developed by Engagement Lab, 2020
  * ==============
  * App start

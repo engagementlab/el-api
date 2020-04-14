@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -9,7 +8,9 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const { db } = res.locals;
+  const {
+    db
+  } = res.locals;
 
   const contact = db.list('Contact').model;
   const fields = 'name blurb students community -_id';

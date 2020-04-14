@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -9,8 +8,12 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const { db } = res.locals;
-  const options = { id: req.params.key };
+  const {
+    db
+  } = res.locals;
+  const options = {
+    id: req.params.key
+  };
   const person = db.list('Person').model;
   const fields = 'name title key category image.public_id url cohortYear';
   const personFields = 'bio.html twitterURL fbURL igURL linkedInURL githubURL websiteURL email phone';
@@ -19,7 +22,9 @@ const BuildData = async (req, res) => {
     let data;
     // Get person data
     if (options.id) {
-      const query = person.findOne({ key: options.id }, `${fields} ${personFields} -_id`).populate({
+      const query = person.findOne({
+        key: options.id
+      }, `${fields} ${personFields} -_id`).populate({
         path: 'cohortYear',
         select: 'name -_id',
       });
@@ -41,19 +46,19 @@ const BuildData = async (req, res) => {
       }, '_id').exec(async (error, currentYr) => {
         // Get faculty, staff, board
         const peopleData = person.find({
-          category: {
-            $in: ['faculty leadership', 'staff', 'advisory board', 'faculty fellows'],
-          },
-        }, `${fields} -_id`)
+            category: {
+              $in: ['faculty leadership', 'staff', 'advisory board', 'faculty fellows'],
+            },
+          }, `${fields} -_id`)
           .sort([
             ['sortOrder', 'ascending'],
           ]);
 
         // Get current cohort
         const studentData = person.find({
-          cohortYear: currentYr,
-          category: 'Masters',
-        }, `${fields} cohortYear -_id`)
+            cohortYear: currentYr,
+            category: 'Masters',
+          }, `${fields} cohortYear -_id`)
           .sort([
             ['sortOrder', 'ascending'],
           ]);

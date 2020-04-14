@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -9,7 +8,9 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const { db } = res.locals;
+  const {
+    db
+  } = res.locals;
   const getPeople = req.params.key === 'people';
 
   const person = db.list('Person').model;
@@ -26,8 +27,8 @@ const BuildData = async (req, res) => {
 
       // We have to get all cohorts and then assign their respective students to them in data object
       const filterQuery = filter.find({
-        category: 'Cohort',
-      }, 'key name _id')
+          category: 'Cohort',
+        }, 'key name _id')
         .sort([
           ['key', 'ascending'],
         ]);
@@ -37,15 +38,18 @@ const BuildData = async (req, res) => {
         cohorts.map(async (cohort) => {
           // Get all people in cohort and assign to object
           const query = await person.find({
-            cohortYear: cohort._id,
-            category: 'Masters',
-          }, `${personFields} ${personFieldsAddtl} cohortYear -_id`)
+              cohortYear: cohort._id,
+              category: 'Masters',
+            }, `${personFields} ${personFieldsAddtl} cohortYear -_id`)
             .sort([
               ['sortOrder', 'ascending'],
             ])
             .exec();
 
-          data[cohort.key] = { name: cohort.name, people: query };
+          data[cohort.key] = {
+            name: cohort.name,
+            people: query
+          };
         }),
       );
       Object.keys(data).sort().forEach((key) => {
@@ -60,8 +64,13 @@ const BuildData = async (req, res) => {
       };
 
       // Get current cohort via filter year in masters page data
-      const peopleQuery = person.find({ cohortYear: data.masters.cohortYear, category: 'Masters' }, `${personFields} -_id`)
-        .sort([['sortOrder', 'ascending']]).lean();
+      const peopleQuery = person.find({
+          cohortYear: data.masters.cohortYear,
+          category: 'Masters'
+        }, `${personFields} -_id`)
+        .sort([
+          ['sortOrder', 'ascending']
+        ]).lean();
 
       data.people = await peopleQuery.exec();
 

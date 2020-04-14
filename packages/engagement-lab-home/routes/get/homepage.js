@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -9,7 +8,9 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const { db } = res.locals;
+  const {
+    db
+  } = res.locals;
   const initiative = db.list('Initiative').model;
   const project = db.list('Project').model;
   const event = db.list('Event').model;
@@ -22,17 +23,24 @@ const BuildData = async (req, res) => {
   try {
     // Get initiatives
     const initiativeData = initiative.find({}, initiativeFields).sort([
-      ['sortOrder', 'ascending'],
-    ])
+        ['sortOrder', 'ascending'],
+      ])
       .populate({
         path: 'projects',
         select: 'name key -_id',
-        options: { limit: 3, sort: 'name' },
+        options: {
+          limit: 3,
+          sort: 'name'
+        },
       });
     // Get a couple featured projects
-    const projectData = project.find({ featured: true }, projectFields).limit(2);
+    const projectData = project.find({
+      featured: true
+    }, projectFields).limit(2);
     // Get 3 events most recent by date
-    const eventData = event.find({ enabled: true }, eventFields).sort([
+    const eventData = event.find({
+      enabled: true
+    }, eventFields).sort([
       ['date', 'descending'],
     ]).limit(3);
     // Get tagline

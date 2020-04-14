@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -13,8 +12,7 @@ const GetAdjacent = async (list, results, res) => {
   const fields = 'name key -_id';
   // Get one next/prev event from selected event's sortorder
   const nextEvent = list
-    .findOne(
-      {
+    .findOne({
         enabled: true,
         date: {
           $gt: results.date,
@@ -24,8 +22,7 @@ const GetAdjacent = async (list, results, res) => {
     )
     .limit(1);
   const prevEvent = list
-    .findOne(
-      {
+    .findOne({
         enabled: true,
         date: {
           $lt: results.date,
@@ -33,7 +30,9 @@ const GetAdjacent = async (list, results, res) => {
       },
       fields,
     )
-    .sort({ sortOrder: -1 })
+    .sort({
+      sortOrder: -1
+    })
     .limit(1);
 
   const nextPrevResults = {
@@ -43,7 +42,9 @@ const GetAdjacent = async (list, results, res) => {
 
   // Poplulate next/prev and output response
   try {
-    const output = Object.assign(nextPrevResults, { event: results });
+    const output = Object.assign(nextPrevResults, {
+      event: results
+    });
     return output;
   } catch (err) {
     res.status(500).send(err);
@@ -52,7 +53,9 @@ const GetAdjacent = async (list, results, res) => {
 
 const BuildData = async (req, res) => {
   const list = res.locals.db.list('Event').model;
-  const options = { id: req.params.key };
+  const options = {
+    id: req.params.key
+  };
 
   const fields = 'name date key shortDescription eventUrl';
   let data;
@@ -66,13 +69,19 @@ const BuildData = async (req, res) => {
       }, `${fields} ${addtlFields}`);
     } else if (options.archived) {
       data = list.find({
-        enabled: true,
-      },
-      fields)
-        .sort([['sortOrder', 'descending']]);
+            enabled: true,
+          },
+          fields)
+        .sort([
+          ['sortOrder', 'descending']
+        ]);
     } else {
-      data = list.find({ enabled: true }, `${fields} -_id`)
-        .sort([['sortOrder', 'ascending']]);
+      data = list.find({
+          enabled: true
+        }, `${fields} -_id`)
+        .sort([
+          ['sortOrder', 'ascending']
+        ]);
     }
 
     const results = await data.exec();

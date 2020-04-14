@@ -1,6 +1,5 @@
-
 /**
- * @fileoverview Engagement Lab Website v2.x content service
+ * @fileoverview Engagement Lab Content and Data API
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
@@ -13,8 +12,7 @@ const GetAdjacent = async (list, results, res) => {
   const fields = 'name key -_id';
   // Get one next/prev project from selected project's sortorder
   const nextProject = list
-    .findOne(
-      {
+    .findOne({
         enabled: true,
         sortOrder: {
           $gt: results.sortOrder,
@@ -24,8 +22,7 @@ const GetAdjacent = async (list, results, res) => {
     )
     .limit(1);
   const prevProject = list
-    .findOne(
-      {
+    .findOne({
         enabled: true,
         sortOrder: {
           $lt: results.sortOrder,
@@ -33,7 +30,9 @@ const GetAdjacent = async (list, results, res) => {
       },
       fields,
     )
-    .sort({ sortOrder: -1 })
+    .sort({
+      sortOrder: -1
+    })
     .limit(1);
 
   const nextPrevResults = {
@@ -43,7 +42,9 @@ const GetAdjacent = async (list, results, res) => {
 
   // Poplulate next/prev and output response
   try {
-    const output = Object.assign(nextPrevResults, { project: results });
+    const output = Object.assign(nextPrevResults, {
+      project: results
+    });
     return output;
   } catch (err) {
     res.status(500).send(err);
@@ -52,7 +53,9 @@ const GetAdjacent = async (list, results, res) => {
 
 const BuildData = async (req, res) => {
   const list = res.locals.db.list('Publication').model;
-  const options = { id: req.params.key };
+  const options = {
+    id: req.params.key
+  };
 
   const fields = 'key title author date blurb context downloadUrls purchaseUrls -_id';
   let data;
@@ -62,8 +65,8 @@ const BuildData = async (req, res) => {
     if (options.id) {
       const addtlFields = 'description challengeTxt strategyTxt resultsTxt externalLinkUrl githubUrl projectImages';
       data = list.findOne({
-        key: options.id,
-      }, `${fields} ${addtlFields}`)
+          key: options.id,
+        }, `${fields} ${addtlFields}`)
         .populate({
           path: 'principalInvestigator',
           select: 'name -_id',
@@ -73,8 +76,12 @@ const BuildData = async (req, res) => {
           select: 'name -_id',
         });
     } else {
-      data = list.find({ enabled: true }, `${fields} -_id`)
-        .sort([['date', 'descending']])
+      data = list.find({
+          enabled: true
+        }, `${fields} -_id`)
+        .sort([
+          ['date', 'descending']
+        ])
         .populate({
           path: 'form',
           select: 'key -_id',
