@@ -10,7 +10,7 @@
     "start": "nodemon ./packages/init/app.js",
     "start-ci": "node ./packages/init/app.js",
     "test": "node_modules/.bin/mocha ./packages/**/tests/*.js",
-    "ci": "start-server-and-test start http://localhost:3000 test"
+    "ci": "start-server-and-test start-ci http://localhost:3000 test"
   },
   "devDependencies": {
     "lerna": "^3.20.2",
