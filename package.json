@@ -7,9 +7,10 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
-    "start": "nodemon ./packages/init/app.js",
-    "start-ci": "node ./packages/init/app.js",
-    "test": "node_modules/.bin/mocha ./packages/**/tests/*.js",
+    "dev": "nodemon ./packages/init/app.js",
+    "start": "node ./packages/init/app.js",
+    "start-ci": "./node_modules/.bin/nyc yarn run start",
+    "test": "./node_modules/.bin/mocha ./packages/**/tests/*.js",
     "ci": "start-server-and-test start-ci http://localhost:3000 test"
   },
   "devDependencies": {
@@ -21,6 +22,7 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
+    "nyc": "^15.0.1",
     "start-server-and-test": "^1.10.11"
   },
   "version": "0.0.2",
