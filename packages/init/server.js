@@ -15,10 +15,12 @@
 /**
  * Module dependencies.
  */
-// Load .env vars
-require('dotenv').config({
-    path: `${__dirname}/.env`,
-});
+// Load .env vars if not in CI environment
+if (process.env.NODE_ENV !== 'ci') {
+    require('dotenv').config({
+        path: `${__dirname}/.env`,
+    });
+}
 
 const path = require('path');
 

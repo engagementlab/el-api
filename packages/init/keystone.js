@@ -22,10 +22,14 @@ const cloudinaryAdapter = new CloudinaryAdapter({
 });
 
 const KeystoneApp = (config, callback) => {
+  const dbAddress = (process.env.NODE_ENV === 'development') ?
+    `mongodb://localhost/${config.package.database}` :
+    `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
+
   const keystone = new Keystone({
     name: config.package.name,
     adapter: new MongooseAdapter({
-      mongoUri: `mongodb://localhost/${config.package.database}`
+      mongoUri: dbAddress
     }),
   });
 
