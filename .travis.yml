@@ -9,5 +9,4 @@ before_script:
 
 script:
   - yarn run bootstrap
-  - yarn run install
-  - yarn run test
+  - yarn run ci
