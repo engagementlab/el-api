@@ -1,0 +1,13 @@
+language: node_js
+
+branches:
+  only:
+    - master
+
+before_script:
+  - npm i -g lerna
+
+script:
+  - yarn run bootstrap
+  - yarn run install
+  - yarn run test
