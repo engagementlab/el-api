@@ -17,6 +17,7 @@
  */
 // Load .env vars if not in CI environment
 if (process.env.NODE_ENV !== 'ci') {
+    // eslint-disable-next-line global-require
     require('dotenv').config({
         path: `${__dirname}/.env`,
     });
@@ -42,46 +43,6 @@ let server;
 let startCallback;
 let socket;
 let wss;
-
-const start = (productionMode, currentApp) => {
-    // If server defined, close current one
-    if (server) server.close();
-
-    app = express();
-    app.use(express.json());
-    app.use(
-        express.urlencoded({
-            extended: false,
-        })
-    );
-    app.set('view engine', 'pug');
-    app.set('views', `${__dirname}/views`);
-
-    app.get('/', (req, res) => {
-        res.render('index', {
-            packages,
-        });
-    });
-
-    if (!currentApp) currentApp = 'homepage';
-
-    // Load all routes for API of currently used package
-    const packagePath = `@engagement-lab/${currentApp}`;
-    const packageModule = require(packagePath);
-    const packageConfig = packageModule.Config();
-    const routes = packageModule.Routes;
-    const packageApiRoutes = routes(app);
-
-    const bootConfig = {
-        app,
-        package: packageConfig,
-        path: packagePath,
-        routes: packageApiRoutes,
-        production: productionMode,
-    };
-    if (process.env.SEARCH_ENABLED === 'true') searchBoot(app);
-    else boot(bootConfig);
-};
 
 const boot = (config) => {
     // Export all models for current app
@@ -110,8 +71,8 @@ const boot = (config) => {
             global.logger.info(
                 colors.bgCyan.bold.black(
                     `Content API for "${config.package.name}" started (${
-            config.production ? 'Production' : 'Development'
-          } Mode).`
+                    config.production ? 'Production' : 'Development'
+                    } Mode).`
                 )
             );
 
@@ -123,7 +84,7 @@ const boot = (config) => {
     });
 };
 
-const searchBoot = (app) => {
+const searchBoot = (searchApp) => {
     global.elasti = new elasticsearch.Client({
         node: process.env.ELASTISEARCH_NODE_URL,
     });
@@ -136,17 +97,56 @@ const searchBoot = (app) => {
                     `Search cluster running at ${process.env.ELASTISEARCH_NODE_URL}`
                 )
             );
-            boot(app);
+            boot(searchApp);
         }
     });
+};
+
+const start = (productionMode, appName) => {
+    // If server defined, close current one
+    if (server) server.close();
+
+    const currentApp = (!appName) ? 'homepage' : appName;
+
+    app = express();
+    app.use(express.json());
+    app.use(
+        express.urlencoded({
+            extended: false,
+        })
+    );
+    app.set('view engine', 'pug');
+    app.set('views', `${__dirname}/views`);
+
+    app.get('/', (req, res) => {
+        res.render('index', {
+            packages,
+        });
+    });
+
+    // Load all routes for API of currently used package
+    const packagePath = `@engagement-lab/${currentApp}`;
+    const packageModule = require(packagePath);
+    const packageConfig = packageModule.Config();
+    const routes = packageModule.Routes;
+    const packageApiRoutes = routes(app);
+
+    const bootConfig = {
+        app,
+        package: packageConfig,
+        path: packagePath,
+        routes: packageApiRoutes,
+        production: productionMode,
+    };
+    if (process.env.SEARCH_ENABLED === 'true') searchBoot(app);
+    else boot(bootConfig);
 };
 
 const init = (callback) => {
 
     if (callback) startCallback = callback;
 
-    productionMode =
-        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
+    const productionMode = process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
     wss = new WebSocket.Server({
         port: 3001,
@@ -191,9 +191,9 @@ const init = (callback) => {
             } = info;
 
             const ts = timestamp.slice(0, 19).replace('T', ' ');
-            return `${ts} [${level}]: ${message} ${
-        Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
-      }`;
+            return (
+                `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ''}`
+            );
         })
     );
 
