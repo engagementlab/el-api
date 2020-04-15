@@ -38,6 +38,7 @@ const BuildData = async (req, res) => {
     const data = await db.executeQuery(`
       query {
         allAboutPages {
+          images
           missionStatement
           summary1
           summary2
