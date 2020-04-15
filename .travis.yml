@@ -15,5 +15,5 @@ script:
 notifications:
   slack:
     rooms:
-	  - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#code
-	  - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#el-api-dev
+      - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#code
+      - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#el-api-dev
