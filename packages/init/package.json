@@ -1,6 +1,12 @@
 {
-  "name": "@engagement-lab/api-init",
+  "name": "@engagementlab/api-init",
   "description": "Content API for Engagement Lab web apps.",
+  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/engagementlab/el-api/issues"
+  },
+  "homepage": "https://github.com/engagementlab/el-api#readme",
   "version": "0.0.3-alpha.0",
   "private": false,
   "scripts": {
@@ -43,11 +49,5 @@
     "express",
     "keystonejs",
     "api"
-  ],
-  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/engagementlab/el-api/issues"
-  },
-  "homepage": "https://github.com/engagementlab/el-api#readme"
+  ]
 }
