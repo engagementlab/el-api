@@ -1,7 +1,7 @@
 {
   "name": "@engagement-lab/api-init",
   "description": "Content API for Engagement Lab web apps.",
-  "version": "0.0.2",
+  "version": "0.0.3-alpha.0",
   "private": false,
   "scripts": {
     "clean": "kill -9 $(lsof -t -i:3000)",
@@ -9,7 +9,7 @@
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
   },
   "dependencies": {
-    "@engagement-lab/homepage": "^2.4.0",
+    "@engagement-lab/homepage": "^2.4.1-alpha.0",
     "@keystonejs/app-admin-ui": "^5.9.3",
     "@keystonejs/app-static": "^5.1.1",
     "@keystonejs/build-field-types": "^5.2.4",

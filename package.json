@@ -10,7 +10,7 @@
     "dev": "nodemon ./packages/init/app.js",
     "start": "node ./packages/init/app.js",
     "start-ci": "./node_modules/.bin/nyc yarn run start",
-    "test": "./node_modules/.bin/mocha ./packages/**/tests/*.js",
+    "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
     "ci": "start-server-and-test start-ci http://localhost:3000 test"
   },
   "devDependencies": {

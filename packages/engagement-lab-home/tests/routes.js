@@ -19,7 +19,6 @@ describe('Get all route content and ensure JSON response with required keys.', (
             .get('/get/about').end((err, res) => {
                 expect(res.statusCode).to.equal(200);
                 expect(res.body).to.contain.keys(
-                    'images',
                     'missionStatement',
                     'summary1',
                     'summary2',

@@ -11,3 +11,9 @@ script:
   - yarn run bootstrap
   - yarn run ci
   - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  slack:
+    rooms:
+      - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#code
+      - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#el-api-dev
