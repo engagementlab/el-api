@@ -28,5 +28,26 @@
     "validator": "^12.2.0",
     "winston": "^3.2.1",
     "ws": "^7.2.3"
-  }
+  },
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/engagementlab/el-api.git"
+  },
+  "keywords": [
+    "lerna",
+    "express",
+    "keystonejs",
+    "api"
+  ],
+  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/engagementlab/el-api/issues"
+  },
+  "homepage": "https://github.com/engagementlab/el-api#readme"
 }
