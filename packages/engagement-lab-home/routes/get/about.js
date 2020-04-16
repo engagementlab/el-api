@@ -8,6 +8,7 @@
  * ==========
  */
 const BuildData = async (req, res) => {
+
   const {
     db
   } = res.locals;
@@ -35,7 +36,7 @@ const BuildData = async (req, res) => {
     };
  */
 
-    const data = await db.executeQuery(`
+    const query = await db.executeQuery(`
       query {
         allAboutPages {
           missionStatement
@@ -49,13 +50,17 @@ const BuildData = async (req, res) => {
         }
       }`);
 
-    if (data.errors) {
-
-      res.status(500).send(data.errors);
+    if (query.data.allAboutPages.length === 0) {
+      res.status(204).send();
       return;
     }
 
-    res.json(data.data.allAboutPages[0]);
+    if (query.errors) {
+      res.status(500).send(query.errors);
+      return;
+    }
+
+    res.json(query.data.allAboutPages[0]);
   } catch (e) {
     res.status(500).send(e.toString());
   }
