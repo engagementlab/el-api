@@ -47,16 +47,11 @@ let wss;
 const boot = (config) => {
 
     // Initialize keystone instance
-    keystone(config, (middleware, keystoneInstance) => {
+    keystone(config, (middleware) => {
         /**
          * Get port from environment and store in Express.
          */
         const port = ServerUtils.normalizePort(process.env.PORT || '3000');
-
-        config.app.use((req, res, next) => {
-            res.locals.db = keystoneInstance;
-            next();
-        });
 
         /**
          * Listen on provided port w/ both keystone instance and API routes
@@ -125,7 +120,7 @@ const start = (productionMode, appName) => {
     const packageModule = require(packagePath)(ServerUtils.routeImporter);
 
     // Get config and routes
-    const packageConfig = packageModule.Config();
+    const packageConfig = packageModule.Config;
     const packageApiRoutes = packageModule.Routes;
 
     // Export all models for current app
