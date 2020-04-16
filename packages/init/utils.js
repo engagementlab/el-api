@@ -44,13 +44,9 @@ const ServerUtils = {
    * directory, and returns all .js modules in it (recursively).
    *
    * ####Example:
-   *
-   *     var importRoutes = keystone.importer(__dirname);
-   *
-   *     var routes = {
-   *         site: importRoutes('./site'),
-   *         api: importRoutes('./api')
-   *     };
+   * 
+   *  const importRoutes = importer(__dirname);
+   *  const routes = importRoutes('get')
    *
    * @param {String} relDirname
    * @api public
@@ -61,10 +57,10 @@ const ServerUtils = {
 
       const imported = {};
       const joinPath = () => {
-        return `.${path.sep}${path.join(...arguments)}`;
+        return `${  relDirname  }${path.sep}${path.join(...arguments)}`
       };
 
-      const fsPath = joinPath(path.relative(process.cwd(), relDirname), from);
+      const fsPath = joinPath(from);
       fs.readdirSync(fsPath).forEach((name) => {
         const info = fs.statSync(path.join(fsPath, name));
         if (info.isDirectory()) {
@@ -75,8 +71,9 @@ const ServerUtils = {
           const base = path.basename(name, ext);
           if (require.extensions[ext]) {
             imported[base] = require(path.join(relDirname, from, name));
+
           } else {
-            global.logger.eror('cannot require ', ext);
+            global.logger.error('cannot require ', ext);
           }
         }
       });

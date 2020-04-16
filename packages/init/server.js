@@ -45,15 +45,9 @@ let socket;
 let wss;
 
 const boot = (config) => {
-    // Export all models for current app
-    const models = require(config.path).Models();
-    const ksConfig = {
-        models,
-        package: config.package,
-    };
 
     // Initialize keystone instance
-    keystone(ksConfig, (middleware, keystoneInstance) => {
+    keystone(config, (middleware, keystoneInstance) => {
         /**
          * Get port from environment and store in Express.
          */
@@ -65,7 +59,7 @@ const boot = (config) => {
         });
 
         /**
-         * Listen on provided port w/ both keystone instance and API
+         * Listen on provided port w/ both keystone instance and API routes
          */
         server = config.app.use([middleware, config.routes]).listen(port, () => {
             global.logger.info(
@@ -124,17 +118,24 @@ const start = (productionMode, appName) => {
         });
     });
 
-    // Load all routes for API of currently used package
+    // Load all data for API of currently used package
     const packagePath = `@engagement-lab/${currentApp}`;
-    const packageModule = require(packagePath);
+
+    // Pass our route importer util to package
+    const packageModule = require(packagePath)(ServerUtils.routeImporter);
+
+    // Get config and routes
     const packageConfig = packageModule.Config();
-    const routes = packageModule.Routes;
-    const packageApiRoutes = routes(app);
+    const packageApiRoutes = packageModule.Routes;
+
+    // Export all models for current app
+    const packageModels = packageModule.Models();
 
     const bootConfig = {
         app,
         package: packageConfig,
         path: packagePath,
+        models: packageModels,
         routes: packageApiRoutes,
         production: productionMode,
     };
