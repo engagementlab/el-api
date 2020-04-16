@@ -1,5 +1,5 @@
 /**
- * Engagement Lab Website v2.x
+ * Engagement Lab Content and Data API
  * Developed by Engagement Lab, 2018-2020
  * ==============
  * App utilities
@@ -11,27 +11,82 @@
 
 // TODO: Make npm package
 const validator = require('validator');
+const fs = require('fs');
+const path = require('path');
 
 const ServerUtils = {
-/**
- * Normalize a port into a number, string, or false.
- */
+  /**
+   * Normalize a port into a number, string, or false.
+   */
 
   normalizePort: (val) => {
     const port = parseInt(val, 10);
 
     if (isNaN(port)) {
-    // named pipe
+      // named pipe
       return val;
     }
 
     if (port >= 0) {
-    // port number
+      // port number
       return port;
     }
 
     return false;
   },
+
+  /*
+      Borrowed from KeystoneJS classic/4.x:
+      https://github.com/keystonejs/keystone-classic/blob/d34f45662eb359e2cb18b397f2ffea21f9883141/lib/core/importer.js
+  */
+  /**
+   * Returns a function that looks in a specified path relative to the current
+   * directory, and returns all .js modules in it (recursively).
+   *
+   * ####Example:
+   *
+   *     var importRoutes = keystone.importer(__dirname);
+   *
+   *     var routes = {
+   *         site: importRoutes('./site'),
+   *         api: importRoutes('./api')
+   *     };
+   *
+   * @param {String} relDirname
+   * @api public
+   */
+  routeImporter: (relDirname) => {
+
+    function importer(from) {
+
+      const imported = {};
+      const joinPath = () => {
+        return `.${path.sep}${path.join(...arguments)}`;
+      };
+
+      const fsPath = joinPath(path.relative(process.cwd(), relDirname), from);
+      fs.readdirSync(fsPath).forEach((name) => {
+        const info = fs.statSync(path.join(fsPath, name));
+        if (info.isDirectory()) {
+          imported[name] = importer(joinPath(from, name));
+        } else {
+          // only import files that we can `require`
+          const ext = path.extname(name);
+          const base = path.basename(name, ext);
+          if (require.extensions[ext]) {
+            imported[base] = require(path.join(relDirname, from, name));
+          } else {
+            global.logger.eror('cannot require ', ext);
+          }
+        }
+      });
+
+      return imported;
+    };
+
+    return importer;
+
+  }
 
 };
 
@@ -49,17 +104,17 @@ const ServerUtils = {
 
 
 /**
-   * Event listener for HTTP server "error" event.
-   */
+ * Event listener for HTTP server "error" event.
+ */
 
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
 
-  const bind = typeof port === 'string'
-    ? `Pipe ${port}`
-    : `Port ${port}`;
+  const bind = typeof port === 'string' ?
+    `Pipe ${port}` :
+    `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -77,14 +132,14 @@ function onError(error) {
 }
 
 /**
-   * Event listener for HTTP server "listening" event.
-   */
+ * Event listener for HTTP server "listening" event.
+ */
 
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? `pipe ${addr}`
-    : `port ${addr.port}`;
+  const bind = typeof addr === 'string' ?
+    `pipe ${addr}` :
+    `port ${addr.port}`;
   debug(`Listening on ${bind}`);
 }
 
