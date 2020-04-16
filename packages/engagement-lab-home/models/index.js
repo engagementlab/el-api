@@ -1,5 +1,5 @@
 /**
- * Engagement Lab Website v2.x content API
+ * Engagement Lab Content and Data API content API
  * Developed by Engagement Lab, 2020
  *
  * @author Johnny Richardson

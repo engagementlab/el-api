@@ -1,5 +1,5 @@
 /**
- * Engagement Lab Website v2.x
+ * Engagement Lab Content and Data API
  *
  * About page Model
  * @module models

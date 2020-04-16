@@ -1,6 +1,5 @@
-
 /**
- * Engagement Lab Website v2.x
+ * Engagement Lab Content and Data API
  *
  * Image
  * @module models
@@ -9,7 +8,9 @@
  * ==========
  */
 
-const { CloudinaryImage } = require('@keystonejs/fields');
+const {
+  CloudinaryImage
+} = require('@keystonejs/fields');
 
 const Image = (keystone, cloudinary) => {
   /**
@@ -32,7 +33,9 @@ const Image = (keystone, cloudinary) => {
     },
   };
 
-  keystone.createList('Image', { fields });
+  keystone.createList('Image', {
+    fields
+  });
 };
 
 /**
