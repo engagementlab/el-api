@@ -15,6 +15,7 @@
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
   },
   "dependencies": {
+    "@engagementlab/homepage": "^2.4.1-alpha.0",
     "@keystonejs/app-admin-ui": "^5.9.3",
     "@keystonejs/app-static": "^5.1.1",
     "@keystonejs/build-field-types": "^5.2.4",

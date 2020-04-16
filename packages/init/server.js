@@ -119,7 +119,7 @@ const start = (productionMode, appName) => {
     });
 
     // Load all data for API of currently used package
-    const packagePath = `@engagement-lab/${currentApp}`;
+    const packagePath = `@engagementlab/${currentApp}`;
 
     // Pass our route importer util to package
     const packageModule = require(packagePath)(ServerUtils.routeImporter);
