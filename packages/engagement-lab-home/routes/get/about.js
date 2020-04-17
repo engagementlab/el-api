@@ -13,54 +13,58 @@ const BuildData = async (req, res) => {
     db
   } = res.locals;
 
-  // const person = db.list('Person').model;
-  // const partner = db.list('Partner').model;
-  // const about = db.list('About').model;
+  const person = db.collection('Person');
+  const partner = db.collection('Partner');
+  const about = db.collection('abouts');
 
   const aboutFields = 'missionStatement summary1 summary2 images.public_id research workshops tools teaching design -_id';
   const partnerFields = 'name image.public_id url -_id';
   const personFields = 'name title key image.public_id url -_id';
 
   try {
-    /*     // Get about
-    const aboutData = about.findOne({}, aboutFields);
+    // Get about
+    const aboutData = await about.findOne({}, aboutFields);
     // Get a couple featured projects
-    const partnersData = partner.find({}, partnerFields);
+    const partnersData = await partner.find({}, partnerFields);
     // Get faculty and staff
-    const peopleData = person.find({ category: { $in: ['faculty leadership', 'staff'] } }, personFields)
-      .sort([['sortOrder', 'ascending']]);
-    const data = {
-      about: await aboutData.exec(),
-      partners: await partnersData.exec(),
-      people: await peopleData.exec(),
-    };
- */
-
-    const query = await db.executeQuery(`
-      query {
-        allAboutPages {
-          missionStatement
-          summary1
-          summary2
-          research
-          workshops
-          tools
-          teaching
-          design
+    const peopleData = await person.find({
+        category: {
+          $in: ['faculty leadership', 'staff']
         }
-      }`);
+      }, personFields)
+      .sort({
+        'sortOrder': 'ascending'
+      });
+    console.log(aboutData)
+    const data = aboutData
 
-    if (query.data.allAboutPages.length === 0) {
-      res.status(204).send();
-      return;
-    }
+    /*     const query = await db.executeQuery(`
+          query {
+            allAboutPages {
+              missionStatement
+              summary1
+              summary2
+              research
+              workshops
+              tools
+              teaching
+              design
+            }
+          }`);
 
-    if (query.errors) {
-      res.status(500).send(query.errors);
-      return;
-    }
+        if (query.errors) {
+          console.error(query.errors)
+          res.status(500).send(query.errors);
+          return;
+        }
 
-    res.json(query.data.allAboutPages[0]);
+        if (query.data.allAboutPages.length === 0) {
+          res.status(204).send();
+          return;
+        }
+
+        res.json(query.data.allAboutPages[0]); */
+    res.json(data);
   } catch (e) {
     res.status(500).send(e.toString());
   }

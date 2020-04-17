@@ -8,53 +8,37 @@
  */
 
 const {
-  Keystone
-} = require('@keystonejs/keystone');
-const {
-  MongooseAdapter
-} = require('@keystonejs/adapter-mongoose');
-const {
-  GraphQLApp
-} = require('@keystonejs/app-graphql');
+  MongoClient
+} = require('mongodb');
 
 const fs = require('fs');
 const routes = require('./routes');
-const models = require('./models');
+const models = require('./models')();
 
-module.exports = (routesImporter) => {
+module.exports = routesImporter => {
+  return new Promise(async resolve => {
+    const dataFile = fs.readFileSync(`${__dirname}/config.json`);
+    const configData = JSON.parse(dataFile);
 
-  const dataFile = fs.readFileSync(`${__dirname}/config.json`);
-  const configData = JSON.parse(dataFile);
-  const pkgRouter = routes(routesImporter);
+    const dbAddress =
+      process.env.NODE_ENV === 'development' ?
+      'mongodb://localhost' :
+      `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
 
-  const dbAddress =
-    process.env.NODE_ENV === 'development' ?
-    `mongodb://localhost/${configData.database}` :
-    `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
-
-  const keystone = new Keystone({
-    adapter: new MongooseAdapter({
-      mongoUri: dbAddress
-    })
-  });
-
-  keystone
-    .prepare({
-      apps: [new GraphQLApp()]
-    })
-    .then(() => {
-      keystone.connect();
-      // Tell package to use this graphql app for all queries
-      pkgRouter.use((req, res, next) => {
-        res.locals.db = keystone;
-        next();
-      });
+    const client = await MongoClient.connect(dbAddress, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
+    const db = client.db(configData.database)
 
-  // TODO: give all routes a namespace prefix, e.g. 'homepage/'
-  return {
-    Routes: pkgRouter,
-    Models: models,
-    Config: configData
-  }
+    const appRoutes = routes(routesImporter, db);
+    global.logger.info('🚀 Homepage API ready.');
+
+    // TODO: give all routes a namespace prefix, e.g. 'homepage/'
+    resolve({
+      Routes: appRoutes,
+      Models: models,
+      Config: configData
+    });
+  });
 };

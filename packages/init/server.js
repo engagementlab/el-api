@@ -17,10 +17,10 @@
  */
 // Load .env vars if not in CI environment
 if (process.env.NODE_ENV !== 'ci') {
-  // eslint-disable-next-line global-require
-  require('dotenv').config({
-    path: `${__dirname}/.env`
-  });
+    // eslint-disable-next-line global-require
+    require('dotenv').config({
+        path: `${__dirname}/.env`
+    });
 }
 
 const path = require('path');
@@ -44,138 +44,139 @@ let socket;
 let wss;
 
 const boot = config => {
-  // Initialize keystone instance
-  keystone(config, middleware => {
-    /**
-     * Get port from environment and store in Express.
-     */
-    const port = ServerUtils.normalizePort(process.env.PORT || '3000');
+    // Initialize keystone instance
+    keystone(config, middleware => {
+        /**
+         * Get port from environment and store in Express.
+         */
+        const port = ServerUtils.normalizePort(process.env.PORT || '3000');
 
-    /**
-     * Listen on provided port w/ both keystone instance and API routes
-     */
-    server = config.app.use([middleware, config.routes]).listen(port, () => {
-      global.logger.info(
-        colors.bgCyan.bold.black(
-          `Content API for "${config.package.name}" started (${
+        /**
+         * Listen on provided port w/ both keystone instance and API routes
+         */
+        server = config.app.use([middleware, config.routes]).listen(port, () => {
+            global.logger.info(
+                colors.bgCyan.bold.black(
+                    `Content API for "${config.package.name}" started (${
             config.production ? 'Production' : 'Development'
           } Mode).`
-        )
-      );
+                )
+            );
 
-      if (socket) socket.send('loaded');
+            if (socket) socket.send('loaded');
 
-      // Call class callback if defined (for tests)
-      if (startCallback) startCallback(app);
+            // Call class callback if defined (for tests)
+            if (startCallback) startCallback(app);
+        });
     });
-  });
 };
 
-const start = (productionMode, appName) => {
-  // If server defined, close current one
-  if (server) server.close();
+const start = async (productionMode, appName) => {
+    // If server defined, close current one
+    if (server) server.close();
 
-  const currentApp = !appName ? 'homepage' : appName;
+    const currentApp = !appName ? 'homepage' : appName;
 
-  app = express();
-  app.use(express.json());
-  app.use(
-    express.urlencoded({
-      extended: false
-    })
-  );
-  app.set('view engine', 'pug');
-  app.set('views', `${__dirname}/views`);
+    app = express();
+    app.use(express.json());
+    app.use(
+        express.urlencoded({
+            extended: false
+        })
+    );
+    app.set('view engine', 'pug');
+    app.set('views', `${__dirname}/views`);
 
-  app.get('/', (req, res) => {
-    res.render('index', {
-      packages
+    app.get('/', (req, res) => {
+        res.render('index', {
+            packages
+        });
     });
-  });
 
-  // Load all data for API of currently used package
-  const packagePath = `@engagementlab/${currentApp}`;
+    // Load all data for API of currently used package
+    const packagePath = `@engagementlab/${currentApp}`;
 
-  // Pass our route importer util to package
-  const packageModule = require(packagePath)(ServerUtils.routeImporter);
+    // Pass our route importer util to package
+    const packageInit = require(packagePath);
+    const pkg = await packageInit(ServerUtils.routeImporter);
 
-  // Get config and routes
-  const packageConfig = packageModule.Config;
-  const packageApiRoutes = packageModule.Routes;
+    // Export all models, routes, config for this app
+    const bootConfig = {
+        app,
+        package: pkg.Config,
+        models: pkg.Models,
+        routes: pkg.Routes,
+        path: packagePath,
+        production: productionMode
+    };
 
-  // Export all models for current app
-  const packageModels = packageModule.Models();
+    boot(bootConfig);
 
-  const bootConfig = {
-    app,
-    package: packageConfig,
-    path: packagePath,
-    models: packageModels,
-    routes: packageApiRoutes,
-    production: productionMode
-  };
-
-  boot(bootConfig);
 };
 
 const init = callback => {
-  if (callback) startCallback = callback;
+    if (callback) startCallback = callback;
 
-  const productionMode =
-    process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
+    const productionMode =
+        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
-  wss = new WebSocket.Server({
-    port: 3001
-  });
-
-  wss.on('listening', ws => {
-    global.logger.info(`${'Websockets:'.magenta} server listening.`);
-  });
-  wss.on('connection', ws => {
-    ws.on('message', async message => {
-      const data = JSON.parse(message);
-      global.logger.info(
-        `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`
-      );
-
-      // Event for server close and reboot w/ new package
-      if (data.evt === 'reload') {
-        socket = ws;
-        start(productionMode, data.id);
-      }
+    wss = new WebSocket.Server({
+        port: 3001
     });
 
-    ws.send('Connected.');
-  });
+    wss.on('listening', ws => {
+        global.logger.info(`${'Websockets:'.magenta} server listening.`);
+    });
+    wss.on('connection', ws => {
+        ws.on('message', async message => {
+            const data = JSON.parse(message);
+            global.logger.info(
+                `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`
+            );
 
-  /**
-   *  Load all possible apps from sibling packages (config defined in app.json)
-   */
-  const appConfigs = fs.readFileSync(appsJson);
-  packages = JSON.parse(appConfigs);
+            // Event for server close and reboot w/ new package
+            if (data.evt === 'reload') {
+                socket = ws;
+                start(productionMode, data.id);
+            }
+        });
 
-  const logFormat = winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp(),
-    winston.format.align(),
-    winston.format.printf(info => {
-      const { timestamp, level, message, ...args } = info;
+        ws.send('Connected.');
+    });
 
-      const ts = timestamp.slice(0, 19).replace('T', ' ');
-      return `${ts} [${level}]: ${message} ${
+    /**
+     *  Load all possible apps from sibling packages (config defined in app.json)
+     */
+    const appConfigs = fs.readFileSync(appsJson);
+    packages = JSON.parse(appConfigs);
+
+    const logFormat = winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp(),
+        winston.format.align(),
+        winston.format.printf(info => {
+            const {
+                timestamp,
+                level,
+                message,
+                ...args
+            } = info;
+
+            const ts = timestamp.slice(0, 19).replace('T', ' ');
+            return `${ts} [${level}]: ${message} ${
         Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
       }`;
-    })
-  );
+        })
+    );
 
-  global.logger = winston.createLogger({
-    level: 'info',
-    format: logFormat,
-    transports: [new winston.transports.Console()]
-  });
-  global.elasti = undefined;
+    global.logger = winston.createLogger({
+        level: 'info',
+        format: logFormat,
+        transports: [new winston.transports.Console()]
+    });
+    global.elasti = undefined;
 
-  start(productionMode);
+    start(productionMode);
 };
 
 module.exports = init;
