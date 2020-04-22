@@ -58,8 +58,8 @@ const boot = config => {
             global.logger.info(
                 colors.bgCyan.bold.black(
                     `Content API for "${config.package.name}" started (${
-            config.production ? 'Production' : 'Development'
-          } Mode).`
+                    config.production ? 'Production' : 'Development'
+                    } Mode).`
                 )
             );
 
@@ -98,6 +98,13 @@ const start = async (productionMode, appName) => {
 
     // Pass our route importer util to package
     const packageInit = require(packagePath);
+
+    console.log('\n');
+    console.log('packagePath: ', packagePath);
+    console.log('typeOf packageInit: ', typeof packageInit);
+    console.log('packageInit: ', packageInit);
+    console.log('\n');
+
     const pkg = await packageInit(ServerUtils.routeImporter);
 
     // Export all models, routes, config for this app
@@ -164,8 +171,8 @@ const init = callback => {
 
             const ts = timestamp.slice(0, 19).replace('T', ' ');
             return `${ts} [${level}]: ${message} ${
-        Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
-      }`;
+                Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
+                }`;
         })
     );
 
