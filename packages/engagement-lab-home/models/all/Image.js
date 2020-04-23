@@ -24,7 +24,7 @@ const Image = (keystone, cloudinary) => {
       hidden: true,
       isRequired: true,
       initial: true,
-      adminDoc: 'hi',
+      adminDoc: 'el-home-img',
     },
     // TODO: Custom multi-image field
     image: {
@@ -34,6 +34,7 @@ const Image = (keystone, cloudinary) => {
   };
 
   keystone.createList('Image', {
+    adapterName: 'home',
     fields
   });
 };

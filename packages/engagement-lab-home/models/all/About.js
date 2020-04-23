@@ -88,6 +88,7 @@ const About = (keystone, cloudinary) => {
    * See: https://www.keystonejs.com/api/create-list
    */
   const options = {
+    adapterName: 'home',
     label: 'About Page',
     singular: 'About Page',
     path: 'about',

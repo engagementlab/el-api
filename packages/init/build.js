@@ -35,37 +35,41 @@ const KeystoneApp = (config, callback) => {
 
     const keystone = new Keystone({
         name: config.package.name,
+        schemaNames: ['el-home', 'test'],
         adapter: new MongooseAdapter({
             mongoUri: dbAddress
         })
     });
 
     // Initialize all models (lists) for this app
-    // All models need access to KS Instance and cloudinary adapter
+    // All models n=eed access to KS Instance and cloudinary adapter
     config.models.forEach(model => {
         model(keystone, cloudinaryAdapter);
     });
 
     return {
         keystone,
-        apps: [new AdminUIApp({
-            apiPath: 'http://localhost:3000/cms/api',
-            graphiqlPath: '/api/graphiql'
-        })]
+        apps: [
+            new AdminUIApp({
+                apiPath: 'http://localhost:3000/api/?schema=test',
+                graphiqlPath: '/api/graphiql',
+                // TODO: cli arg
+                schemaName: 'test'
+            })
+        ]
     };
 };
 
-module.exports = function () {
-
+module.exports = (function () {
     // Pass our route importer util to package
-    const packageInit = require('../engagement-lab-home');
+    const packageInit = require('../test');
     const pkg = packageInit();
 
     // Export all models, routes, config for this app
     const bootConfig = {
         package: pkg.Config,
-        models: pkg.Models,
+        models: pkg.Models
     };
     const ex = KeystoneApp(bootConfig);
     return ex;
-}()
+})();

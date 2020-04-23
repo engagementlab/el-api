@@ -1793,6 +1793,11 @@
     serialize-error "^3.0.0"
     stack-utils "^1.0.2"
 
+"@keystonejs/app-schema-router@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@keystonejs/app-schema-router/-/app-schema-router-5.1.1.tgz#566a87b0bdbdc7a40b4f0a6b69d617cf3f7c331c"
+  integrity sha512-fEQTqTFcu798lJckgu0UKogHSKlrDdEOxUqirdrYncEdCPV5FWCC9s7E0Fz6DeVw4cqJ9o5c3j3UeAZQokLPiw==
+
 "@keystonejs/app-static@^5.1.1":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@keystonejs/app-static/-/app-static-5.1.2.tgz#b757605dc5b45da8c23cc335060b96229809b927"

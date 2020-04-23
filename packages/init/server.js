@@ -98,13 +98,6 @@ const start = async (productionMode, appName) => {
 
     // Pass our route importer util to package
     const packageInit = require(packagePath);
-
-    console.log('\n');
-    console.log('packagePath: ', packagePath);
-    console.log('typeOf packageInit: ', typeof packageInit);
-    console.log('packageInit: ', packageInit);
-    console.log('\n');
-
     const pkg = await packageInit(ServerUtils.routeImporter);
 
     // Export all models, routes, config for this app
