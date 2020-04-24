@@ -12,7 +12,7 @@ const {
   CloudinaryImage
 } = require('@keystonejs/fields');
 
-const Image = (keystone, cloudinary) => {
+const Image = (cloudinary) => {
   /**
    * Model Fields
    * @memberof Image
@@ -32,11 +32,16 @@ const Image = (keystone, cloudinary) => {
       adapter: cloudinary,
     },
   };
+  const options = {
 
-  keystone.createList('Image', {
+    label: 'Testy Img',
+    singular: 'Img',
+  }
+  return {
     fields,
+    options,
     adapterName: 'test',
-  });
+  };
 };
 
 /**

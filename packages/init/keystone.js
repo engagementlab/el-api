@@ -32,7 +32,7 @@ const KeystoneApp = (config, callback) => {
 
   const keystone = new Keystone({
     name: config.package.name,
-    schemaNames: ['el-home', 'test'],
+    schemaNames: ['home', 'test'],
     adapters: {
       home: new MongooseAdapter({
         mongoUri: dbAddress
@@ -44,19 +44,50 @@ const KeystoneApp = (config, callback) => {
     defaultAdapter: 'home'
   });
 
+  // Create an object of all models loaded and check for duplicate names/keys,
+  // as this can cause issues in keystone's list adapter global,
+  // and leads to CRUD operations for one model to occur in model instantiated
+  // following another
+  const allModels = {}
+
   // Initialize all models (lists) for this app
   // All models need access to KS Instance and cloudinary adapter
-  config.models.forEach(model => {
-    model(keystone, cloudinaryAdapter);
-  });
   const testModels = require('../test/models')();
-  testModels.forEach(model => {
-    model(keystone, cloudinaryAdapter);
+  const modelsMerged = [].concat(config.models, testModels);
+
+  modelsMerged.forEach(model => {
+
+    let thisKey = model.name;
+    // Check if model key already present
+    // console.log('thisKey', thisKey, Object.keys(allModels))
+    if (Object.keys(allModels).indexOf(thisKey) > -1)
+      thisKey = `${model().adapterName}__${thisKey}`
+
+    allModels[thisKey] = model;
+
   });
+
+  Object.keys(allModels).forEach(modelName => {
+    const list = allModels[modelName](cloudinaryAdapter);
+    // TODO: not hard-code
+    if (list.adapterName === 'home')
+      keystone.createList(modelName, {
+        fields: list.fields,
+        ...list.options,
+        adapterName: list.adapterName
+      });
+  });
+
   const apiPath = '/api';
   keystone
     .prepare({
       apps: [
+        new AdminUIApp({
+          adminPath: '/cms',
+          apiPath: '/api/?schema=test',
+          graphiqlPath: '/api/graphiql',
+          schemaName: 'home'
+        }),
         new SchemaRouterApp({
           apiPath,
           routerFn: (req) => {
@@ -65,7 +96,7 @@ const KeystoneApp = (config, callback) => {
           apps: {
             'el-home': new GraphQLApp({
               apiPath,
-              schemaName: 'el-home'
+              schemaName: 'home'
             }),
             test: new GraphQLApp({
               apiPath,

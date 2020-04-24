@@ -88,7 +88,6 @@ const About = (keystone, cloudinary) => {
    * See: https://www.keystonejs.com/api/create-list
    */
   const options = {
-    adapterName: 'home',
     label: 'About Page',
     singular: 'About Page',
     path: 'about',
@@ -100,10 +99,15 @@ const About = (keystone, cloudinary) => {
       delete: false,
     },
   };
-  keystone.createList('About', {
+  // keystone.createList('About', {
+  //   fields,
+  //   ...options
+  // });
+  return {
     fields,
-    ...options
-  });
+    options,
+    adapterName: 'home',
+  };
 };
 
 /**
