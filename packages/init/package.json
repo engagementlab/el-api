@@ -10,6 +10,7 @@
   "version": "0.0.3-alpha.0",
   "private": false,
   "scripts": {
+    "build": "keystone build",
     "clean": "kill -9 $(lsof -t -i:3000)",
     "start": "nodemon app.js",
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
