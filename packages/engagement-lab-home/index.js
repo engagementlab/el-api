@@ -15,7 +15,7 @@ const fs = require('fs');
 const routes = require('./routes');
 const models = require('./models')();
 
-module.exports = (routesImporter) => new Promise(async resolve => {
+module.exports = (routesImporter) => new Promise((resolve) => {
   const dataFile = fs.readFileSync(`${__dirname}/config.json`);
   const configData = JSON.parse(dataFile);
 
@@ -24,19 +24,22 @@ module.exports = (routesImporter) => new Promise(async resolve => {
       'mongodb://localhost' :
       `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
 
-  const client = await MongoClient.connect(dbAddress, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-  const db = client.db(configData.database)
+  MongoClient
+    .connect(dbAddress, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
+    .then((client) => {
+      const db = client.db(configData.database)
 
-  const appRoutes = routes(routesImporter, db);
-  global.logger.info('🚀 Homepage API ready.');
+      const appRoutes = routes(routesImporter, db);
+      global.logger.info('🚀 Homepage API ready.');
 
-  // TODO: give all routes a namespace prefix, e.g. 'homepage/'
-  resolve({
-    Routes: appRoutes,
-    Models: models,
-    Config: configData
-  });
+      // TODO: give all routes a namespace prefix, e.g. 'homepage/'
+      resolve({
+        Routes: appRoutes,
+        Models: models,
+        Config: configData
+      });
+    })
 });

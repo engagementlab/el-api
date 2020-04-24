@@ -71,7 +71,7 @@ const boot = config => {
     });
 };
 
-const start = async (productionMode, appName) => {
+const start = (productionMode, appName) => {
     // If server defined, close current one
     if (server) server.close();
 
@@ -103,22 +103,36 @@ const start = async (productionMode, appName) => {
     console.log('packagePath: ', packagePath);
     console.log('typeOf packageInit: ', typeof packageInit);
     console.log('packageInit: ', packageInit);
+    console.log('packageInit.Config: ', packageInit.Config);
+    console.log('packageInit.Models: ', packageInit.Models);
+    console.log('packageInit.Routes: ', packageInit.Routes);
     console.log('\n');
 
-    const pkg = await packageInit(ServerUtils.routeImporter);
-
-    // Export all models, routes, config for this app
     const bootConfig = {
         app,
-        package: pkg.Config,
-        models: pkg.Models,
-        routes: pkg.Routes,
+        package: packageInit.Config,
+        models: packageInit.Models,
+        routes: packageInit.Routes,
         path: packagePath,
-        production: productionMode
+        production: productionMode,
     };
 
     boot(bootConfig);
 
+    // packageInit(ServerUtils.routeImporter)
+    //     .then((pkg) => {
+    //         // Export all models, routes, config for this app
+    //         const bootConfig = {
+    //             app,
+    //             package: pkg.Config,
+    //             models: pkg.Models,
+    //             routes: pkg.Routes,
+    //             path: packagePath,
+    //             production: productionMode
+    //         };
+
+    //         boot(bootConfig);
+    //     });
 };
 
 const init = callback => {
