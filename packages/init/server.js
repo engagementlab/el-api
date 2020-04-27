@@ -25,7 +25,6 @@ if (process.env.NODE_ENV !== 'ci') {
 
 const path = require('path');
 
-const appsJson = path.join(__dirname, 'apps.json');
 
 const fs = require('fs');
 const express = require('express');
@@ -34,6 +33,8 @@ const WebSocket = require('ws');
 
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
+
+const appsJson = path.join(__dirname, 'apps.json');
 
 // Create logger 
 require('./logger');
