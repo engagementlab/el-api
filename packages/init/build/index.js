@@ -9,8 +9,7 @@
 
 const fs = require('fs');
 const path = require('path');
-// const generator = require('./generator')
-const { spawn, exec } = require('child_process');
+const { spawn } = require('child_process');
 
 const appsJson = path.join(__dirname, '../apps.json');
 
@@ -27,8 +26,6 @@ module.exports = (async () => {
   const packages = JSON.parse(appConfigs);
 
   // Call CMS distributable static generator for the current package
-  // exec('keystone build  --entry=generator.js --out=./dist/home');
-  console.log(__dirname);
   const child = spawn('npm', [
     'run',
     'build',
@@ -38,11 +35,11 @@ module.exports = (async () => {
     `--app=${packages[0]}`,
     `--allApps=${packages}`
   ]);
-  // const child = spawn('npm run build')
 
+  // TODO: Cleanup
   let data = '';
   for await (const chunk of child.stdout) {
-    console.log(`stdout chunk: ${chunk}`);
+    console.log(`> ${chunk}`);
     data += chunk;
   }
   let error = '';

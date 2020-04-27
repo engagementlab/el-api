@@ -91,10 +91,10 @@ const KeystoneApp = (config, callback) => {
         new SchemaRouterApp({
           apiPath,
           routerFn: (req) => {
-            return (req.query && req.query.schema) ? req.query.schema : 'el-home';
+            return (req.query && req.query.schema) ? req.query.schema : 'home';
           },
           apps: {
-            'el-home': new GraphQLApp({
+            home: new GraphQLApp({
               apiPath,
               schemaName: 'home'
             }),

@@ -24,6 +24,7 @@ module.exports = routesImporter => {
     'mongodb://localhost' :
     `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
 
+  console.log('mods', models)
   return {
     // Routes: appRoutes,
     Models: models,
