@@ -1,7 +1,10 @@
 {
   "name": "@engagementlab/api-init",
   "description": "Content API for Engagement Lab web apps.",
-  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
+  "author": "Johnny Richardson <johnny@elab.emerson.edu> (https://github.com/johnnycrich)",
+  "contributors": [
+    "Ralph Drake <ralph@ralphdrake.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/engagementlab/el-api/issues"
@@ -16,10 +19,11 @@
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
   },
   "dependencies": {
-    "@engagementlab/homepage": "^2.4.1-alpha.0",
+    "@engagementlab/homepage": "^2.4.2-alpha.1",
+    "@engagementlab/test": "^2.4.1-alpha.0",
     "@keystonejs/app-admin-ui": "^5.9.3",
-    "@keystonejs/app-static": "^5.1.1",
     "@keystonejs/app-schema-router": "^5.1.1",
+    "@keystonejs/app-static": "^5.1.1",
     "@keystonejs/build-field-types": "^5.2.4",
     "@keystonejs/file-adapters": "^6.0.0",
     "@keystonejs/keystone": "^7.0.0",
@@ -35,7 +39,8 @@
     "pug": "^2.0.4",
     "validator": "^12.2.0",
     "winston": "^3.2.1",
-    "ws": "^7.2.3"
+    "ws": "^7.2.3",
+    "yargs": "^15.3.1"
   },
   "main": "app.js",
   "directories": {
