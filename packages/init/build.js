@@ -11,6 +11,11 @@ const {
     CloudinaryAdapter
 } = require('@keystonejs/file-adapters');
 
+
+// Create logger 
+require('./logger');
+
+// Load env
 require('dotenv').config({
     path: `${__dirname}/.env`
 });
@@ -77,6 +82,7 @@ const KeystoneApp = (config) => {
                 adapterName: list.adapterName
             });
     });
+    global.logger.info('🍺 Starting CMS build.')
 
     return {
         keystone,

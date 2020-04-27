@@ -29,12 +29,14 @@ const appsJson = path.join(__dirname, 'apps.json');
 
 const fs = require('fs');
 const express = require('express');
-const winston = require('winston');
 const colors = require('colors');
 const WebSocket = require('ws');
 
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
+
+// Create logger 
+require('./logger');
 
 let app;
 let packages;
@@ -115,6 +117,7 @@ const start = async (productionMode, appName) => {
 };
 
 const init = callback => {
+
     if (callback) startCallback = callback;
 
     const productionMode =
@@ -149,31 +152,6 @@ const init = callback => {
      */
     const appConfigs = fs.readFileSync(appsJson);
     packages = JSON.parse(appConfigs);
-
-    const logFormat = winston.format.combine(
-        winston.format.colorize(),
-        winston.format.timestamp(),
-        winston.format.align(),
-        winston.format.printf(info => {
-            const {
-                timestamp,
-                level,
-                message,
-                ...args
-            } = info;
-
-            const ts = timestamp.slice(0, 19).replace('T', ' ');
-            return `${ts} [${level}]: ${message} ${
-                Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
-                }`;
-        })
-    );
-
-    global.logger = winston.createLogger({
-        level: 'info',
-        format: logFormat,
-        transports: [new winston.transports.Console()]
-    });
     global.elasti = undefined;
 
     start(productionMode);

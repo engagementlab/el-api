@@ -20,6 +20,7 @@ const models = require('./models')();
  * @module 
  * @param {function} routesImporter - The instance of initialization module's routes importer.
  * @param {boolean} configOnly - Skip API routes instantiation and return only data models and package config.
+ * @returns {object} Package's routes, models, config.
  */
 module.exports = (routesImporter, configOnly) => {
   const dataFile = fs.readFileSync(`${__dirname}/config.json`);
@@ -33,7 +34,7 @@ module.exports = (routesImporter, configOnly) => {
   // Just return config data and data models
   if (configOnly) {
 
-    console.log('🚀 Homepage config loaded.');
+    global.logger.info('🏛️ Homepage config loaded.');
     return packageConfig;
 
   }
