@@ -1,6 +1,7 @@
 {
     "name": "Engagement Lab Home",
     "database": "engagement-lab",
+    "schema": "home",
     "admin_nav": {
         "projects/publications": ["projects", "publications"],
         "programs": ["initiatives", "Masters"],
