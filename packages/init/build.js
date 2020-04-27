@@ -1,14 +1,9 @@
-// SUPER EXPERIMENTAL
-
 const {
     Keystone
 } = require('@keystonejs/keystone');
 const {
     MongooseAdapter
 } = require('@keystonejs/adapter-mongoose');
-const {
-    GraphQLApp
-} = require('@keystonejs/app-graphql');
 const {
     AdminUIApp
 } = require('@keystonejs/app-admin-ui');
@@ -27,7 +22,7 @@ const cloudinaryAdapter = new CloudinaryAdapter({
     folder: process.env.CLOUDINARY_DIR
 });
 
-const KeystoneApp = (config, callback) => {
+const KeystoneApp = (config) => {
     const dbAddress =
         process.env.NODE_ENV === 'development' ?
         `mongodb://localhost/${config.package.database}` :
@@ -96,10 +91,10 @@ const KeystoneApp = (config, callback) => {
     };
 };
 
-module.exports = (function () {
+module.exports = (() => {
     // Pass our route importer util to package
-    const packageInit = require('../engagement-lab-home/index.build');
-    const pkg = packageInit();
+    const packageInit = require('../engagement-lab-home');
+    const pkg = packageInit(null, true);
 
     // Export all models, routes, config for this app
     const bootConfig = {
