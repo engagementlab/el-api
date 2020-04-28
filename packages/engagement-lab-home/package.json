@@ -1,11 +1,11 @@
 {
-  "name": "@engagementlab/homepage",
+  "name": "@engagementlab/home",
   "author": "Johnny Richardson <johnny@elab.emerson.edu> (https://github.com/johnnycrich)",
   "contributors": [
     "Ralph Drake <ralph@ralphdrake.com>"
   ],
   "description": "Engagement Lab home CMS models/lists and content API routes.",
-  "version": "2.4.2-alpha.1",
+  "version": "2.4.3-alpha.1",
   "main": "index.js",
   "scripts": {
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
