@@ -78,7 +78,7 @@ const start = async (productionMode, appName) => {
     // If server defined, close current one
     if (server) server.close();
 
-    const currentApp = !appName ? 'homepage' : appName;
+    const currentApp = !appName ? 'home' : appName;
 
     app = express();
     app.use(express.json());
