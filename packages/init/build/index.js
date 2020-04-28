@@ -9,7 +9,14 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const {
+    spawn
+} = require('child_process');
+
+const colors = require('colors');
+
+// Create logger
+require('../logger');
 
 const appsJson = path.join(__dirname, '../apps.json');
 
@@ -18,37 +25,43 @@ const appsJson = path.join(__dirname, '../apps.json');
  * @module
  * @param {function}
  */
-module.exports = (async () => {
-  /**
-   *  Load all possible apps from sibling packages (config defined in app.json)
-   */
-  const appConfigs = fs.readFileSync(appsJson);
-  const packages = JSON.parse(appConfigs);
+module.exports = (() => {
 
-  // Call CMS distributable static generator for the current package
-  const child = spawn('npm', [
-    'run',
-    'build',
-    '--',
-    `--entry=${__dirname}/generator.js`,
-    '--out=./dist/home',
-    `--app=${packages[0]}`,
-    `--allApps=${packages}`
-  ]);
+    // Load all possible apps from sibling packages (config defined in app.json)
+    const appConfigs = fs.readFileSync(appsJson);
+    const packages = JSON.parse(appConfigs);
 
-  // TODO: Cleanup
-  let data = '';
-  for await (const chunk of child.stdout) {
-    console.log(`> ${chunk}`);
-    data += chunk;
-  }
-  let error = '';
-  for await (const chunk of child.stderr) {
-    console.error(`stderr chunk: ${chunk}`);
-    error += chunk;
-  }
-  const exitCode = await new Promise((resolve, reject) => {
-    console.log('done');
-    child.on('close', resolve);
-  });
+    // For all packages...
+    packages.forEach(async pkg => {
+
+        try {
+            // Call CMS distributable static generator for the current package
+            const child = spawn('npm', [
+                'run',
+                'build',
+                '--',
+                `--entry=${__dirname}/generator.js`,
+                `--out=./../../bin/${pkg}`,
+                `--app=${pkg}`,
+                `--allApps=${packages}`
+            ]);
+
+            child.stdout.on('data', (chunk) => {
+                global.logger.info(chunk);
+            });
+
+            child.stdout.on('err', (chunk) => {
+                global.logger.error(chunk);
+            });
+
+            child.stdout.on('close', () => {
+                global.logger.info(`🍺 CMS bundle exported for ${colors.yellow(pkg)}.`);
+
+            });
+
+        } catch (err) {
+            global.logger.error(err);
+        }
+    });
+
 })();
