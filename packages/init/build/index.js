@@ -12,6 +12,9 @@ const path = require('path');
 const {
     spawn
 } = require('child_process');
+const {
+    argv
+} = require('yargs');
 
 const colors = require('colors');
 
@@ -21,11 +24,45 @@ require('../logger');
 const appsJson = path.join(__dirname, '../apps.json');
 
 /**
+ * Get config data for all sibling app packages, or for one if name specified.
+ * @function
+ * @param {boolean} list - Just list app packages
+ * @param {string} pkgName - Name of app for package info to load
+ */
+const getPackagesData = (list, pkgName) => {
+
+    const pkgsPath = path.join(__dirname, '../../../packages');
+    fs.readdir(pkgsPath, (err, dirs) => {
+
+        let names = '';
+        dirs.filter((name) =>
+            name !== 'init').forEach(name => {
+            if (fs.statSync(path.join(pkgsPath, name)).isDirectory())
+                names += `\n ${name}`;
+        });
+
+        if (list)
+            global.logger.info(names);
+
+    });
+};
+
+/**
  *
  * @module
  * @param {function}
  */
 module.exports = (() => {
+
+    /* 
+     Handle app arguments
+     */
+    // List all package names in repo
+    if (argv.list) {
+        getPackagesData(true);
+        return
+    }
+
 
     // Load all possible apps from sibling packages (config defined in app.json)
     const appConfigs = fs.readFileSync(appsJson);

@@ -34,7 +34,7 @@ module.exports = (routesImporter, configOnly) => {
   // Just return config data and data models
   if (configOnly) {
 
-    global.logger.info('🏛️ Homepage config loaded.');
+    global.logger.simple.info('🏛️ Homepage config loaded.');
     return packageConfig;
 
   }
