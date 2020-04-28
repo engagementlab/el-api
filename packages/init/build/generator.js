@@ -11,8 +11,7 @@ const {
     CloudinaryAdapter
 } = require('@keystonejs/file-adapters');
 
-// Create logger
-require('../logger');
+const colors = require('colors');
 
 // Load env
 require('dotenv').config({
@@ -38,14 +37,19 @@ const cloudinaryAdapter = new CloudinaryAdapter({
     folder: process.env.CLOUDINARY_DIR
 });
 
+// Load logger
+require('../logger');
+
+
 const CmsBuild = (currentApp, allApps) => {
     // Array to hold all model references
     const modelsMerged = [];
     let currentAppConfig = {};
     const schemaAdapters = {};
 
+    global.logger.simple.info(`Starting build for ${colors.yellow(currentApp)}.`);
+
     allApps.forEach(appName => {
-        global.logger.info(`Import config for _${appName}_`);
 
         const packagePath = `@engagementlab/${appName}`;
         const packageInit = require(packagePath);
@@ -101,7 +105,6 @@ const CmsBuild = (currentApp, allApps) => {
 
         // Initalize for schema being output to CMS only
         if (list.adapterName === currentAppConfig.package.schema) {
-            console.log('export', list.adapterName, modelName);
             keystone.createList(modelName, {
                 fields: list.fields,
                 ...list.options,
@@ -109,9 +112,7 @@ const CmsBuild = (currentApp, allApps) => {
             });
         }
     });
-    global.logger.info(
-        `🍺 Starting CMS build for ${currentAppConfig.package.name}`
-    );
+    global.logger.simple.info(`📣 Starting CMS build for ${colors.yellow(currentAppConfig.package.name)}.`);
 
     return {
         keystone,
@@ -126,9 +127,11 @@ const CmsBuild = (currentApp, allApps) => {
 };
 
 module.exports = (() => {
+
     const {
         argv
     } = require('yargs');
     const build = CmsBuild(argv.app, argv.allApps.split(','));
     return build;
+
 })();
