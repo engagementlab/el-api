@@ -40,8 +40,8 @@ const cloudinaryAdapter = new CloudinaryAdapter({
 // Load logger
 require('../logger');
 
-
 const CmsBuild = (currentApp, allApps) => {
+
     // Array to hold all model references
     const modelsMerged = [];
     let currentAppConfig = {};
@@ -50,38 +50,41 @@ const CmsBuild = (currentApp, allApps) => {
     global.logger.simple.info(`Starting build for ${colors.yellow(currentApp)}.`);
 
     allApps.forEach(appName => {
+        try {
+            const packagePath = `@engagementlab/${appName}`;
+            const packageInit = require(packagePath);
+            // Load all data for API of currently used package
+            const appPackage = packageInit(null, true);
 
-        const packagePath = `@engagementlab/${appName}`;
-        const packageInit = require(packagePath);
-        // Load all data for API of currently used package
-        const appPackage = packageInit(null, true);
+            // Export models, config for this app
+            const config = {
+                package: appPackage.Config,
+                models: appPackage.Models
+            };
 
-        // Export models, config for this app
-        const config = {
-            package: appPackage.Config,
-            models: appPackage.Models
-        };
+            // TODO: APPLY adapterName to all models
 
-        // TODO: APPLY adapterName to all models
+            // If this is app being exported to CMS, cache
+            if (appName === currentApp) currentAppConfig = config;
 
-        // If this is app being exported to CMS, cache
-        if (appName === currentApp) currentAppConfig = config;
+            const schemaName = config.package.schema || 'test';
+            const dbAddress =
+                process.env.NODE_ENV === 'development' ?
+                `mongodb://localhost/${config.package.database}` :
+                `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
 
-        const schemaName = config.package.schema || 'test';
-        const dbAddress =
-            process.env.NODE_ENV === 'development' ?
-            `mongodb://localhost/${config.package.database}` :
-            `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
+            // Add to array of all
+            config.models.forEach(model => {
+                modelsMerged.push(model);
+            });
 
-        // Add to array of all
-        config.models.forEach(model => {
-            modelsMerged.push(model);
-        });
-
-        // Assign mongoose adapter for app
-        schemaAdapters[schemaName] = new MongooseAdapter({
-            mongoUri: dbAddress
-        });
+            // Assign mongoose adapter for app
+            schemaAdapters[schemaName] = new MongooseAdapter({
+                mongoUri: dbAddress
+            });
+        } catch (e) {
+            throw new Error(e);
+        }
     });
 
     const keystone = new Keystone({
@@ -112,7 +115,9 @@ const CmsBuild = (currentApp, allApps) => {
             });
         }
     });
-    global.logger.simple.info(`📣 Starting CMS build for ${colors.yellow(currentAppConfig.package.name)}.`);
+    global.logger.simple.info(
+        `📣 Starting CMS build for ${colors.yellow(currentAppConfig.package.name)}.`
+    );
 
     return {
         keystone,
@@ -127,11 +132,9 @@ const CmsBuild = (currentApp, allApps) => {
 };
 
 module.exports = (() => {
-
     const {
         argv
     } = require('yargs');
     const build = CmsBuild(argv.app, argv.allApps.split(','));
     return build;
-
 })();
