@@ -41,4 +41,14 @@ module.exports = (() => {
         format: logFormat,
         transports: [new winston.transports.Console()]
     });
+    global.logger.simple = winston.createLogger({
+        level: 'info',
+        format: winston.format.printf(info => {
+            const {
+                message,
+            } = info;
+            return message;
+        }),
+        transports: [new winston.transports.Console()]
+    });
 })();
