@@ -19,7 +19,7 @@
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
   },
   "dependencies": {
-    "@engagementlab/homepage": "^2.4.2-alpha.1",
+    "@engagementlab/home": "^2.4.3-alpha.1",
     "@engagementlab/test": "^2.4.1-alpha.0",
     "@keystonejs/app-admin-ui": "^5.9.3",
     "@keystonejs/app-schema-router": "^5.1.1",
