@@ -57,7 +57,7 @@ const ServerUtils = {
 
       const imported = {};
       const joinPath = () => {
-        return `${  relDirname  }${path.sep}${path.join(...arguments)}`
+        return `${  relDirname  }${path.sep}${path.join(...arguments)}`;
       };
 
       const fsPath = joinPath(from);

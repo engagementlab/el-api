@@ -35,8 +35,8 @@ const BuildData = async (req, res) => {
       .sort({
         'sortOrder': 'ascending'
       });
-    console.log(aboutData)
-    const data = aboutData
+    console.log(aboutData);
+    const data = aboutData;
 
     /*     const query = await db.executeQuery(`
           query {
