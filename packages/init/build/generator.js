@@ -63,21 +63,26 @@ const CmsBuild = (currentApp, allApps) => {
                 package: appPackage.Config,
                 models: appPackage.Models
             };
-
-            // TODO: APPLY adapterName to all models
-
             // If this is app being exported to CMS, cache
             if (appName === currentApp) currentAppConfig = config;
 
             const schemaName = config.package.schema || 'test';
+
             const dbAddress =
                 process.env.NODE_ENV === 'development' ?
                 `mongodb://localhost/${config.package.database}` :
                 `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
 
-            // Add to array of all
-            config.models.forEach(model => {
-                modelsMerged.push(model);
+            // Add instantiated model to array of all
+            config.models.forEach(modelFunc => {
+                // All models need access to cloudinary adapter
+                const modelObj = modelFunc(cloudinaryAdapter);
+                // Apply adapterName to all models based on respective schemaName
+                modelObj.adapterName = schemaName;
+                // Apply 'name' of model from it's function's name, for later key creation
+                modelObj.name = modelFunc.name;
+
+                modelsMerged.push(modelObj);
             });
 
             // Assign mongoose adapter for app
@@ -99,14 +104,15 @@ const CmsBuild = (currentApp, allApps) => {
     modelsMerged.forEach(model => {
         let thisKey = model.name;
         // Check if model key already present in global CMS lists
-        if (Object.keys(allLists).indexOf(thisKey) > -1)
-            thisKey = `${model().adapterName}__${thisKey}`;
+        if (Object.keys(allLists).indexOf(thisKey) > -1) {
+            // If present, mutate key w/ adaptername prefix
+            thisKey = `${model.adapterName}__${thisKey}`;
+        }
         allLists[thisKey] = model;
     });
 
     Object.keys(allLists).forEach(modelName => {
-        // All models need access to KS Instance and cloudinary adapter
-        const list = allLists[modelName](cloudinaryAdapter);
+        const list = allLists[modelName];
 
         // Initalize for schema being output to CMS only
         if (list.adapterName === currentAppConfig.package.schema) {

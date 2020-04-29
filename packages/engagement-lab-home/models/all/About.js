@@ -13,7 +13,7 @@ const {
   Relationship
 } = require('@keystonejs/fields');
 
-const About = (keystone, cloudinary) => {
+const About = (cloudinary) => {
   /**
    * Model Fields
    * @memberof About
@@ -99,14 +99,9 @@ const About = (keystone, cloudinary) => {
       delete: false,
     },
   };
-  // keystone.createList('About', {
-  //   fields,
-  //   ...options
-  // });
   return {
     fields,
     options,
-    adapterName: 'home',
   };
 };
 

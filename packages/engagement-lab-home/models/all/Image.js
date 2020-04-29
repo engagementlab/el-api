@@ -12,7 +12,7 @@ const {
   CloudinaryImage
 } = require('@keystonejs/fields');
 
-const Image = (cloudinary, nameOverride) => {
+const Image = (cloudinary) => {
   /**
    * Model Fields
    * @memberof Image
@@ -34,7 +34,6 @@ const Image = (cloudinary, nameOverride) => {
   };
   return {
     fields,
-    adapterName: 'home',
   };
 };
 

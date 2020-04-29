@@ -38,7 +38,6 @@ const Image = (cloudinary) => {
   return {
     fields,
     options,
-    adapterName: 'test',
   };
 };
 
