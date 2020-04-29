@@ -51,7 +51,9 @@ const CmsBuild = (currentApp, allApps) => {
 
     allApps.forEach(appName => {
         try {
-            const packagePath = `@engagementlab/${appName}`;
+            let packagePath = `@engagementlab/${appName}`;
+            if (process.env.NODE_ENV === 'development')
+                packagePath = `../../packages/${appName}`;
             const packageInit = require(packagePath);
             // Load all data for API of currently used package
             const appPackage = packageInit(null, true);
@@ -124,7 +126,7 @@ const CmsBuild = (currentApp, allApps) => {
         apps: [
             new AdminUIApp({
                 apiPath: `http://localhost:3000/api/?schema=${currentAppConfig.package.schema}`,
-                graphiqlPath: '/api/graphiql',
+                graphiqlPath: '/graphiql',
                 schemaName: currentAppConfig.package.schema
             })
         ]
