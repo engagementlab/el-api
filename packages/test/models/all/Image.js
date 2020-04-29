@@ -33,10 +33,8 @@ const Image = (cloudinary) => {
     },
   };
   const options = {
-
-    label: 'Testy Img',
-    singular: 'Img',
-  }
+    label: 'blahblah'
+  };
   return {
     fields,
     options,
