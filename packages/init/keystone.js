@@ -37,6 +37,7 @@ const cloudinaryAdapter = new CloudinaryAdapter({
   apiSecret: process.env.CLOUDINARY_SECRET,
   folder: process.env.CLOUDINARY_DIR
 });
+const apiPath = '/api';
 
 const KeystoneApp = (ksConfig, callback) => {
 
@@ -46,6 +47,8 @@ const KeystoneApp = (ksConfig, callback) => {
   const modelsMerged = [];
   // All schemas
   const schemaAdapters = {};
+  // All schema (graphql) apps
+  const schemaApps = {};
 
   // For all packages...
   const keys = Object.keys(packages);
@@ -84,6 +87,12 @@ const KeystoneApp = (ksConfig, callback) => {
     schemaAdapters[schemaName] = new MongooseAdapter({
       mongoUri: dbAddress
     });
+
+    // Assign schema app
+    schemaApps[schemaName] = new GraphQLApp({
+      apiPath,
+      schemaName
+    });
   });
 
   const keystone = new Keystone({
@@ -121,9 +130,18 @@ const KeystoneApp = (ksConfig, callback) => {
     });
   });
 
-  const apiPath = '/api';
-  const ksApps = [];
+  const ksApps = [
+    new SchemaRouterApp({
+      apiPath,
+      // Direct each front-end req to respective schema
+      routerFn: (req) => {
+        return (req.query && req.query.schema) ? req.query.schema : 'home';
+      },
+      apps: schemaApps
+    }),
+  ];
 
+  // Include admin UI if on dev instance
   if (process.env.NODE_ENV === 'development')
     ksApps.push(
       new AdminUIApp({
@@ -134,24 +152,6 @@ const KeystoneApp = (ksConfig, callback) => {
       })
     );
 
-  ksApps.push(
-    new SchemaRouterApp({
-      apiPath,
-      routerFn: (req) => {
-        return (req.query && req.query.schema) ? req.query.schema : 'home';
-      },
-      apps: {
-        home: new GraphQLApp({
-          apiPath,
-          schemaName: 'home'
-        }),
-        test: new GraphQLApp({
-          apiPath,
-          schemaName: 'test'
-        })
-      },
-    }),
-  );
   keystone
     .prepare({
       apps: ksApps,
