@@ -146,7 +146,7 @@ const KeystoneApp = (ksConfig, callback) => {
     ksApps.push(
       new AdminUIApp({
         adminPath: '/cms',
-        apiPath: '/api/?schema=test',
+        apiPath: '/cms/api/?schema=test',
         graphiqlPath: '/api/graphiql',
         schemaName: 'test'
       })
