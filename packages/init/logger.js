@@ -51,4 +51,19 @@ module.exports = (() => {
         }),
         transports: [new winston.transports.Console()]
     });
+    global.logger.file = winston.createLogger({
+        level: 'error',
+        format: winston.format.printf(info => {
+            const {
+                message,
+            } = info;
+            return message;
+        }),
+        transports: [new winston.transports.File({
+            handleExceptions: true,
+            level: 'error',
+            filename: `${__dirname}/error.log`
+        })]
+    });
+
 })();
