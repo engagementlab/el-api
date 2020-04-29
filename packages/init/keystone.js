@@ -69,13 +69,13 @@ const KeystoneApp = (config, callback) => {
 
   Object.keys(allModels).forEach(modelName => {
     const list = allModels[modelName](cloudinaryAdapter);
-    // TODO: not hard-code
-    if (list.adapterName === 'home')
-      keystone.createList(modelName, {
-        fields: list.fields,
-        ...list.options,
-        adapterName: list.adapterName
-      });
+    // TODO: not hard-code and enable only on dev
+    // if (list.adapterName === 'test')
+    keystone.createList(modelName, {
+      fields: list.fields,
+      ...list.options,
+      adapterName: list.adapterName
+    });
   });
 
   const apiPath = '/api';
@@ -86,7 +86,7 @@ const KeystoneApp = (config, callback) => {
           adminPath: '/cms',
           apiPath: '/api/?schema=test',
           graphiqlPath: '/api/graphiql',
-          schemaName: 'home'
+          schemaName: 'test'
         }),
         new SchemaRouterApp({
           apiPath,
