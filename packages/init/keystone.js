@@ -142,15 +142,15 @@ const KeystoneApp = (ksConfig, callback) => {
   ];
 
   // Include admin UI if on dev instance
-  if (process.env.NODE_ENV === 'development')
-    ksApps.push(
-      new AdminUIApp({
-        adminPath: '/cms',
-        apiPath: '/cms/api/?schema=test',
-        graphiqlPath: '/api/graphiql',
-        schemaName: 'test'
-      })
-    );
+  // if (process.env.NODE_ENV === 'development')
+  //   ksApps.push(
+  //     new AdminUIApp({
+  //       adminPath: '/cms',
+  //       apiPath: '/cms/api/?schema=test',
+  //       graphiqlPath: '/api/graphiql',
+  //       schemaName: 'test'
+  //     })
+  //   );
 
   keystone
     .prepare({

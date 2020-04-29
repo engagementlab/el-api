@@ -24,9 +24,8 @@ if (process.env.NODE_ENV !== 'ci') {
 }
 
 const path = require('path');
-
-
 const fs = require('fs');
+
 const express = require('express');
 const colors = require('colors');
 const WebSocket = require('ws');
@@ -55,6 +54,24 @@ const boot = config => {
         const port = ServerUtils.normalizePort(process.env.PORT || '3000');
 
         /**
+         * Get all build directories for CMS builds
+         */
+        const binPath = path.join(__dirname, '../../bin');
+
+        // Get all builds
+        const cmsRouter = express.Router('');
+        const allDirs = fs.readdirSync(binPath, {
+                withFileTypes: true
+            })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+        // Create route in /cms router for all builds
+        allDirs.forEach(name => {
+            cmsRouter.get(name, (req, res) => {
+                res.sendfile(path.join(__dirname, '../../bin', name));
+            });
+        });
+        /**
          * Listen on provided port w/ both keystone instance and API routes
          */
         server = config.app.use([middleware, config.routes]).listen(port, () => {
@@ -65,7 +82,7 @@ const boot = config => {
                     } Mode).`
                 )
             );
-
+            config.app.use('/cms', cmsRouter);
             if (socket) socket.send('loaded');
 
             // Call class callback if defined (for tests)
