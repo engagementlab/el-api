@@ -38,8 +38,11 @@ const GetPackagesData = (list, pkgNames) => {
             const configData = JSON.parse(
                 fs.readFileSync(path.join(pkgsPath, name, 'config.json'))
             );
-            // Obj for usage in build gen
-            namesObj[configData.schema] = configData.name;
+            // Obj for usage in build gen and API mount
+            namesObj[configData.schema] = {
+                name: configData.name,
+                dir: name
+            };
             namesStr += `\n  🔸 ${colors.bold(configData.name)} (${colors.yellow(
         name
       )})`;
@@ -55,7 +58,7 @@ const GetPackagesData = (list, pkgNames) => {
     }
     global.logger.info(
         `\n\n🌮 ${colors.green.underline(
-        'Packages to export:'
+        'Packages loaded:'
       )} ${namesStr}`);
     return namesObj;
 
@@ -68,5 +71,5 @@ const GetPackagesData = (list, pkgNames) => {
 module.exports = () => {
     return {
         GetPackagesData
-    }
-}
+    };
+};
