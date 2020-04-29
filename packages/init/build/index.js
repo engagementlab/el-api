@@ -7,8 +7,6 @@
  * ==========
  */
 
-const fs = require('fs');
-const path = require('path');
 const {
     spawn
 } = require('child_process');
@@ -17,55 +15,10 @@ const {
 } = require('yargs');
 
 const colors = require('colors');
+const utils = require('./utils')();
 
 // Create logger
 require('../logger');
-
-const appsJson = path.join(__dirname, '../apps.json');
-
-/**
- * Get config data for all sibling app packages, or for one if name specified.
- * @function
- * @param {boolean} list - Just list app packages
- * @param {string} [pkgNames] - Names of apps for package info to return (comma-seperated)
- */
-const getPackagesData = (list, pkgNames) => {
-    const pkgsPath = path.join(__dirname, '../../../packages');
-    const dirs = fs.readdirSync(pkgsPath);
-    let namesStr = '';
-    const namesObj = {};
-    // Do not include 'init' package, and only package(s) specified if any
-    const dirsFiltered = dirs.filter(name => name !== 'init');
-    if (pkgNames) {
-        const pkgArr = pkgNames.split(',');
-        dirsFiltered.filter(name => pkgArr.indexOf(name) > -1);
-    }
-
-    dirsFiltered.forEach(name => {
-        if (fs.statSync(path.join(pkgsPath, name)).isDirectory()) {
-            // Get formal app name
-            const configData = JSON.parse(
-                fs.readFileSync(path.join(pkgsPath, name, 'config.json'))
-            );
-            // Obj for usage in build gen
-            namesObj[configData.schema] = configData.name;
-            namesStr += `\n  🔸 ${colors.bold(configData.name)} (${colors.yellow(
-        name
-      )})`;
-        }
-    });
-
-    if (list) {
-        global.logger.info(
-            `\n\n📦 ${colors.green.underline(
-        'Packages found for build:'
-      )} ${namesStr}`
-        );
-        return {};
-    }
-
-    return namesObj;
-};
 
 /**
  * Send either all of specified app packages to CMS front-end generator.
@@ -79,11 +32,11 @@ module.exports = (() => {
       */
     // List all package names in repo
     if (argv.list) {
-        getPackagesData(true);
+        utils.GetPackagesData(true);
         return;
     }
     // Retrieve info and build only packages specified, or all if not
-    packages = getPackagesData(false, argv.packages);
+    packages = utils.GetPackagesData(false, argv.packages);
 
     // For all packages...
     const keys = Object.keys(packages);

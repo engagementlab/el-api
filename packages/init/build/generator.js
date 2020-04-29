@@ -54,6 +54,7 @@ const CmsBuild = (currentApp, allApps) => {
             let packagePath = `@engagementlab/${appName}`;
             if (process.env.NODE_ENV === 'development')
                 packagePath = `../../packages/${appName}`;
+
             const packageInit = require(packagePath);
             // Load all data for API of currently used package
             const appPackage = packageInit(null, true);
