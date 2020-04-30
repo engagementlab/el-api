@@ -36,7 +36,7 @@ const buildsRouter = require('./build/router');
 
 const appsJson = path.join(__dirname, 'apps.json');
 
-// Create logger 
+// Create logger
 require('./logger');
 
 let app;
@@ -49,7 +49,6 @@ let wss;
 const boot = config => {
     // Initialize keystone instance
     keystone(config, middleware => {
-
         /**
          * Create router for all CMS builds from outputs dir if not on dev
          */
@@ -70,8 +69,8 @@ const boot = config => {
             global.logger.info(
                 colors.bgCyan.bold.black(
                     `Content API for "${config.package.name}" started (${
-                    config.production ? 'Production' : 'Development'
-                    } Mode).`
+            config.production ? 'Production' : 'Development'
+          } Mode).`
                 )
             );
 
@@ -99,11 +98,12 @@ const start = async (productionMode, appName) => {
     app.set('view engine', 'pug');
     app.set('views', `${__dirname}/views`);
 
-    app.get('/', (req, res) => {
-        res.render('index', {
-            packages
-        });
-    });
+    //   app.get('/', (req, res) => {
+    //     res.render('index', {
+    //       packages
+    //     });
+    //   });
+
 
     // Load all data for API of currently used package
     const packagePath = `@engagementlab/${currentApp}`;
@@ -123,11 +123,9 @@ const start = async (productionMode, appName) => {
     };
 
     boot(bootConfig);
-
 };
 
 const init = callback => {
-
     if (callback) startCallback = callback;
 
     const productionMode =
