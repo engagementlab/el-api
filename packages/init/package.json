@@ -33,6 +33,7 @@
     "elasticsearch": "^16.6.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "express": "~4.16.1",
+    "glob": "^7.1.6",
     "http-errors": "~1.6.3",
     "mongoose": "^5.9.3",
     "morgan": "~1.9.1",
