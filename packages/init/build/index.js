@@ -8,6 +8,7 @@
  */
 
 const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const {
     spawn
@@ -40,9 +41,6 @@ const postBuild = paths => {
             const bundleFile = glob.sync('main*.js', {
                 cwd: jsPath
             })[0];
-            const listFiles = glob.sync('*bundle.js', {
-                cwd: jsPath
-            });
 
             try {
                 // Delete index; it is served by views/cms template
@@ -52,7 +50,11 @@ const postBuild = paths => {
                     path.join(jsPath, bundleFile),
                     path.join(binPath, 'bundle.js')
                 );
-                // Move all bundles per CMS list under [root]/js
+                // Get all remaining packed bundles
+                const listFiles = glob.sync('*bundle.js', {
+                    cwd: jsPath
+                });
+                // Move all other bundles under [root]/js
                 fs.mkdirSync(path.join(binPath, 'js'));
                 listFiles.forEach(file => {
                     fs.renameSync(
@@ -60,12 +62,10 @@ const postBuild = paths => {
                         path.join(binPath, `js/${file}`)
                     );
                 });
-                // Delete dangling dir
-                fs.rmdir(path.join(binPath, 'admin/secure/js'), {}, (err) => {
-                    console.error(err);
-
-                });
+                // Delete dangling dir (via fs-extra)
+                fse.removeSync(path.join(binPath, 'admin'));
             } catch (e) {
+                global.logger.error(e);
                 throw new Error(e);
             }
         }
@@ -80,8 +80,8 @@ module.exports = (() => {
     let packages = [];
 
     /* 
-          Handle app arguments
-          */
+            Handle app arguments
+            */
     // List all package names in repo
     if (argv.list) {
         utils.GetPackagesData(true);
