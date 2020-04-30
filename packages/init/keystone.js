@@ -37,7 +37,7 @@ const cloudinaryAdapter = new CloudinaryAdapter({
   apiSecret: process.env.CLOUDINARY_SECRET,
   folder: process.env.CLOUDINARY_DIR
 });
-const apiPath = '/api';
+const apiPath = '/cms/api';
 
 const KeystoneApp = (ksConfig, callback) => {
 
