@@ -32,6 +32,7 @@ const WebSocket = require('ws');
 
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
+const buildsRouter = require('./build/router');
 
 const appsJson = path.join(__dirname, 'apps.json');
 
@@ -48,42 +49,17 @@ let wss;
 const boot = config => {
     // Initialize keystone instance
     keystone(config, middleware => {
+
+        /**
+         * Create router for all CMS builds from outputs dir
+         */
+        const cmsRouter = buildsRouter(path.join(__dirname, '../../bin'));
+        config.app.use('/cms', cmsRouter);
+
         /**
          * Get port from environment and store in Express.
          */
         const port = ServerUtils.normalizePort(process.env.PORT || '3000');
-
-        /**
-         * Get all build directories for CMS builds
-         */
-        const binPath = path.join(__dirname, '../../bin');
-
-        // Get all builds
-        const cmsRouter = express.Router();
-        const allDirs = fs.readdirSync(binPath, {
-                withFileTypes: true
-            })
-            .filter(dirent => dirent.isDirectory())
-            .map(dirent => dirent.name);
-        cmsRouter.use('/@', express.static(binPath));
-        // Create route in /cms router for all builds
-        allDirs.forEach(name => {
-            cmsRouter.get(`/${name}*`, (req, res) => {
-                // Send index for this CMS
-                res.render('cms', {
-                    schema: name
-                });
-            });
-
-            cmsRouter.get(`/@/${name}*`, (req, res) => {
-                res.render('cms', {
-                    schema: name
-                });
-            });
-
-
-        });
-        config.app.use('/cms', cmsRouter);
 
         /**
          * Listen on provided port w/ both keystone instance and API routes
