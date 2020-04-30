@@ -33,11 +33,9 @@ module.exports = (buildsDir) => {
 
     // Create route in router for all builds
     allDirs.forEach(name => {
-        router.get(`/${name}*`, (req, res) => {
+        router.get(`/${name}`, (req, res) => {
             // Send index for this CMS
-            res.render('cms', {
-                schema: name
-            });
+            res.redirect(`/cms/@/${name}`);
         });
 
         // We also need a route to render index for all intermediates as per react-dom-router

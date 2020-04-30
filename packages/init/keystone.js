@@ -45,6 +45,8 @@ const KeystoneApp = (ksConfig, callback) => {
   const packages = utils.GetPackagesData();
   // Array to hold all model references
   const modelsMerged = [];
+  // All admin UI apps
+  const adminApps = [];
   // All schemas
   const schemaAdapters = {};
   // All schema (graphql) apps
@@ -93,6 +95,14 @@ const KeystoneApp = (ksConfig, callback) => {
       apiPath,
       schemaName
     });
+
+    // Create admin UI app if on dev 
+    adminApps.push(
+      new AdminUIApp({
+        adminPath: `/cms/${schemaName}`,
+        apiPath: `/cms/api/?schema=${schemaName}`,
+        schemaName
+      }));
   });
 
   const keystone = new Keystone({
@@ -107,7 +117,6 @@ const KeystoneApp = (ksConfig, callback) => {
   // as this can cause issues in keystone's list adapter global,
   // and leads to CRUD operations for one model to occur in model instantiated
   // following another
-
 
   modelsMerged.forEach(model => {
     let thisKey = model.name;
@@ -142,15 +151,8 @@ const KeystoneApp = (ksConfig, callback) => {
   ];
 
   // Include admin UI if on dev instance
-  // if (process.env.NODE_ENV === 'development')
-  //   ksApps.push(
-  //     new AdminUIApp({
-  //       adminPath: '/cms',
-  //       apiPath: '/cms/api/?schema=test',
-  //       graphiqlPath: '/api/graphiql',
-  //       schemaName: 'test'
-  //     })
-  //   );
+  if (process.env.NODE_ENV === 'development')
+    Array.prototype.push.apply(ksApps, adminApps);
 
   keystone
     .prepare({

@@ -51,10 +51,12 @@ const boot = config => {
     keystone(config, middleware => {
 
         /**
-         * Create router for all CMS builds from outputs dir
+         * Create router for all CMS builds from outputs dir if not on dev
          */
-        const cmsRouter = buildsRouter(path.join(__dirname, '../../bin'));
-        config.app.use('/cms', cmsRouter);
+        if (process.env.NODE_ENV !== 'development') {
+            const cmsRouter = buildsRouter(path.join(__dirname, '../../bin'));
+            config.app.use('/cms', cmsRouter);
+        }
 
         /**
          * Get port from environment and store in Express.
