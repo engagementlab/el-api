@@ -65,7 +65,7 @@ const boot = config => {
             })
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
-        cmsRouter.use('/pages', express.static(binPath));
+        cmsRouter.use('/@', express.static(binPath));
         // Create route in /cms router for all builds
         allDirs.forEach(name => {
             cmsRouter.get(`/${name}*`, (req, res) => {
@@ -75,7 +75,7 @@ const boot = config => {
                 });
             });
 
-            cmsRouter.get(`/pages/${name}*`, (req, res) => {
+            cmsRouter.get(`/@/${name}*`, (req, res) => {
                 res.render('cms', {
                     schema: name
                 });

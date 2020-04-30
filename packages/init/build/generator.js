@@ -132,7 +132,7 @@ const CmsBuild = (currentApp, allApps) => {
             keystone,
             apps: [
                 new AdminUIApp({
-                    adminPath: `/cms/pages/${currentAppConfig.package.schema}`,
+                    adminPath: `/cms/@/${currentAppConfig.package.schema}`,
                     apiPath: `http://localhost:3000/cms/api/?schema=${currentAppConfig.package.schema}`,
                     graphiqlPath: '/graphiql',
                     schemaName: currentAppConfig.package.schema
