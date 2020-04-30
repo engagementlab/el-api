@@ -59,18 +59,32 @@ const boot = config => {
         const binPath = path.join(__dirname, '../../bin');
 
         // Get all builds
-        const cmsRouter = express.Router('');
+        const cmsRouter = express.Router();
         const allDirs = fs.readdirSync(binPath, {
                 withFileTypes: true
             })
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
+        cmsRouter.use('/pages', express.static(binPath));
         // Create route in /cms router for all builds
         allDirs.forEach(name => {
-            cmsRouter.get(name, (req, res) => {
-                res.sendfile(path.join(__dirname, '../../bin', name));
+            cmsRouter.get(`/${name}*`, (req, res) => {
+                // Send index for this CMS
+                res.render('cms', {
+                    schema: name
+                });
             });
+
+            cmsRouter.get(`/pages/${name}*`, (req, res) => {
+                res.render('cms', {
+                    schema: name
+                });
+            });
+
+
         });
+        config.app.use('/cms', cmsRouter);
+
         /**
          * Listen on provided port w/ both keystone instance and API routes
          */
@@ -82,7 +96,7 @@ const boot = config => {
                     } Mode).`
                 )
             );
-            config.app.use('/cms', cmsRouter);
+
             if (socket) socket.send('loaded');
 
             // Call class callback if defined (for tests)
