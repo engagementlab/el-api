@@ -27,6 +27,7 @@ const path = require('path');
 const fs = require('fs');
 
 const express = require('express');
+const mongoose = require('mongoose');
 const colors = require('colors');
 const WebSocket = require('ws');
 
@@ -153,6 +154,24 @@ const init = callback => {
 
         ws.send('Connected.');
     });
+
+
+    /**
+     *  Create DB connection for admin database, which contains CMS privileges, etc.
+     */
+    const dbAddress =
+        process.env.NODE_ENV === 'development' ? process.env.MONGO_ADMIN_URI : process.env.MONGO_CLOUD_ADMIN_URI;
+    if (!dbAddress) global.logger.error('Please provide either MONGO_ADMIN_URI or MONGO_CLOUD_ADMIN_URI');
+    try {
+        mongoose.connect(dbAddress, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true
+        });
+    } catch (e) {
+        global.logger.error(e);
+        throw new Error(e);
+    }
 
     /**
      *  Load all possible apps from sibling packages (config defined in app.json)

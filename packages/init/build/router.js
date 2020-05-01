@@ -1,5 +1,5 @@
 /**
- * Engagement Lab Homepage API
+ * Engagement Lab Content and Data API
  * Developed by Engagement Lab, 2020
  *
  * @author Johnny Richardson
@@ -14,44 +14,43 @@ const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+// User model
+const User = require('../models/User');
+
 /**
-		Handle CMS auth via Auth0 and passport
-	*/
+ *	Handle CMS auth via passport/google
+ */
 const authentication = {
-  // Perform the login, after login Auth0 will redirect to callback
-  login: passport.authenticate('google', {
-    scope: 'openid email profile'
-  }),
+    // Perform the login, after login will redirect to callback
+    login: passport.authenticate('google', {
+        scope: ['openid', 'email', 'profile']
+    }),
 
-  // Handle Auth0 callback and direct to CMS backend if success
-  callback: (req, res, next) => {
-    // if(process.env.NODE_ENV === 'development') {
-    // 	res.redirect('/cms');
-    // 	return;
-    // }
+    // Handle google oauth2 callback and direct to CMS app requested if success
+    callback: (req, res, next) => {
+        // if(process.env.NODE_ENV === 'development') {
+        // 	res.redirect('/cms');
+        // 	return;
+        // } 
 
-    passport.authenticate('google', function(err, user, info) {
-      if (err) {
-        global.logger.error('Auth error!', err);
-        return next(err);
-      }
-      if (!user) {
-        global.logger.error('No user!', info);
-        return res.redirect('/');
-      }
-
-      req.logIn(user, err => {
-        if (err) {
-          console.error('Login error', err);
-          return next(err);
-        }
-        const { returnTo } = req.session;
-        delete req.session.returnTo;
-
-        res.redirect(returnTo || '/cms/home');
-      });
-    })(req, res, next);
-  }
+        passport.authenticate('google', (err, user, info) => {
+            console.log(req);
+            if (err) {
+                global.logger.error('Auth error!', err);
+                return next(err);
+            }
+            if (!user) {
+                global.logger.error('No user!', info);
+                return res.redirect('/');
+            }
+            req.logIn(user, (err) => {
+                if (err) {
+                    return next(err);
+                }
+                return res.redirect('/cms/home');
+            });
+        })(req, res, next);
+    }
 };
 
 /**
@@ -60,67 +59,93 @@ const authentication = {
  * @param {string} buildsDir - Path to root builds directory (bin)
  */
 module.exports = buildsDir => {
-  /**
-   * Get all build directories for CMS builds
-   */
-  const binPath = buildsDir;
+    /**
+     * Get all build directories for CMS builds
+     */
+    const binPath = buildsDir;
 
-  // Get all builds
-  const router = express.Router();
-  const allDirs = fs
-    .readdirSync(binPath, {
-      withFileTypes: true
-    })
-    .filter(dirent => dirent.isDirectory())
-    .map(dirent => dirent.name);
+    // Get all builds
+    const router = express.Router();
+    const allDirs = fs
+        .readdirSync(binPath, {
+            withFileTypes: true
+        })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
 
-  /**
-   * Auth0/passport config
-   */
+    /**
+     * Google oauth2/passport config
+     */
 
-  router.use(passport.initialize());
-  router.use(passport.session());
+    router.use(passport.initialize());
+    router.use(passport.session());
 
-  const strategy = new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.AUTH_CALLBACK_URL
-    },
-    (accessToken, refreshToken, profile, cb) => {
-      console.log(profile);
-    }
-  );
-  passport.use(strategy);
-  passport.serializeUser((user, done) => {
-    done(null, user);
-  });
-  passport.deserializeUser((user, done) => {
-    done(null, user);
-  });
-
-  // Static files
-  router.use('/@', express.static(binPath));
-
-  // Authentication
-  router.get('/*', authentication.login, (req, res) => {
-    res.redirect('/');
-  });
-  router.get('/callback', authentication.callback);
-
-  // Create route in router for all builds
-  allDirs.forEach(name => {
-    router.get(`/${name}`, (req, res) => {
-      // Send index for this CMS
-      res.redirect(`/cms/@/${name}`);
+    const strategy = new GoogleStrategy({
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: process.env.AUTH_CALLBACK_URL,
+            passReqToCallback: true,
+        },
+        (request, accessToken, refreshToken, profile, done) => {
+            // Verify user allowed
+            User.findOne({
+                email: profile.emails[0].value
+            }, (err, user) => {
+                if (err) {
+                    global.logger.error(`Login error: ${err}`);
+                    return null;
+                }
+                if (!user) {
+                    global.logger.error(`Login error: user not found for email ${ profile.emails[0].value}`);
+                    return null;
+                }
+                return done(err, user);
+            });
+        }
+    );
+    passport.use(strategy);
+    passport.serializeUser((user, done) => {
+        done(null, user);
+    });
+    passport.deserializeUser((user, done) => {
+        done(null, user);
     });
 
-    // We also need a route to render index for all intermediates as per react-dom-router
-    router.get(`/@/${name}*`, (req, res) => {
-      res.render('cms', {
-        schema: name
-      });
+    // Static files
+    router.use('/@', express.static(binPath));
+
+    // Authentication
+    router.get('/callback', authentication.callback);
+    router.get('/*', authentication.login, (req, res, next) => {
+        next();
     });
-  });
-  return router;
+
+    // Create route in router for all builds
+    allDirs.forEach(name => {
+        router.get(`/${name}`, (req, res) => {
+            // Send index for this CMS
+            res.redirect(`/cms/@/${name}`);
+        });
+
+        // We also need a route to render index for all intermediates as per react-dom-router
+        router.get(`/@/${name}*`, (req, res) => {
+            res.render('cms', {
+                schema: name
+            });
+        });
+    });
+
+    // If on dev instance, create dev user if none
+    // TODO: Limit to dev
+    User.findOne({
+        email: process.env.DEV_EMAIL
+    }, (err, user) => {
+        if (!user) {
+            User.create({
+                email: process.env.DEV_EMAIL,
+                name: 'Dev User'
+            });
+        }
+    });
+    return router;
 };
