@@ -98,12 +98,11 @@ const start = async (productionMode, appName) => {
     app.set('view engine', 'pug');
     app.set('views', `${__dirname}/views`);
 
-    //   app.get('/', (req, res) => {
-    //     res.render('index', {
-    //       packages
-    //     });
-    //   });
-
+    app.get('/', (req, res) => {
+        res.render('index', {
+            packages
+        });
+    });
 
     // Load all data for API of currently used package
     const packagePath = `@engagementlab/${currentApp}`;
