@@ -24,7 +24,7 @@ const User = require('../models/User');
 const authentication = {
     // Perform the login, after login will redirect to callback
     login: passport.authenticate('google', {
-        scope: ['openid', 'email', 'profile']
+        scope: ['openid', 'email', 'profile'],
     }),
 
     isAllowed: (req, res, next) => {
@@ -73,6 +73,7 @@ module.exports = buildsDir => {
         done(null, user);
     });
     passport.deserializeUser((user, done) => {
+        console.log(user);
         done(null, user);
     });
 
@@ -83,7 +84,6 @@ module.exports = buildsDir => {
             passReqToCallback: true
         },
         (request, accessToken, refreshToken, profile, done) => {
-
             // Verify user allowed
             User.findOne({
                     email: profile.emails[0].value
@@ -91,13 +91,13 @@ module.exports = buildsDir => {
                 (err, user) => {
                     if (err) {
                         global.logger.error(`Login error: ${err}`);
-                        return null;
+                        return done(err);
                     }
                     if (!user) {
                         global.logger.error(
                             `Login error: user not found for email ${profile.emails[0].value}`
                         );
-                        return null;
+                        return done(err);
                     }
                     return done(err, user);
                 }
@@ -105,6 +105,12 @@ module.exports = buildsDir => {
         }
     );
     passport.use(strategy);
+
+    const bodyParser = require('body-parser');
+    router.use(bodyParser.json()); // support json encoded bodies
+    router.use(bodyParser.urlencoded({
+        extended: true
+    })); // support encoded bodies
 
     router.use(passport.initialize());
     router.use(passport.session());
@@ -116,12 +122,27 @@ module.exports = buildsDir => {
      * Authentication
      */
     // Handle google oauth2 callback and direct to CMS app requested if success
-    router.get('/callback', passport.authenticate('google', {
-        failureRedirect: '/'
-    }), (req, res) => {
-        // Successful authentication, to itended app
-        res.redirect(req.originalUrl || '/cms/@/home');
-    });
+    router.get(
+        '/callback',
+        (req, res, next) => {
+            passport.authenticate('google', function (error, user, info) {
+
+                if (error) {
+                    res.status(401).send(error);
+                    return;
+                }
+                if (!user) {
+                    res.status(401).send(info);
+                    return;
+                }
+
+                console.log('req.originalUrl', req.originalUrl);
+                res.redirect('/');
+
+
+                // res.status(401).send(info);
+            })(req, res);
+        });
 
     router.get('/logout', (req, res) => {
         req.logout();
@@ -146,18 +167,19 @@ module.exports = buildsDir => {
     });
 
     // If on dev instance, create dev user if none
-    // TODO: Limit to dev
-    User.findOne({
-            email: process.env.DEV_EMAIL
-        },
-        (err, user) => {
-            if (!user) {
-                User.create({
-                    email: process.env.DEV_EMAIL,
-                    name: 'Dev User'
-                });
+    if (process.env.NODE_ENV === 'development') {
+        User.findOne({
+                email: process.env.DEV_EMAIL
+            },
+            (err, user) => {
+                if (!user) {
+                    User.create({
+                        email: process.env.DEV_EMAIL,
+                        name: 'Dev User'
+                    });
+                }
             }
-        }
-    );
+        );
+    }
     return router;
 };
