@@ -27,39 +27,11 @@ const authentication = {
         scope: ['openid', 'email', 'profile']
     }),
 
-    // Handle google oauth2 callback and direct to CMS app requested if success
-    callback: (req, res, next) => {
-        // if(process.env.NODE_ENV === 'development') {
-        // 	res.redirect('/cms');
-        // 	return;
-        // }
-        console.trace();
-
-        passport.authenticate('google', (err, user, info) => {
-            console.log(user);
-            if (err) {
-                // global.logger.error('Auth error:', err);
-                return next(err);
-            }
-            if (!user) {
-                global.logger.error('No user!', info);
-                return res.redirect('/');
-            }
-            req.logIn(user, err => {
-                console.log('login');
-                if (err) {
-                    return next(err);
-                }
-                return res.redirect(req.originalUrl || '/cms/@/home');
-            });
-        })(req, res, next);
-    },
-
     isAllowed: (req, res, next) => {
-        console.log('authed', req.isAuthenticated());
+        console.log('authed', req.user);
 
         if (req.isAuthenticated()) next();
-        else res.redirect('/');
+        else res.redirect('/cms/login');
     }
 };
 
@@ -97,8 +69,12 @@ module.exports = buildsDir => {
         })
     );
 
-    router.use(passport.initialize());
-    router.use(passport.session());
+    passport.serializeUser((user, done) => {
+        done(null, user);
+    });
+    passport.deserializeUser((user, done) => {
+        done(null, user);
+    });
 
     const strategy = new GoogleStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
@@ -107,7 +83,7 @@ module.exports = buildsDir => {
             passReqToCallback: true
         },
         (request, accessToken, refreshToken, profile, done) => {
-            console.log(accessToken, refreshToken, profile);
+
             // Verify user allowed
             User.findOne({
                     email: profile.emails[0].value
@@ -129,28 +105,34 @@ module.exports = buildsDir => {
         }
     );
     passport.use(strategy);
-    passport.serializeUser((user, done) => {
-        done(null, user);
-    });
-    passport.deserializeUser((user, done) => {
-        console.log('DE', user);
-        done(null, user);
-    });
+
+    router.use(passport.initialize());
+    router.use(passport.session());
 
     // Static files
     router.use('/@', express.static(binPath));
 
-    // Authentication
-    router.get('/callback', authentication.callback);
+    /**
+     * Authentication
+     */
+    // Handle google oauth2 callback and direct to CMS app requested if success
+    router.get('/callback', passport.authenticate('google', {
+        failureRedirect: '/'
+    }), (req, res) => {
+        // Successful authentication, to itended app
+        res.redirect(req.originalUrl || '/cms/@/home');
+    });
+
     router.get('/logout', (req, res) => {
         req.logout();
         res.redirect('/');
     });
-    router.get('/*', authentication.login);
+
+    router.get('/login', authentication.login);
 
     // Create route in router for all builds
     allDirs.forEach(name => {
-        router.get(`/${name}`, (req, res) => {
+        router.get(`/${name}`, authentication.isAllowed, (req, res) => {
             // Send index for this CMS
             res.redirect(`/cms/@/${name}`);
         });
