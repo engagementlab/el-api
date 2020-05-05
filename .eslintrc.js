@@ -1,20 +1,21 @@
 module.exports = {
-    env: {
-        es6: true,
-    },
-    extends: [
-        'airbnb',
-        'eslint-config-prettier'
-    ],
-    globals: {
-        Atomics: 'readonly',
-        SharedArrayBuffer: 'readonly',
-    },
-    parserOptions: {
-        ecmaVersion: 2018,
-        sourceType: 'module',
-    },
-    rules: {
-        semi: ['error', 'always']
-    }
+  env: {
+    commonjs: true,
+    es6: true,
+    node: true,
+  },
+  extends: [
+    'airbnb-base',
+  ],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
+  },
+  parserOptions: {
+    ecmaVersion: 2018,
+  },
+  rules: {
+    semi: ['error', 'always'],
+    indent: ['error', 6]
+  }
 };

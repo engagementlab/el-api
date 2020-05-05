@@ -19,7 +19,7 @@
 if (process.env.NODE_ENV !== 'ci') {
     // eslint-disable-next-line global-require
     require('dotenv').config({
-        path: `${__dirname}/.env`
+        path: `${__dirname}/.env`,
     });
 }
 
@@ -47,9 +47,9 @@ let startCallback;
 let socket;
 let wss;
 
-const boot = config => {
+const boot = (config) => {
     // Initialize keystone instance
-    keystone(config, middleware => {
+    keystone(config, (middleware) => {
         /**
          * Create router for all CMS builds from outputs dir if not on dev
          */
@@ -71,8 +71,8 @@ const boot = config => {
                 colors.bgCyan.bold.black(
                     `Content API for "${config.package.name}" started (${
             config.production ? 'Production' : 'Development'
-          } Mode).`
-                )
+          } Mode).`,
+                ),
             );
 
             if (socket) socket.send('loaded');
@@ -83,7 +83,7 @@ const boot = config => {
     });
 };
 
-const start = async (productionMode, appName) => {
+const start = (productionMode, appName) => {
     // If server defined, close current one
     if (server) server.close();
 
@@ -93,15 +93,15 @@ const start = async (productionMode, appName) => {
     app.use(express.json());
     app.use(
         express.urlencoded({
-            extended: false
-        })
+            extended: false,
+        }),
     );
     app.set('view engine', 'pug');
     app.set('views', `${__dirname}/views`);
 
     app.get('/', (req, res) => {
         res.render('index', {
-            packages
+            packages,
         });
     });
 
@@ -110,39 +110,38 @@ const start = async (productionMode, appName) => {
 
     // Pass our route importer util to package
     const packageInit = require(packagePath);
-    const pkg = await packageInit(ServerUtils.routeImporter);
+    packageInit(ServerUtils.routeImporter).then((pkg) => {
+        // Export all models, routes, config for this app
+        const bootConfig = {
+            app,
+            package: pkg.Config,
+            models: pkg.Models,
+            routes: pkg.Routes,
+            path: packagePath,
+            production: productionMode,
+        };
 
-    // Export all models, routes, config for this app
-    const bootConfig = {
-        app,
-        package: pkg.Config,
-        models: pkg.Models,
-        routes: pkg.Routes,
-        path: packagePath,
-        production: productionMode
-    };
-
-    boot(bootConfig);
+        boot(bootConfig);
+    });
 };
 
-const init = callback => {
+const init = (callback) => {
     if (callback) startCallback = callback;
 
-    const productionMode =
-        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
+    const productionMode = process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
     wss = new WebSocket.Server({
-        port: 3001
+        port: 3001,
     });
 
-    wss.on('listening', ws => {
+    wss.on('listening', (ws) => {
         global.logger.info(`${'Websockets:'.magenta} server listening.`);
     });
-    wss.on('connection', ws => {
-        ws.on('message', async message => {
+    wss.on('connection', (ws) => {
+        ws.on('message', async (message) => {
             const data = JSON.parse(message);
             global.logger.info(
-                `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`
+                `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`,
             );
 
             // Event for server close and reboot w/ new package
@@ -159,14 +158,13 @@ const init = callback => {
     /**
      *  Create DB connection for admin database, which contains CMS privileges, etc.
      */
-    const dbAddress =
-        process.env.NODE_ENV === 'development' ? process.env.MONGO_ADMIN_URI : process.env.MONGO_CLOUD_ADMIN_URI;
+    const dbAddress = process.env.NODE_ENV === 'development' ? process.env.MONGO_ADMIN_URI : process.env.MONGO_CLOUD_ADMIN_URI;
     if (!dbAddress) global.logger.error('Please provide either MONGO_ADMIN_URI or MONGO_CLOUD_ADMIN_URI');
     try {
         mongoose.connect(dbAddress, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useCreateIndex: true
+            useCreateIndex: true,
         });
     } catch (e) {
         global.logger.error(e);
