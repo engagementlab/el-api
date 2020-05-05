@@ -34,7 +34,7 @@ const GetPackagesData = (list, pkgNames) => {
     if (fs.statSync(path.join(pkgsPath, name)).isDirectory()) {
       // Get formal app name
       const configData = JSON.parse(
-        fs.readFileSync(path.join(pkgsPath, name, 'config.json')),
+        fs.readFileSync(path.join(pkgsPath, name, 'config.json'))
       );
       // Obj for usage in build gen and API mount
       namesObj[configData.schema] = {
@@ -42,7 +42,7 @@ const GetPackagesData = (list, pkgNames) => {
         dir: name,
       };
       namesStr += `\n  🔸 ${colors.bold(configData.name)} (${colors.yellow(
-        name,
+        name
       )})`;
     }
   });
@@ -50,15 +50,15 @@ const GetPackagesData = (list, pkgNames) => {
   if (list) {
     global.logger.info(
       `\n\n📦 ${colors.green.underline(
-        'Packages found for build:',
-      )} ${namesStr}`,
+        'Packages found for build:'
+      )} ${namesStr}`
     );
     return {};
   }
   global.logger.info(
     `\n\n🌮 ${colors.green.underline(
-      'Packages loaded:',
-    )} ${namesStr}`,
+      'Packages loaded:'
+    )} ${namesStr}`
   );
   return namesObj;
 };

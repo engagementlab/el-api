@@ -51,28 +51,28 @@ const boot = config => {
   // Initialize keystone instance
   keystone(config, middleware => {
     /**
-         * Create router for all CMS builds from outputs dir if not on dev
-         */
+     * Create router for all CMS builds from outputs dir if not on dev
+     */
     if (process.env.NODE_ENV !== 'development') {
       const cmsRouter = buildsRouter(path.join(__dirname, '../../bin'));
       config.app.use('/cms', cmsRouter);
     }
 
     /**
-         * Get port from environment and store in Express.
-         */
+     * Get port from environment and store in Express.
+     */
     const port = ServerUtils.normalizePort(process.env.PORT || '3000');
 
     /**
-         * Listen on provided port w/ both keystone instance and API routes
-         */
+     * Listen on provided port w/ both keystone instance and API routes
+     */
     server = config.app.use([middleware, config.routes]).listen(port, () => {
       global.logger.info(
         colors.bgCyan.bold.black(
           `Content API for "${config.package.name}" started (${
             config.production ? 'Production' : 'Development'
-          } Mode).`,
-        ),
+          } Mode).`
+        )
       );
 
       if (socket) socket.send('loaded');
@@ -94,16 +94,10 @@ const start = (productionMode, appName) => {
   app.use(
     express.urlencoded({
       extended: false,
-    }),
+    })
   );
   app.set('view engine', 'pug');
   app.set('views', `${__dirname}/views`);
-
-  app.get('/', (req, res) => {
-    res.render('index', {
-      packages,
-    });
-  });
 
   // Load all data for API of currently used package
   const packagePath = `@engagementlab/${currentApp}`;
@@ -141,7 +135,7 @@ const init = callback => {
     ws.on('message', async message => {
       const data = JSON.parse(message);
       global.logger.info(
-        `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`,
+        `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`
       );
 
       // Event for server close and reboot w/ new package
@@ -156,8 +150,8 @@ const init = callback => {
 
 
   /**
-     *  Create DB connection for admin database, which contains CMS privileges, etc.
-     */
+   *  Create DB connection for admin database, which contains CMS privileges, etc.
+   */
   const dbAddress = process.env.NODE_ENV === 'development' ? process.env.MONGO_ADMIN_URI : process.env.MONGO_CLOUD_ADMIN_URI;
   if (!dbAddress) global.logger.error('Please provide either MONGO_ADMIN_URI or MONGO_CLOUD_ADMIN_URI');
   try {
@@ -172,8 +166,8 @@ const init = callback => {
   }
 
   /**
-     *  Load all possible apps from sibling packages (config defined in app.json)
-     */
+   *  Load all possible apps from sibling packages (config defined in app.json)
+   */
   const appConfigs = fs.readFileSync(appsJson);
   packages = JSON.parse(appConfigs);
   global.elasti = undefined;
