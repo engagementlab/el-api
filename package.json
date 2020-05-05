@@ -1,37 +1,38 @@
 {
-  "name": "el-api",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
-    "dev": "nodemon ./packages/init/app.js",
-    "start": "node ./packages/init/app.js",
-    "start-ci": "./node_modules/.bin/nyc yarn run start",
-    "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
-    "ci": "start-server-and-test start-ci http://localhost:3000 test"
-  },
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-config-prettier": "^6.9.0",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.18.3",
-    "lerna": "^3.20.2",
-    "nyc": "^15.0.1",
-    "start-server-and-test": "^1.10.11"
-  },
-  "version": "0.0.2",
-  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^7.1.1",
-    "mongodb": "^3.5.6",
-    "supertest": "^4.0.2"
-  }
+    "name": "el-api",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "bootstrap": "lerna bootstrap",
+        "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
+        "dev": "nodemon ./packages/init/app.js",
+        "fix": "eslint --fix ./",
+        "start": "node ./packages/init/app.js",
+        "start-ci": "./node_modules/.bin/nyc yarn run start",
+        "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
+        "ci": "start-server-and-test start-ci http://localhost:3000 test"
+    },
+    "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb": "^18.0.1",
+        "eslint-config-airbnb-base": "^14.1.0",
+        "eslint-config-prettier": "^6.9.0",
+        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-prettier": "^3.1.2",
+        "eslint-plugin-react": "^7.18.3",
+        "lerna": "^3.20.2",
+        "nyc": "^15.0.1",
+        "start-server-and-test": "^1.10.11"
+    },
+    "version": "0.0.2",
+    "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^7.1.1",
+        "mongodb": "^3.5.6",
+        "supertest": "^4.0.2"
+    }
 }
