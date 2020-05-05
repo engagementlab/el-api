@@ -36,6 +36,10 @@ const authentication = {
 
         if (req.isAuthenticated()) next();
         else res.redirect('/cms/login');
+        // Logged in, but not allowed into this app
+        // else {
+
+        // }
     },
 };
 
@@ -58,6 +62,20 @@ module.exports = buildsDir => {
         })
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name);
+
+    /**
+     * Middleware for landing/errors
+     */
+    const landing = (req, res) => {
+        const appsAllowed = req.session.passport.user.permissions;
+        const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
+        const errPermission = req.query.type === 'permission';
+        res.render('index', {
+            apps: appsInfo,
+            noAccess: appsInfo.length === 0,
+            noPermission: errPermission,
+        });
+    };
 
     /**
      * Google oauth2/passport config
@@ -125,14 +143,11 @@ module.exports = buildsDir => {
     // Static files
     router.use('/@', express.static(binPath));
 
-    // Index page (app selection)
-    router.get('/', authentication.isAllowed, (req, res) => {
-        const appsAllowed = req.session.passport.user.permissions;
-        const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
-        res.render('index', {
-            apps: appsInfo,
-        });
-    });
+    // Landing page (app selection)
+    router.get('/', authentication.isAllowed, landing);
+
+    // Errors
+    router.get('/error/:type?', authentication.isAllowed, landing);
 
     /**
      * Authentication
@@ -155,17 +170,13 @@ module.exports = buildsDir => {
                     req.statusCode(500).send(logInErr);
                     return logInErr;
                 }
+                const allowed = user.permissions.indexOf(req.session.redirectTo.replace('/cms/', '')) > -1;
                 // Explicitly save the session before redirecting!
                 req.session.save(() => {
                     // Ensure user has permissions for this CMS
-                    if (
-                        req.session.redirectTo !== 'cms/' ||
-                        user.permissions.indexOf(
-                            req.session.redirectTo.replace('/cms/', '')
-                        ) > -1
-                    ) {
+                    if (req.session.redirectTo === 'cms/' || allowed) {
                         res.redirect(req.session.redirectTo || '/');
-                    } else res.send('not allowed');
+                    } else res.redirect('/cms/error?type=permission');
                 });
             });
         })(req, res);
