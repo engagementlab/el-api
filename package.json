@@ -9,6 +9,7 @@
         "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
         "dev": "nodemon ./packages/init/app.js",
         "fix": "eslint --fix ./",
+        "inspect": "nodemon --inspect ./packages/init/app.js",
         "start": "node ./packages/init/app.js",
         "start-ci": "./node_modules/.bin/nyc yarn run start",
         "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
