@@ -9,30 +9,30 @@
 const mongoose = require('mongoose');
 
 const {
-      Schema,
+  Schema,
 } = mongoose;
 
 const userSchema = new Schema({
-      googleId: {
-            type: String,
-            index: true,
-            unique: true,
-      },
-      name: {
-            type: String,
-            required: true,
-      },
-      email: {
-            type: String,
-            required: true,
-            unique: true,
-      },
-      permissions: {
-            type: Array,
-      },
-      lastLogin: {
-            type: Date,
-      },
+  googleId: {
+    type: String,
+    index: true,
+    unique: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  permissions: {
+    type: Array,
+  },
+  lastLogin: {
+    type: Date,
+  },
 });
 
 /**

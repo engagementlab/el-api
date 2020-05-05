@@ -14,7 +14,7 @@ module.exports = {
       },
       rules: {
             semi: ['error', 'always'],
-            indent: ['error', 6],
+            indent: ['error', 2],
             'arrow-parens': [2, 'as-needed'],
             'operator-linebreak': ['error', 'after'],
       },

@@ -8,25 +8,25 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-      const {
-            db,
-      } = res.locals;
+  const {
+    db,
+  } = res.locals;
 
-      const jobs = db.list('Job').model;
-      const fields = 'title description url -_id';
+  const jobs = db.list('Job').model;
+  const fields = 'title description url -_id';
 
-      try {
-            // Get enabled jobs
-            const data = await jobs.find({
-                  enabled: true,
-            }, fields).sort([
-                  ['createdAt', 'descending'],
-            ]).exec();
+  try {
+    // Get enabled jobs
+    const data = await jobs.find({
+      enabled: true,
+    }, fields).sort([
+      ['createdAt', 'descending'],
+    ]).exec();
 
-            res.json(data);
-      } catch (e) {
-            res.status(500).send(e.toString());
-      }
+    res.json(data);
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 };
 
 module.exports = (req, res) => BuildData(req, res);
