@@ -16,6 +16,6 @@ module.exports = {
   },
   rules: {
     semi: ['error', 'always'],
-    indent: ['error', 6]
+    indent: ['error', 4]
   }
 };
