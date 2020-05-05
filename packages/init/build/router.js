@@ -28,8 +28,9 @@ const authentication = {
     }),
 
     isAllowed: (req, res, next) => {
-        console.log('authed', req.user);
-
+        // Cache URL to bring user to after auth
+        req.session.redirectTo = req.originalUrl;
+        console.log('req.isAuthenticated', req.isAuthenticated());
         if (req.isAuthenticated()) next();
         else res.redirect('/cms/login');
     }
@@ -73,7 +74,6 @@ module.exports = buildsDir => {
         done(null, user);
     });
     passport.deserializeUser((user, done) => {
-        console.log(user);
         done(null, user);
     });
 
@@ -136,11 +136,18 @@ module.exports = buildsDir => {
                     return;
                 }
 
-                console.log('req.originalUrl', req.originalUrl);
-                res.redirect('/');
+                req.logIn(user, (logInErr) => {
+                    if (logInErr) {
+                        req.statusCode(500).send(logInErr);
+                        return logInErr;
+                    }
 
+                    // Explicitly save the session before redirecting!
+                    req.session.save(() => {
+                        res.redirect(req.session.redirectTo || '/');
+                    });
+                });
 
-                // res.status(401).send(info);
             })(req, res);
         });
 
