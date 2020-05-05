@@ -35,16 +35,17 @@ module.exports = (routesImporter, configOnly) => {
             return packageConfig;
       }
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
             // Create DB connection and import API routes if not generating CMS build
-            const dbAddress = process.env.NODE_ENV === 'development'
-                  ? 'mongodb://localhost'
-                  : `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
+            const dbAddress =
+                  process.env.NODE_ENV === 'development'
+                        ? 'mongodb://localhost'
+                        : `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
 
             MongoClient.connect(dbAddress, {
                   useNewUrlParser: true,
                   useUnifiedTopology: true,
-            }).then((client) => {
+            }).then(client => {
                   const db = client.db(configData.database);
                   const appRoutes = routes(routesImporter, db);
                   // TODO: give all routes a namespace prefix, e.g. 'homepage/'
