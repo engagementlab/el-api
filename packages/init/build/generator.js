@@ -1,24 +1,24 @@
 const {
-    Keystone
+      Keystone,
 } = require('@keystonejs/keystone');
 const {
-    MongooseAdapter
+      MongooseAdapter,
 } = require('@keystonejs/adapter-mongoose');
 const {
-    AdminUIApp
+      AdminUIApp,
 } = require('@keystonejs/app-admin-ui');
 const {
-    CloudinaryAdapter
+      CloudinaryAdapter,
 } = require('@keystonejs/file-adapters');
 
 const colors = require('colors');
 
 // Load env
 require('dotenv').config({
-    path: `${__dirname}/../.env`
+      path: `${__dirname}/../.env`,
 });
 
-/* 
+/*
     Since the production backend will have all possible CMS lists in-memory,
     we have to load all models for all packages.
 
@@ -31,124 +31,122 @@ const allLists = {};
 
 // Cloudinary config
 const cloudinaryAdapter = new CloudinaryAdapter({
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-    apiKey: process.env.CLOUDINARY_KEY,
-    apiSecret: process.env.CLOUDINARY_SECRET,
-    folder: process.env.CLOUDINARY_DIR
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      apiKey: process.env.CLOUDINARY_KEY,
+      apiSecret: process.env.CLOUDINARY_SECRET,
+      folder: process.env.CLOUDINARY_DIR,
 });
 
 // Load logger
 require('../logger');
 
 const CmsBuild = (currentApp, allApps) => {
-    try {
-        // Array to hold all model references
-        const modelsMerged = [];
-        let currentAppConfig = {};
-        const schemaAdapters = {};
+      try {
+            // Array to hold all model references
+            const modelsMerged = [];
+            let currentAppConfig = {};
+            const schemaAdapters = {};
 
-        global.logger.simple.info(
-            `Starting build for ${colors.yellow(currentApp)}.`
-        );
+            global.logger.simple.info(
+                  `Starting build for ${colors.yellow(currentApp)}.`,
+            );
 
-        allApps.forEach(appName => {
-            let packagePath = `@engagementlab/${appName}`;
-            if (process.env.NODE_ENV === 'development')
-                packagePath = `../../packages/${appName}`;
+            allApps.forEach((appName) => {
+                  let packagePath = `@engagementlab/${appName}`;
+                  if (process.env.NODE_ENV === 'development') packagePath = `../../packages/${appName}`;
 
-            const packageInit = require(packagePath);
-            // Load all data for API of currently used package
-            const appPackage = packageInit(null, true);
+                  const packageInit = require(packagePath);
+                  // Load all data for API of currently used package
+                  const appPackage = packageInit(null, true);
 
-            // Export models, config for this app
-            const config = {
-                package: appPackage.Config,
-                models: appPackage.Models
+                  // Export models, config for this app
+                  const config = {
+                        package: appPackage.Config,
+                        models: appPackage.Models,
+                  };
+                  // If this is app being exported to CMS, cache
+                  if (appName === currentApp) currentAppConfig = config;
+
+                  const schemaName = config.package.schema || 'test';
+
+                  const dbAddress = process.env.NODE_ENV === 'development'
+                        ? `mongodb://localhost/${config.package.database}`
+                        : `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
+
+                  // Add instantiated model to array of all
+                  config.models.forEach((modelFunc) => {
+                        // All models need access to cloudinary adapter
+                        const modelObj = modelFunc(cloudinaryAdapter);
+                        // Apply adapterName to all models based on respective schemaName
+                        modelObj.adapterName = schemaName;
+                        // Apply 'name' of model from it's function's name, for later key creation
+                        modelObj.name = modelFunc.name;
+
+                        modelsMerged.push(modelObj);
+                  });
+
+                  // Assign mongoose adapter for app
+                  schemaAdapters[schemaName] = new MongooseAdapter({
+                        mongoUri: dbAddress,
+                  });
+            });
+
+            const keystone = new Keystone({
+                  name: currentAppConfig.package.name,
+                  schemaNames: Object.keys(schemaAdapters),
+                  adapters: schemaAdapters,
+                  defaultAdapter: Object.keys(schemaAdapters)[0],
+            });
+
+            modelsMerged.forEach((model) => {
+                  let thisKey = model.name;
+                  // Check if model key already present in global CMS lists
+                  if (Object.keys(allLists).indexOf(thisKey) > -1) {
+                        // If present, mutate key w/ adaptername prefix
+                        thisKey = `${model.adapterName}__${thisKey}`;
+                  }
+                  allLists[thisKey] = model;
+            });
+
+            Object.keys(allLists).forEach((modelName) => {
+                  const list = allLists[modelName];
+
+                  // Initalize for schema being output to CMS only
+                  if (list.adapterName === currentAppConfig.package.schema) {
+                        keystone.createList(modelName, {
+                              fields: list.fields,
+                              ...list.options,
+                              adapterName: list.adapterName,
+                        });
+                  }
+            });
+            global.logger.simple.info(
+                  `📣 Starting CMS build for ${colors.yellow(
+                        currentAppConfig.package.name,
+                  )}.`,
+            );
+
+            return {
+                  keystone,
+                  apps: [
+                        new AdminUIApp({
+                              adminPath: `/cms/@/${currentAppConfig.package.schema}`,
+                              apiPath: `http://localhost:3000/cms/api/?schema=${currentAppConfig.package.schema}`,
+                              graphiqlPath: '/graphiql',
+                              schemaName: currentAppConfig.package.schema,
+                        }),
+                  ],
             };
-            // If this is app being exported to CMS, cache
-            if (appName === currentApp) currentAppConfig = config;
-
-            const schemaName = config.package.schema || 'test';
-
-            const dbAddress =
-                process.env.NODE_ENV === 'development' ?
-                `mongodb://localhost/${config.package.database}` :
-                `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
-
-            // Add instantiated model to array of all
-            config.models.forEach(modelFunc => {
-                // All models need access to cloudinary adapter
-                const modelObj = modelFunc(cloudinaryAdapter);
-                // Apply adapterName to all models based on respective schemaName
-                modelObj.adapterName = schemaName;
-                // Apply 'name' of model from it's function's name, for later key creation
-                modelObj.name = modelFunc.name;
-
-                modelsMerged.push(modelObj);
-            });
-
-            // Assign mongoose adapter for app
-            schemaAdapters[schemaName] = new MongooseAdapter({
-                mongoUri: dbAddress
-            });
-        });
-
-        const keystone = new Keystone({
-            name: currentAppConfig.package.name,
-            schemaNames: Object.keys(schemaAdapters),
-            adapters: schemaAdapters,
-            defaultAdapter: Object.keys(schemaAdapters)[0]
-        });
-
-        modelsMerged.forEach(model => {
-            let thisKey = model.name;
-            // Check if model key already present in global CMS lists
-            if (Object.keys(allLists).indexOf(thisKey) > -1) {
-                // If present, mutate key w/ adaptername prefix
-                thisKey = `${model.adapterName}__${thisKey}`;
-            }
-            allLists[thisKey] = model;
-        });
-
-        Object.keys(allLists).forEach(modelName => {
-            const list = allLists[modelName];
-
-            // Initalize for schema being output to CMS only
-            if (list.adapterName === currentAppConfig.package.schema) {
-                keystone.createList(modelName, {
-                    fields: list.fields,
-                    ...list.options,
-                    adapterName: list.adapterName
-                });
-            }
-        });
-        global.logger.simple.info(
-            `📣 Starting CMS build for ${colors.yellow(
-        currentAppConfig.package.name
-      )}.`
-        );
-
-        return {
-            keystone,
-            apps: [
-                new AdminUIApp({
-                    adminPath: `/cms/@/${currentAppConfig.package.schema}`,
-                    apiPath: `http://localhost:3000/cms/api/?schema=${currentAppConfig.package.schema}`,
-                    graphiqlPath: '/graphiql',
-                    schemaName: currentAppConfig.package.schema
-                })
-            ]
-        };
-    } catch (e) {
-        global.logger.error(e.toString());
-        throw new Error(e);
-    }
+      } catch (e) {
+            global.logger.error(e.toString());
+            throw new Error(e);
+      }
 };
 
 module.exports = (() => {
-    const {
-        argv
-    } = require('yargs');
-    const build = CmsBuild(argv.app, argv.allApps.split(','));
-    return build;
+      const {
+            argv,
+      } = require('yargs');
+      const build = CmsBuild(argv.app, argv.allApps.split(','));
+      return build;
 })();

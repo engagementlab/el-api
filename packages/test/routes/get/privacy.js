@@ -8,24 +8,24 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const {
-    db
-  } = res.locals;
+      const {
+            db,
+      } = res.locals;
 
-  const privacy = db.list('Privacy').model;
-  const fields = 'content.html lastUpdated -_id';
+      const privacy = db.list('Privacy').model;
+      const fields = 'content.html lastUpdated -_id';
 
 
-  try {
-    // Get privacy text
-    const query = privacy.findOne({}, fields);
-    // Execute queries
-    const data = await query.exec();
+      try {
+            // Get privacy text
+            const query = privacy.findOne({}, fields);
+            // Execute queries
+            const data = await query.exec();
 
-    res.json(data);
-  } catch (e) {
-    res.status(500).send(e.toString());
-  }
+            res.json(data);
+      } catch (e) {
+            res.status(500).send(e.toString());
+      }
 };
 
 module.exports = (req, res) => BuildData(req, res);
