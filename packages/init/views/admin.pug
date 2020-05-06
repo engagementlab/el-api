@@ -1,0 +1,23 @@
+extends header.pug
+block head
+block content
+    h3 User Administration
+
+    ul
+        each val,index in users
+            li(class={active: index === 0} onclick='toggleUser(evt)')
+                strong #{val.name}
+                div(class='content')
+                    span #{val.email}
+            
+
+    script.
+        function toggleUser(evt) {
+            
+            let items = document.querySelectorAll('ul li');
+            items.forEach((item) => {
+                item.classList.remove('active');
+            });
+            evt.currentTarget.classList.toggle('active');
+
+        }

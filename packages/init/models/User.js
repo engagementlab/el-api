@@ -30,6 +30,9 @@ const userSchema = new Schema({
   permissions: {
     type: Array,
   },
+  isAdmin: {
+    type: Boolean,
+  },
   lastLogin: {
     type: Date,
   },
