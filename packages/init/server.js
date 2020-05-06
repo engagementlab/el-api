@@ -41,7 +41,6 @@ const appsJson = path.join(__dirname, 'apps.json');
 require('./logger');
 
 let app;
-let packages;
 let server;
 let startCallback;
 let socket;
@@ -168,9 +167,9 @@ const init = callback => {
   /**
    *  Load all possible apps from sibling packages (config defined in app.json)
    */
-  const appConfigs = fs.readFileSync(appsJson);
-  packages = JSON.parse(appConfigs);
-  global.elasti = undefined;
+  // const appConfigs = fs.readFileSync(appsJson);
+  // packages = JSON.parse(appConfigs);
+  // global.elasti = undefined;
 
   start(productionMode);
 };
