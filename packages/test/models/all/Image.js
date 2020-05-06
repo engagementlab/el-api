@@ -32,9 +32,7 @@ const Image = cloudinary => {
       adapter: cloudinary,
     },
   };
-  const options = {
-    label: 'blahblah',
-  };
+  const options = {};
   return {
     fields,
     options,
