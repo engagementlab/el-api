@@ -11,7 +11,7 @@
         "dev": "nodemon ./packages/init/app.js",
         "fix": "eslint --fix ./",
         "inspect": "nodemon --inspect ./packages/init/app.js",
-        "start": "nodemon ./packages/init/app.js",
+        "start": "node ./packages/init/app.js",
         "start-ci": "./node_modules/.bin/nyc yarn run start",
         "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
         "ci": "start-server-and-test start-ci http://localhost:3000 test"
