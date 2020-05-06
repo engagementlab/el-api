@@ -34,12 +34,28 @@ const authentication = {
         // Cache URL to bring user to after auth
         req.session.redirectTo = req.originalUrl;
 
+        // Check if logged in
         if (req.isAuthenticated()) next();
         else res.redirect('/cms/login');
-        // Logged in, but not allowed into this app
-        // else {
 
-        // }
+    },
+    isAllowedInApp: (req, res, next) => {
+        // Check if logged in, and allowed into this app
+        if (req.isAuthenticated()) {
+            const appsAllowed = req.session.passport.user.permissions;
+            const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
+            const originalUrl = req.originalUrl.replace('/cms/', '').replace('@/', '');
+            // Get /appname from URL requested
+            const appUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
+            const allowed = Object.keys(appsInfo).indexOf(appUrl) > -1;
+
+            if (!allowed)
+                res.redirect('/cms/error?type=permission');
+            else
+                next();
+
+        } else res.redirect('/cms/login');
+
     },
 };
 
@@ -70,6 +86,7 @@ module.exports = buildsDir => {
         const appsAllowed = req.session.passport.user.permissions;
         const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
         const errPermission = req.query.type === 'permission';
+
         res.render('index', {
             apps: appsInfo,
             noAccess: appsInfo.length === 0,
@@ -141,6 +158,7 @@ module.exports = buildsDir => {
     router.use(passport.session());
 
     // Static files
+    router.use('/style', (req, res) => res.sendFile(`${binPath}/global.css`));
     router.use('/@', express.static(binPath));
 
     // Landing page (app selection)
@@ -167,10 +185,16 @@ module.exports = buildsDir => {
             // Log user in
             req.logIn(user, logInErr => {
                 if (logInErr) {
-                    req.statusCode(500).send(logInErr);
+                    res.status(500).send(logInErr);
                     return logInErr;
                 }
-                const allowed = user.permissions.indexOf(req.session.redirectTo.replace('/cms/', '')) > -1;
+
+                const appsInfo = utils.GetPackagesData(false, user.permissions.join(','));
+                const originalUrl = req.session.redirectTo.replace('/cms/', '').replace('@/', '');
+                // Get /appname from URL requested
+                const appUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
+                const allowed = Object.keys(appsInfo).indexOf(appUrl) > -1;
+
                 // Explicitly save the session before redirecting!
                 req.session.save(() => {
                     // Ensure user has permissions for this CMS
@@ -191,13 +215,13 @@ module.exports = buildsDir => {
 
     // Create route in router for all builds
     allDirs.forEach(name => {
-        router.get(`/${name}`, authentication.isAllowed, (req, res) => {
+        router.get(`/${name}`, authentication.isAllowedInApp, (req, res) => {
             // Send index for this CMS
             res.redirect(`/cms/@/${name}`);
         });
 
         // We also need a route to render index for all intermediates as per react-dom-router
-        router.get(`/@/${name}*`, authentication.isAllowed, (req, res) => {
+        router.get(`/@/${name}*`, authentication.isAllowedInApp, (req, res) => {
             res.render('cms', {
                 schema: name,
             });

@@ -121,7 +121,8 @@ const start = (productionMode, appName) => {
 const init = callback => {
   if (callback) startCallback = callback;
 
-  const productionMode = process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
+  const productionMode =
+    process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
   wss = new WebSocket.Server({
     port: 3001,
@@ -147,12 +148,19 @@ const init = callback => {
     ws.send('Connected.');
   });
 
-
   /**
    *  Create DB connection for admin database, which contains CMS privileges, etc.
    */
-  const dbAddress = process.env.NODE_ENV === 'development' ? process.env.MONGO_ADMIN_URI : process.env.MONGO_CLOUD_ADMIN_URI;
-  if (!dbAddress) global.logger.error(`Please provide ${process.env.NODE_ENV === 'development' ? 'MONGO' : 'MONGO_CLOUD'}_ADMIN_URI.`);
+  const dbAddress =
+    process.env.NODE_ENV === 'development'
+      ? process.env.MONGO_ADMIN_URI
+      : process.env.MONGO_CLOUD_ADMIN_URI;
+  if (!dbAddress)
+    global.logger.error(
+      `Please provide ${
+        process.env.NODE_ENV === 'development' ? 'MONGO' : 'MONGO_CLOUD'
+      }_ADMIN_URI.`
+    );
   try {
     mongoose.connect(dbAddress, {
       useNewUrlParser: true,
