@@ -48,7 +48,7 @@ const CmsBuild = (currentApp, allApps) => {
     const schemaAdapters = {};
 
     global.logger.simple.info(
-      `Starting build for ${colors.yellow(currentApp)}.`,
+      `Starting build for ${colors.yellow(currentApp)}.`
     );
 
     allApps.forEach(appName => {
@@ -122,8 +122,8 @@ const CmsBuild = (currentApp, allApps) => {
     });
     global.logger.simple.info(
       `📣 Starting CMS build for ${colors.yellow(
-        currentAppConfig.package.name,
-      )}.`,
+        currentAppConfig.package.name
+      )}.`
     );
 
     return {
@@ -134,7 +134,7 @@ const CmsBuild = (currentApp, allApps) => {
           apiPath: `http://localhost:3000/cms/api/?schema=${currentAppConfig.package.schema}`,
           graphiqlPath: '/graphiql',
           schemaName: currentAppConfig.package.schema,
-        }),
+        })
       ],
     };
   } catch (e) {

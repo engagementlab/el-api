@@ -48,7 +48,7 @@ const postBuild = paths => {
         //  Move 'main' webpack bundle as [root]/bundle.js
         fs.renameSync(
           path.join(jsPath, bundleFile),
-          path.join(binPath, 'bundle.js'),
+          path.join(binPath, 'bundle.js')
         );
         // Get all remaining packed bundles
         const listFiles = glob.sync('*bundle.js', {
@@ -59,7 +59,7 @@ const postBuild = paths => {
         listFiles.forEach(file => {
           fs.renameSync(
             path.join(jsPath, file),
-            path.join(binPath, `js/${file}`),
+            path.join(binPath, `js/${file}`)
           );
         });
         // Delete dangling dir (via fs-extra)
@@ -107,7 +107,7 @@ module.exports = (() => {
         `--entry=${__dirname}/generator.js`,
         `--out=${outDir}`,
         `--app=${pkgKey}`,
-        `--allApps=${keys}`,
+        `--allApps=${keys}`
       ]);
 
       child.stdout.on('data', chunk => {
@@ -121,17 +121,17 @@ module.exports = (() => {
       child.on('exit', (err, info) => {
         if (err !== 0) {
           global.logger.error(
-            `⛔ Uncaught error for ${colors.yellow(pkg.name)} process.`,
+            `⛔ Uncaught error for ${colors.yellow(pkg.name)} process (code: ${err}).`
           );
         } else {
           global.logger.info(
-            `🍺 CMS bundle exported for ${colors.yellow(pkg.name)}.`,
+            `🍺 CMS bundle exported for ${colors.yellow(pkg.name)}.`
           );
           exportsDone.push(outDir);
 
           if (exportsDone.length === keys.length) {
             global.logger.info(
-              '✨  All bundles done, organizing directories.  ✨',
+              '✨  All bundles done, organizing directories.  ✨'
             );
             postBuild(exportsDone);
           }
