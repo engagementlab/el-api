@@ -1,17 +1,36 @@
 extends header.pug
 block head
+    script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js')
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css', type='text/css')
+    link(rel='stylesheet', href='/cms/style/admin', type='text/css')
+
 block content
     h3 User Administration
 
-    ul
         each val,index in users
-            li(class={active: index === 0} onclick='toggleUser(evt)')
-                strong #{val.name}
-                div(class='content')
-                    span #{val.email}
-            
+            .ui.styled.accordion
+                div(class={active: index === 0, title: true})
+                    i.dropdown.icon
+                    strong #{val.name}
+                div(class={active: index === 0, content: true})
+                    p #{val.email}
+                    .content.ui.two.column.grid.container
+                        .column
+                            select.ui.fluid.dropdown(name='app access', multiple='')
+                                option(value='') App Access
+                                each val,index in apps
+                                    option(value=index) #{val.name}
+                        .column
+                            .ui.checkbox(data-children-count='1')
+                                input(type='checkbox')
+                                label Is Admin
 
     script.
+            $('.ui.dropdown').dropdown();
+            $('.ui.accordion').accordion({exlusive: true, collapsible: true});
+        //- });
+
         function toggleUser(evt) {
             
             let items = document.querySelectorAll('ul li');

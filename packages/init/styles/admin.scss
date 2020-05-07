@@ -1,51 +1,55 @@
 // Mixins
 @import '../../../node_modules/@engagementlab/el-scss/src/transforms';
 
+body {
+    padding: 1%;
+}
+
 ul {
-  list-style: none;
-  width: 100%;
-  padding: 0;
-
-  li {
-    cursor: pointer;
     list-style: none;
-    margin-top: 5%;
+    width: 100%;
+    padding: 0;
 
-    div.content {
-      max-height: 0;
-      overflow: hidden;
-      color: black;
+    li {
+        cursor: pointer;
+        list-style: none;
+        margin-top: 5%;
 
-      &.text {
-        margin-left: 0;
-        margin-right: 0;
-      }
+        div.content {
+            max-height: 0;
+            overflow: hidden;
+            color: black;
+
+            &.text {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
     }
-  }
 
-  li.active {
-    h3 {
-      cursor: default;
-      background-color: white;
-      color: black;
+    li.active {
+        h3 {
+            cursor: default;
+            background-color: white;
+            color: black;
 
-      svg {
-        line {
-          stroke: black;
+            svg {
+                line {
+                    stroke: black;
+                }
+
+                .vert {
+                    @include transform(scale(1, 0));
+                }
+            }
         }
 
-        .vert {
-          @include transform(scale(1, 0));
+        div.content {
+            max-height: 1000px;
         }
-      }
-    }
 
-    div.column {
-      max-height: 1000px;
+        hr {
+            width: 100%;
+        }
     }
-
-    hr {
-      width: 100%;
-    }
-  }
 }

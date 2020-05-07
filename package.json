@@ -17,7 +17,7 @@
     "start-ci": "./node_modules/.bin/nyc yarn run start",
     "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
     "watch": "npm-run-all --parallel watch-js watch-sass",
-    "watch-js": "nodemon ./packages/init/app.js --scripts-prepend-node-path",
+    "watch-js": "nodemon ./packages/init/app.js",
     "watch-sass": "nodemon -e scss -x \"npm run css\""
   },
   "devDependencies": {
