@@ -5,51 +5,19 @@ body {
     padding: 1%;
 }
 
-ul {
-    list-style: none;
-    width: 100%;
-    padding: 0;
+#saved {
+    position: fixed;
+    display: block;
+    top: 0;
+    right: 0;
+    padding: 1%;
 
-    li {
-        cursor: pointer;
-        list-style: none;
-        margin-top: 5%;
+    background-color: #c4f1c4;
 
-        div.content {
-            max-height: 0;
-            overflow: hidden;
-            color: black;
+    @include transition(all, .4s);
+    @include translate(100%, 0);
 
-            &.text {
-                margin-left: 0;
-                margin-right: 0;
-            }
-        }
-    }
-
-    li.active {
-        h3 {
-            cursor: default;
-            background-color: white;
-            color: black;
-
-            svg {
-                line {
-                    stroke: black;
-                }
-
-                .vert {
-                    @include transform(scale(1, 0));
-                }
-            }
-        }
-
-        div.content {
-            max-height: 1000px;
-        }
-
-        hr {
-            width: 100%;
-        }
+    &.open {
+        @include translate(0, 0);
     }
 }

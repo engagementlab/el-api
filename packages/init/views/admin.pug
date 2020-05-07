@@ -8,28 +8,53 @@ block head
 block content
     h3 User Administration
 
-        each val,index in users
+        #saved
+            span Saved!
+
+        each user,index in users
             .ui.styled.accordion
-                div(class={active: index === 0, title: true})
+                div(class={active: index === 0, title: true} data-id=user._id)
                     i.dropdown.icon
-                    strong #{val.name}
+                    strong #{user.name}
                 div(class={active: index === 0, content: true})
-                    p #{val.email}
+                    p #{user.email}
                     .content.ui.two.column.grid.container
                         .column
-                            select.ui.fluid.dropdown(name='app access', multiple='')
+                            select.ui.fluid.dropdown(id=user._id, data-preselect=user.permissions multiple='')
                                 option(value='') App Access
                                 each val,index in apps
-                                    option(value=index) #{val.name}
+                                    option(value=val.dir) #{val.name}
                         .column
                             .ui.checkbox(data-children-count='1')
                                 input(type='checkbox')
                                 label Is Admin
+                            
 
     script.
-            $('.ui.dropdown').dropdown();
-            $('.ui.accordion').accordion({exlusive: true, collapsible: true});
-        //- });
+        
+        $('.ui.dropdown').each(((i, el) => {            
+            let pre = $(el).find('select').data('preselect');
+            //- $(el).dropdown('set selected', pre);
+
+            $(el).dropdown({values: pre, onChange: function(value, text, $selectedItem) {
+                let body = {
+                    userId: $(this).attr('id'),
+                    values: value,
+                };
+                fetch('http://localhost:3000/cms/admin/edit', {
+                    method: 'post',
+                    body: JSON.stringify(body),
+                    headers: { 'Content-Type': 'application/json' },
+                }).then(function(response) {
+                    return response;
+                }).then(function(data) {
+                    console.log(data)
+                    $('#saved').addClass('open')
+                });
+            }});
+        }));
+
+        $('.ui.accordion').accordion({exlusive: true, collapsible: true,});
 
         function toggleUser(evt) {
             

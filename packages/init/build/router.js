@@ -136,6 +136,23 @@ const adminPage = (req, res) => {
 };
 
 /**
+ * Middleware for admin user modification
+ */
+const adminUserEdit = (req, res) => {
+  User.findOne({ _id: req.body.userId }, async (err, user) => {
+    if (err) res.status(500).send(err);
+    try {
+      if (req.body.permissions) user.permissions = req.body.permissions;
+      user.save();
+      res.status(200).send();
+    } catch (saveErr) {
+      global.logger.error(saveErr);
+      res.status(500).send(saveErr);
+    }
+  });
+};
+
+/**
  * Create a router for all CMS static build outputs
  * @module
  * @param {string} buildsDir - Path to root builds directory (bin)
@@ -231,6 +248,7 @@ module.exports = buildsDir => {
 
   // Admin page
   router.get('/admin', adminPage);
+  router.post('/admin/edit', adminUserEdit);
 
   // Errors
   router.get('/error/:type?', authentication.isAllowed, landing);
