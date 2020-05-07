@@ -1,18 +1,20 @@
 language: node_js
 branches:
   only:
-  - master
+    - master
 before_script:
-- npm i -g lerna
+  - npm i -g lerna
 script:
-- yarn run bootstrap
-- yarn run ci
-- bash <(curl -s https://codecov.io/bash)
+  - yarn run bootstrap
+  - yarn run build
+  - yarn run css
+  - yarn run ci
+  - bash <(curl -s https://codecov.io/bash)
 notifications:
   slack:
     rooms:
-    - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#code
-    - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#el-api-dev
+      - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#code
+      - engagelab:s6lOlE0DN0Drfzyo2fBtPuch#el-api-dev
 env:
   global:
     secure: sWTKSo9up6/s+a7sYJQqitQmiplYj4BvbyGvj8tOM/auDeUMgerjI9Veq/WaK9hzKAm+IDuPLrzRYhXBuxSLIprkcphJksACATt10CvSkf38lQbzxhYJh7gRhi9QC3L3g/1BFUFcW8HfYqQy78Mw2+XfwPBk1BskI1wKdKEOYWkAklcCtGjmhWsJfagq9axMoa+23NN9ZD5snFwBspmMYhJPlgq83xKWiBWWY2nvUv1W2DuZ7d8Pcojbd10b48alJu9FItr3jtqCXojvQRSg3Ttaz9GO2xOxrOGcEXFvrIGBhK8yR07/vut9GMyHYjlXdg8TfeSHVWWjDjygce7c/vglqUl6wpM6AYMA/8Yb0xdVzYb76tIECAZTvT02DTp7BvptQ8RA+yf+wKV+QTzl3ug5j87ydNaFE8NzNMVKUlvHNwoSx4OSvWExg8VaXZdSdlHw3zGnB4/T4BQ/oG0er0KnXdGT9ByQ2y0NRNcPjPnrCjbTJ/9in4viWB3htXLRUPpW9Z+jQ7S4LXy3/AcT3WCAHjR+djWzyOmuFAja2FD9f07mpDc6ZCXxN+Iic50s07JLvS2b687mFEqnmGp2PMtT/ImHQZUiULo0F9M4ut/pQt0x8yGlH0GdQzr+2uXhIFYO4xsZGsx2fZtnUh606Miawa1a4Wd+DbhexfPIDu4=
