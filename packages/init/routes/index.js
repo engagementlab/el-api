@@ -16,93 +16,13 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Build utils
-const utils = require('./utils')();
+const utils = require('../build/utils')();
+
+// Middleware
+const authentication = require('./middleware/auth');
 
 // User model
 const User = require('../models/User');
-
-/**
- *	Handle CMS auth via passport/google
- */
-const authentication = {
-    // Perform the login, after login will redirect to callback
-    login: passport.authenticate('google', {
-        scope: ['openid', 'email', 'profile'],
-    }),
-
-    // Handle google oauth2 callback and direct to CMS app requested if success
-    callback: (req, res, next) => {
-        passport.authenticate('google', (error, user, info) => {
-            if (error) {
-                res.status(401).send(error);
-                return;
-            }
-            if (!user) {
-                res.status(401).send(info);
-                return;
-            }
-
-            // Log user in
-            req.logIn(user, logInErr => {
-                if (logInErr) {
-                    res.status(500).send(logInErr);
-                    return logInErr;
-                }
-
-                const appsInfo = utils.GetPackagesData(
-                    false,
-                    user.permissions.join(',')
-                );
-                const originalUrl = req.session.redirectTo
-                    .replace('/cms/', '')
-                    .replace('@/', '');
-                // Get /appname from URL requested
-                const appUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
-                const allowed = Object.keys(appsInfo).indexOf(appUrl) > -1;
-
-                // Explicitly save the session before redirecting!
-                req.session.save(() => {
-                    // Ensure user has permissions for this CMS
-                    if (req.session.redirectTo === 'cms/' || allowed) {
-                        res.redirect(req.session.redirectTo || '/');
-                    } else res.redirect('/cms/error?type=permission');
-                });
-            });
-        })(req, res);
-    },
-
-    // Check if logged in
-    isAllowed: (req, res, next) => {
-    // Cache URL to bring user to after auth
-        req.session.redirectTo = req.originalUrl;
-
-        if (req.isAuthenticated()) next();
-        else res.redirect('/cms/login');
-    },
-
-    // Check if logged in, and allowed into this app
-    isAllowedInApp: (req, res, next) => {
-        if (req.isAuthenticated()) {
-            const appsAllowed = req.session.passport.user.permissions;
-            const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
-            const originalUrl = req.originalUrl
-                .replace('/cms/', '')
-                .replace('@/', '');
-            // Get /appname from URL requested
-            const appUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
-            const allowed = Object.keys(appsInfo).indexOf(appUrl) > -1;
-
-            if (!allowed) res.redirect('/cms/error?type=permission');
-            else next();
-        } else res.redirect('/cms/login');
-    },
-
-    // Check if user is admin
-    isAdmin: (req, res, next) => {
-        if (req.session.passport.user.isAdmin) next();
-        else res.redirect('/cms/error?type=not-admin');
-    },
-};
 
 /**
  * Middleware for landing/errors
@@ -206,8 +126,8 @@ const adminUserEdit = (req, res) => {
  */
 module.exports = buildsDir => {
     /**
-   * Get all build directories for CMS builds
-   */
+     * Get all build directories for CMS builds
+     */
     const binPath = buildsDir;
 
     // Get all builds
@@ -220,8 +140,8 @@ module.exports = buildsDir => {
         .map(dirent => dirent.name);
 
     /**
-   * Google oauth2/passport config
-   */
+     * Google oauth2/passport config
+     */
 
     // Session store
     //  TODO: mongostore for prod
@@ -241,31 +161,31 @@ module.exports = buildsDir => {
     });
 
     const strategy = new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.AUTH_CALLBACK_URL,
-        passReqToCallback: true,
-    },
-    (request, accessToken, refreshToken, profile, done) => {
-        // Verify user allowed
-        User.findOne({
-            email: profile.emails[0].value,
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: process.env.AUTH_CALLBACK_URL,
+            passReqToCallback: true,
         },
-        (err, user) => {
-            if (err) {
-                global.logger.error(`Login error: ${err}`);
-                return done(err);
-            }
-            if (!user) {
-                global.logger.error(
-                    `Login error: user not found for email ${profile.emails[0].value}`
-                );
-                return done(err);
-            }
-            return done(err, user);
+        (request, accessToken, refreshToken, profile, done) => {
+            // Verify user allowed
+            User.findOne({
+                    email: profile.emails[0].value,
+                },
+                (err, user) => {
+                    if (err) {
+                        global.logger.error(`Login error: ${err}`);
+                        return done(err);
+                    }
+                    if (!user) {
+                        global.logger.error(
+                            `Login error: user not found for email ${profile.emails[0].value}`
+                        );
+                        return done(err);
+                    }
+                    return done(err, user);
+                }
+            );
         }
-        );
-    }
     );
     passport.use(strategy);
 
@@ -299,8 +219,8 @@ module.exports = buildsDir => {
     router.get('/error/:type?', authentication.isAllowed, landing);
 
     /**
-   * Authentication
-   */
+     * Authentication
+     */
     router.get('/callback', authentication.callback);
 
     router.get('/logout', (req, res) => {
@@ -328,16 +248,16 @@ module.exports = buildsDir => {
     // If on dev instance, create dev user if none
     if (process.env.NODE_ENV === 'development') {
         User.findOne({
-            email: process.env.DEV_EMAIL,
-        },
-        (err, user) => {
-            if (!user) {
-                User.create({
-                    email: process.env.DEV_EMAIL,
-                    name: 'Dev User',
-                });
+                email: process.env.DEV_EMAIL,
+            },
+            (err, user) => {
+                if (!user) {
+                    User.create({
+                        email: process.env.DEV_EMAIL,
+                        name: 'Dev User',
+                    });
+                }
             }
-        }
         );
     }
     return router;

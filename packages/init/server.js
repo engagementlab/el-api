@@ -33,7 +33,7 @@ const WebSocket = require('ws');
 
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
-const buildsRouter = require('./build/router');
+const buildsRouter = require('./routes');
 
 const appsJson = path.join(__dirname, 'apps.json');
 
@@ -49,22 +49,22 @@ let wss;
 const boot = config => {
     // Initialize keystone instance
     keystone(config, middleware => {
-    /**
-     * Create router for all CMS builds from outputs dir if not on dev
-     */
+        /**
+         * Create router for all CMS builds from outputs dir if not on dev
+         */
         if (process.env.NODE_ENV !== 'development') {
             const cmsRouter = buildsRouter(path.join(__dirname, '../../bin'));
             config.app.use('/cms', cmsRouter);
         }
 
         /**
-     * Get port from environment and store in Express.
-     */
+         * Get port from environment and store in Express.
+         */
         const port = ServerUtils.normalizePort(process.env.PORT || '3000');
 
         /**
-     * Listen on provided port w/ both keystone instance and API routes
-     */
+         * Listen on provided port w/ both keystone instance and API routes
+         */
         server = config.app.use([middleware, config.routes]).listen(port, () => {
             global.logger.info(
                 colors.bgCyan.bold.black(
@@ -104,7 +104,7 @@ const start = (productionMode, appName) => {
     // Pass our route importer util to package
     const packageInit = require(packagePath);
     packageInit(ServerUtils.routeImporter).then(pkg => {
-    // Export all models, routes, config for this app
+        // Export all models, routes, config for this app
         const bootConfig = {
             app,
             package: pkg.Config,
@@ -122,7 +122,7 @@ const init = callback => {
     if (callback) startCallback = callback;
 
     const productionMode =
-    process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
+        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
     wss = new WebSocket.Server({
         port: 3001,
@@ -149,10 +149,10 @@ const init = callback => {
     });
 
     /**
-   *  Create DB connection for admin database, which contains CMS privileges, etc.
-   */
+     *  Create DB connection for admin database, which contains CMS privileges, etc.
+     */
     const dbAddress =
-    process.env.NODE_ENV === 'development' ?
+        process.env.NODE_ENV === 'development' ?
         process.env.MONGO_ADMIN_URI :
         process.env.MONGO_CLOUD_ADMIN_URI;
     if (!dbAddress)
@@ -173,8 +173,8 @@ const init = callback => {
     }
 
     /**
-   *  Load all possible apps from sibling packages (config defined in app.json)
-   */
+     *  Load all possible apps from sibling packages (config defined in app.json)
+     */
     // const appConfigs = fs.readFileSync(appsJson);
     // packages = JSON.parse(appConfigs);
     // global.elasti = undefined;
