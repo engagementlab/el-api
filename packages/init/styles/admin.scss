@@ -5,19 +5,9 @@ body {
     padding: 1%;
 }
 
-#saved {
-    position: fixed;
-    display: block;
+.message {
+    display: none;
+    position: fixed !important;
     top: 0;
-    right: 0;
-    padding: 1%;
-
-    background-color: #c4f1c4;
-
-    @include transition(all, .4s);
-    @include translate(100%, 0);
-
-    &.open {
-        @include translate(0, 0);
-    }
+    right: 1%;
 }

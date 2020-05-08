@@ -139,17 +139,64 @@ const adminPage = (req, res) => {
  * Middleware for admin user modification
  */
 const adminUserEdit = (req, res) => {
-  User.findOne({ _id: req.body.userId }, async (err, user) => {
-    if (err) res.status(500).send(err);
-    try {
-      if (req.body.permissions) user.permissions = req.body.permissions;
-      user.save();
-      res.status(200).send();
-    } catch (saveErr) {
-      global.logger.error(saveErr);
-      res.status(500).send(saveErr);
+
+  try {
+    const {
+      body,
+    } = req;
+    if (body.email && body.name) {
+      User.create({
+        name: body.name,
+        email: body.email,
+        isAdmin: body.isAdmin,
+        permissions: body.permissions,
+      }, (err, user) => {
+        if (err) {
+          // Catch dupe email
+          if (err.name === 'MongoError' && err.keyPattern.email === 1)
+            res.status(500).send({
+              msg: 'email',
+            });
+          else
+            res.status(500).send(err);
+        } else {
+          res.status(200).send({
+            msg: 'created',
+          });
+        }
+      });
+    } else {
+
+      User.findOne({
+        _id: body.userId,
+      }, async (err, user) => {
+        if (err) res.status(500).send(err);
+        else if (body.delete) {
+          if (!user) {
+            res.status(500).send();
+            return;
+          }
+          user.delete();
+          res.status(200).send({
+            msg: 'deleted',
+          });
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          if (body.permissions) user.permissions = body.permissions;
+          // eslint-disable-next-line no-param-reassign
+          if (body.isAdmin !== undefined) user.isAdmin = body.isAdmin;
+          user.save();
+          res.status(200).send({
+            msg: 'saved',
+          });
+        }
+      });
     }
-  });
+  } catch (saveErr) {
+    global.logger.error(saveErr);
+    res.status(500).send(saveErr.toString());
+  }
+
 };
 
 /**
@@ -193,8 +240,7 @@ module.exports = buildsDir => {
     done(null, user);
   });
 
-  const strategy = new GoogleStrategy(
-    {
+  const strategy = new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.AUTH_CALLBACK_URL,
@@ -202,8 +248,7 @@ module.exports = buildsDir => {
     },
     (request, accessToken, refreshToken, profile, done) => {
       // Verify user allowed
-      User.findOne(
-        {
+      User.findOne({
           email: profile.emails[0].value,
         },
         (err, user) => {
@@ -282,8 +327,7 @@ module.exports = buildsDir => {
 
   // If on dev instance, create dev user if none
   if (process.env.NODE_ENV === 'development') {
-    User.findOne(
-      {
+    User.findOne({
         email: process.env.DEV_EMAIL,
       },
       (err, user) => {

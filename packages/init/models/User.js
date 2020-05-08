@@ -15,7 +15,6 @@ const {
 const userSchema = new Schema({
   googleId: {
     type: String,
-    index: true,
     unique: true,
   },
   name: {
@@ -26,6 +25,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   permissions: {
     type: Array,
