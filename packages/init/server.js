@@ -49,6 +49,9 @@ let wss;
 const boot = config => {
     // Initialize keystone instance
     keystone(config, middleware => {
+        // This does nothing for now except return 200 to confirm boot for unit tests
+        config.app.get('/', (req, res) => res.status(200).send('Ready'));
+
         /**
          * Create router for all CMS builds from outputs dir if not on dev
          */
