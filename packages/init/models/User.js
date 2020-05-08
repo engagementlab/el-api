@@ -9,33 +9,33 @@
 const mongoose = require('mongoose');
 
 const {
-  Schema,
+    Schema,
 } = mongoose;
 
 const userSchema = new Schema({
-  googleId: {
-    type: String,
-    unique: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
-  permissions: {
-    type: Array,
-  },
-  isAdmin: {
-    type: Boolean,
-  },
-  lastLogin: {
-    type: Date,
-  },
+    googleId: {
+        type: String,
+        unique: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+    },
+    permissions: {
+        type: Array,
+    },
+    isAdmin: {
+        type: Boolean,
+    },
+    lastLogin: {
+        type: Date,
+    },
 });
 
 /**

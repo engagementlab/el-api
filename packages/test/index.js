@@ -8,7 +8,7 @@
  */
 
 const {
-  MongoClient,
+    MongoClient,
 } = require('mongodb');
 
 const fs = require('fs');
@@ -23,37 +23,37 @@ const models = require('./models')();
  * @returns {object} Package's routes, models, config.
  */
 module.exports = (routesImporter, configOnly) => {
-  const dataFile = fs.readFileSync(`${__dirname}/config.json`);
-  const configData = JSON.parse(dataFile);
-  const packageConfig = {
-    Routes: null,
-    Models: models,
-    Config: configData,
-  };
+    const dataFile = fs.readFileSync(`${__dirname}/config.json`);
+    const configData = JSON.parse(dataFile);
+    const packageConfig = {
+        Routes: null,
+        Models: models,
+        Config: configData,
+    };
 
-  // Just return config data and data models
-  if (configOnly) {
-    global.logger.simple.info('🆗 TEST config loaded.');
-    return packageConfig;
-  }
+    // Just return config data and data models
+    if (configOnly) {
+        global.logger.simple.info('🆗 TEST config loaded.');
+        return packageConfig;
+    }
 
-  return new Promise(resolve => {
+    return new Promise(resolve => {
     // Create DB connection and import API routes if not generating CMS build
-    const dbAddress = process.env.NODE_ENV === 'development' ?
-      'mongodb://localhost' :
-      `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
+        const dbAddress = process.env.NODE_ENV === 'development' ?
+            'mongodb://localhost' :
+            `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
 
-    MongoClient.connect(dbAddress, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }).then(client => {
-      const db = client.db(configData.database);
-      const appRoutes = routes(routesImporter, db);
-      // TODO: give all routes a namespace prefix, e.g. 'homepage/'
-      packageConfig.Routes = appRoutes;
-      resolve(packageConfig);
+        MongoClient.connect(dbAddress, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        }).then(client => {
+            const db = client.db(configData.database);
+            const appRoutes = routes(routesImporter, db);
+            // TODO: give all routes a namespace prefix, e.g. 'homepage/'
+            packageConfig.Routes = appRoutes;
+            resolve(packageConfig);
 
-      global.logger.info('🚀 TEST API ready.');
+            global.logger.info('🚀 TEST API ready.');
+        });
     });
-  });
 };

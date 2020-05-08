@@ -24,35 +24,35 @@ const path = require('path');
  */
 
 function dispatchImporter(rel__dirname) {
-  function importer(from) {
-    debug('importing ', from);
-    const imported = {};
-    const joinPath = function () {
-      return `.${path.sep}${path.join.apply(path, arguments)}`;
-    };
+    function importer(from) {
+        debug('importing ', from);
+        const imported = {};
+        const joinPath = function () {
+            return `.${path.sep}${path.join.apply(path, arguments)}`;
+        };
 
-    const fsPath = joinPath(path.relative(process.cwd(), rel__dirname), from);
-    fs.readdirSync(fsPath).forEach(name => {
-      const info = fs.statSync(path.join(fsPath, name));
-      debug('recur');
-      if (info.isDirectory()) {
-        imported[name] = importer(joinPath(from, name));
-      } else {
-        // only import files that we can `require`
-        const ext = path.extname(name);
-        const base = path.basename(name, ext);
-        if (require.extensions[ext]) {
-          imported[base] = require(path.join(rel__dirname, from, name));
-        } else {
-          debug('cannot require ', ext);
-        }
-      }
-    });
+        const fsPath = joinPath(path.relative(process.cwd(), rel__dirname), from);
+        fs.readdirSync(fsPath).forEach(name => {
+            const info = fs.statSync(path.join(fsPath, name));
+            debug('recur');
+            if (info.isDirectory()) {
+                imported[name] = importer(joinPath(from, name));
+            } else {
+                // only import files that we can `require`
+                const ext = path.extname(name);
+                const base = path.basename(name, ext);
+                if (require.extensions[ext]) {
+                    imported[base] = require(path.join(rel__dirname, from, name));
+                } else {
+                    debug('cannot require ', ext);
+                }
+            }
+        });
 
-    return imported;
-  }
+        return imported;
+    }
 
-  return importer;
+    return importer;
 }
 
 module.exports = dispatchImporter;

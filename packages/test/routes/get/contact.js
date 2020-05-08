@@ -8,24 +8,24 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const {
-    db,
-  } = res.locals;
+    const {
+        db,
+    } = res.locals;
 
-  const contact = db.list('Contact').model;
-  const fields = 'name blurb students community -_id';
+    const contact = db.list('Contact').model;
+    const fields = 'name blurb students community -_id';
 
 
-  try {
+    try {
     // Get contact text
-    const query = contact.findOne({}, fields);
-    // Execute queries
-    const data = await query.exec();
+        const query = contact.findOne({}, fields);
+        // Execute queries
+        const data = await query.exec();
 
-    res.json(data);
-  } catch (e) {
-    res.status(500).send(e.toString());
-  }
+        res.json(data);
+    } catch (e) {
+        res.status(500).send(e.toString());
+    }
 };
 
 module.exports = (req, res) => BuildData(req, res);

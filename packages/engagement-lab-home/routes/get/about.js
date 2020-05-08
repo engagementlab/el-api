@@ -8,35 +8,35 @@
  * ==========
  */
 const BuildData = async (req, res) => {
-  const {
-    db,
-  } = res.locals;
+    const {
+        db,
+    } = res.locals;
 
-  const person = db.collection('Person');
-  const partner = db.collection('Partner');
-  const about = db.collection('abouts');
+    const person = db.collection('Person');
+    const partner = db.collection('Partner');
+    const about = db.collection('abouts');
 
-  const aboutFields = 'missionStatement summary1 summary2 images.public_id research workshops tools teaching design -_id';
-  const partnerFields = 'name image.public_id url -_id';
-  const personFields = 'name title key image.public_id url -_id';
+    const aboutFields = 'missionStatement summary1 summary2 images.public_id research workshops tools teaching design -_id';
+    const partnerFields = 'name image.public_id url -_id';
+    const personFields = 'name title key image.public_id url -_id';
 
-  try {
+    try {
     // Get about
-    const aboutData = await about.findOne({}, aboutFields);
-    // Get a couple featured projects
-    const partnersData = await partner.find({}, partnerFields);
-    // Get faculty and staff
-    const peopleData = await person.find({
-      category: {
-        $in: ['faculty leadership', 'staff'],
-      },
-    }, personFields)
-      .sort({
-        sortOrder: 'ascending',
-      });
-    const data = aboutData;
+        const aboutData = await about.findOne({}, aboutFields);
+        // Get a couple featured projects
+        const partnersData = await partner.find({}, partnerFields);
+        // Get faculty and staff
+        const peopleData = await person.find({
+            category: {
+                $in: ['faculty leadership', 'staff'],
+            },
+        }, personFields)
+            .sort({
+                sortOrder: 'ascending',
+            });
+        const data = aboutData;
 
-    /*     const query = await db.executeQuery(`
+        /*     const query = await db.executeQuery(`
           query {
             allAboutPages {
               missionStatement
@@ -62,10 +62,10 @@ const BuildData = async (req, res) => {
         }
 
         res.json(query.data.allAboutPages[0]); */
-    res.json(data);
-  } catch (e) {
-    res.status(500).send(e.toString());
-  }
+        res.json(data);
+    } catch (e) {
+        res.status(500).send(e.toString());
+    }
 };
 
 module.exports = (req, res) => BuildData(req, res);

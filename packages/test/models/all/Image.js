@@ -9,34 +9,34 @@
  */
 
 const {
-  CloudinaryImage,
+    CloudinaryImage,
 } = require('@keystonejs/fields');
 
 const Image = cloudinary => {
-  /**
+    /**
    * Model Fields
    * @memberof Image
    */
-  const fields = {
-    name: {
-      type: String,
-      default: 'Image',
-      hidden: true,
-      isRequired: true,
-      initial: true,
-      adminDoc: 'test-image',
-    },
-    // TODO: Custom multi-image field
-    image: {
-      type: CloudinaryImage,
-      adapter: cloudinary,
-    },
-  };
-  const options = {};
-  return {
-    fields,
-    options,
-  };
+    const fields = {
+        name: {
+            type: String,
+            default: 'Image',
+            hidden: true,
+            isRequired: true,
+            initial: true,
+            adminDoc: 'test-image',
+        },
+        // TODO: Custom multi-image field
+        image: {
+            type: CloudinaryImage,
+            adapter: cloudinary,
+        },
+    };
+    const options = {};
+    return {
+        fields,
+        options,
+    };
 };
 
 /**
