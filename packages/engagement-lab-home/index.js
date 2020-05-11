@@ -7,7 +7,9 @@
  * ==========
  */
 
-const { MongoClient, } = require('mongodb');
+const {
+    MongoClient,
+} = require('mongodb');
 
 const fs = require('fs');
 const routes = require('./routes');
@@ -36,11 +38,11 @@ module.exports = (routesImporter, configOnly) => {
     }
 
     return new Promise(resolve => {
-    // Create DB connection and import API routes if not generating CMS build
+        // Create DB connection and import API routes if not generating CMS build
         const dbAddress =
-                  process.env.NODE_ENV === 'development' ?
-                      'mongodb://localhost' :
-                      `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
+            process.env.NODE_ENV === 'production' ?
+            'mongodb://localhost' :
+            `${process.env.MONGO_CLOUD_URI}${configData.database}?retryWrites=true&w=majority`;
 
         MongoClient.connect(dbAddress, {
             useNewUrlParser: true,

@@ -124,13 +124,13 @@ const init = callback => {
      *  Create DB connection for admin database, which contains CMS privileges, etc.
      */
     const dbAddress =
-        process.env.NODE_ENV === 'development' ?
+        process.env.NODE_ENV !== 'production' ?
         process.env.MONGO_ADMIN_URI :
         process.env.MONGO_CLOUD_ADMIN_URI;
     if (!dbAddress)
         global.logger.error(
             `Please provide ${
-                process.env.NODE_ENV === 'development' ? 'MONGO' : 'MONGO_CLOUD'
+                process.env.NODE_ENV === 'production' ? 'MONGO' : 'MONGO_CLOUD'
             }_ADMIN_URI.`
         );
     try {
