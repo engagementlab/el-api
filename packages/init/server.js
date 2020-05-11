@@ -24,8 +24,6 @@ if (process.env.NODE_ENV !== 'ci') {
 }
 
 const path = require('path');
-const fs = require('fs');
-
 const express = require('express');
 const mongoose = require('mongoose');
 const colors = require('colors');

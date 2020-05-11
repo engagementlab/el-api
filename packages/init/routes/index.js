@@ -7,6 +7,8 @@
  * ==========
  */
 
+const ciMode = process.env.NODE_ENV === 'ci';
+
 const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
@@ -14,7 +16,9 @@ const parser = require('body-parser');
 
 // Passport
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = ciMode ?
+    require('passport-mocked').Strategy :
+    require('passport-google-oauth20').Strategy;
 
 // Build utils
 const utils = require('../build/utils')();
@@ -101,8 +105,9 @@ module.exports = buildsDir => {
         },
         (request, accessToken, refreshToken, profile, done) => {
             // Verify user allowed
+            const email = ciMode ? process.env.DEV_EMAIL : profile.emails[0].value;
             User.findOne({
-                    email: profile.emails[0].value,
+                    email,
                 },
                 (err, user) => {
                     if (err) {
@@ -120,6 +125,7 @@ module.exports = buildsDir => {
             );
         }
     );
+
     passport.use(strategy);
 
     router.use(passport.initialize());
