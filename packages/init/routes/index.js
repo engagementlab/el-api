@@ -10,6 +10,7 @@
 const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
+const parser = require('body-parser');
 
 // Passport
 const passport = require('passport');
@@ -20,6 +21,7 @@ const utils = require('../build/utils')();
 
 // Middleware
 const authentication = require('./middleware/auth');
+const admin = require('./middleware/admin');
 
 // User model
 const User = require('../models/User');
@@ -42,85 +44,7 @@ const landing = (req, res) => {
 };
 
 /**
- * Middleware for admin page
- */
-const adminPage = (req, res) => {
-    // Get all apps
-    const appsInfo = utils.GetPackagesData(false);
-    User.find({}, (err, users) => {
-        res.render('admin', {
-            apps: appsInfo,
-            users,
-        });
-    });
-};
-
-/**
- * Middleware for admin user modification
- */
-const adminUserEdit = (req, res) => {
-
-    try {
-        const {
-            body,
-        } = req;
-        if (body.email && body.name) {
-            User.create({
-                name: body.name,
-                email: body.email,
-                isAdmin: body.isAdmin,
-                permissions: body.permissions,
-            }, (err, user) => {
-                if (err) {
-                    // Catch dupe email
-                    if (err.name === 'MongoError' && err.keyPattern.email === 1)
-                        res.status(500).send({
-                            msg: 'email',
-                        });
-                    else
-                        res.status(500).send(err);
-                } else {
-                    res.status(200).send({
-                        msg: 'created',
-                    });
-                }
-            });
-        } else {
-
-            User.findOne({
-                _id: body.userId,
-            }, async (err, user) => {
-                if (err) res.status(500).send(err);
-                else if (body.delete) {
-                    if (!user) {
-                        res.status(500).send();
-                        return;
-                    }
-                    user.delete();
-                    res.status(200).send({
-                        msg: 'deleted',
-                    });
-                } else {
-                    // eslint-disable-next-line no-param-reassign
-                    if (body.permissions) user.permissions = body.permissions;
-                    // eslint-disable-next-line no-param-reassign
-                    if (body.isAdmin !== undefined) user.isAdmin = body.isAdmin;
-                    user.save();
-                    res.status(200).send({
-                        msg: 'saved',
-                    });
-                }
-            });
-        }
-    } catch (saveErr) {
-        global.logger.error(saveErr);
-        res.status(500).send(saveErr.toString());
-    }
-
-};
-
-/**
- * Create a router for all CMS static build outputs
+ * Create a router for all CMS static build outputs and admin pages
  * @module
  * @param {string} buildsDir - Path to root builds directory (bin)
  */
@@ -139,10 +63,6 @@ module.exports = buildsDir => {
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name);
 
-    /**
-     * Google oauth2/passport config
-     */
-
     // Session store
     //  TODO: mongostore for prod
     router.use(
@@ -153,6 +73,19 @@ module.exports = buildsDir => {
         })
     );
 
+    const bodyParser = parser;
+    // Support json encoded bodies
+    router.use(bodyParser.json());
+    // Support encoded bodies
+    router.use(
+        bodyParser.urlencoded({
+            extended: true,
+        })
+    );
+
+    /**
+     * Google oauth2/passport config
+     */
     passport.serializeUser((user, done) => {
         done(null, user);
     });
@@ -189,16 +122,6 @@ module.exports = buildsDir => {
     );
     passport.use(strategy);
 
-    const bodyParser = require('body-parser');
-    // Support json encoded bodies
-    router.use(bodyParser.json());
-    // Support encoded bodies
-    router.use(
-        bodyParser.urlencoded({
-            extended: true,
-        })
-    );
-
     router.use(passport.initialize());
     router.use(passport.session());
 
@@ -212,8 +135,8 @@ module.exports = buildsDir => {
     router.get('/', authentication.isAllowed, landing);
 
     // Admin page
-    router.get('/admin', adminPage);
-    router.post('/admin/edit', adminUserEdit);
+    router.get('/admin', admin.landing);
+    router.post('/admin/edit', admin.userCrud);
 
     // Errors
     router.get('/error/:type?', authentication.isAllowed, landing);

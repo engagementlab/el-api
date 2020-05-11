@@ -39,12 +39,18 @@ const UrlAllowed = (permissions, url) => {
  *	Handle CMS auth via passport/google
  */
 module.exports = {
-    // Perform the login, after login will redirect to callback
+    /**
+     * Perform the login, after login will redirect to callback
+     * @function
+     */
     login: passport.authenticate('google', {
         scope: ['openid', 'email', 'profile'],
     }),
 
-    // Handle google oauth2 callback and direct to CMS app requested if success
+    /**
+     * Handle google oauth2 callback and direct to CMS app requested if success
+     * @function
+     */
     callback: (req, res) => {
         passport.authenticate('google', (error, user, info) => {
             if (error) {
@@ -76,7 +82,10 @@ module.exports = {
         })(req, res);
     },
 
-    // Check if logged in
+    /**
+     *  Check if user is logged in
+     * @function
+     */
     isAllowed: (req, res, next) => {
 
         // Cache URL to bring user to after auth
@@ -87,7 +96,10 @@ module.exports = {
 
     },
 
-    // Check if logged in, and allowed into this app
+    /**
+     * Check if logged in, and allowed into this app
+     * @function
+     */
     isAllowedInApp: (req, res, next) => {
 
         // Cache URL to bring user to after auth
