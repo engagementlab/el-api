@@ -27,7 +27,6 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const colors = require('colors');
-const WebSocket = require('ws');
 
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
@@ -41,8 +40,6 @@ require('./logger');
 let app;
 let server;
 let startCallback;
-let socket;
-let wss;
 
 const boot = config => {
     // Initialize keystone instance
@@ -74,8 +71,6 @@ const boot = config => {
                     } Mode).`
                 )
             );
-
-            if (socket) socket.send('loaded');
 
             // Call class callback if defined (for tests)
             if (startCallback) startCallback(app);
@@ -124,30 +119,6 @@ const init = callback => {
 
     const productionMode =
         process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
-
-    wss = new WebSocket.Server({
-        port: 3001,
-    });
-
-    wss.on('listening', ws => {
-        global.logger.info(`${'Websockets:'.magenta} server listening.`);
-    });
-    wss.on('connection', ws => {
-        ws.on('message', async message => {
-            const data = JSON.parse(message);
-            global.logger.info(
-                `${'Websockets:'.magenta} received ${data.evt}, ${data.id}`
-            );
-
-            // Event for server close and reboot w/ new package
-            if (data.evt === 'reload') {
-                socket = ws;
-                start(productionMode, data.id);
-            }
-        });
-
-        ws.send('Connected.');
-    });
 
     /**
      *  Create DB connection for admin database, which contains CMS privileges, etc.
