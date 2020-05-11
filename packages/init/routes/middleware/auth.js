@@ -14,6 +14,28 @@ const passport = require('passport');
 const utils = require('../../build/utils')();
 
 /**
+ * Find if url being accessed for CMS is in user's permissions.
+ * @function
+ * @param {Array} permissions - List of permissions from user records
+ * @param {string} url - Full URL being accessed
+ * @returns {boolean} - Is user allowed?
+ *
+ */
+const UrlAllowed = (permissions, url) => {
+    const appsInfo = utils.GetPackagesData(false, permissions.join(','));
+    let originalUrl = url
+        .replace('/cms/', '')
+        .replace('@/', '');
+
+    // Get /appname from URL requested (only what is before ending / if present)
+    if (originalUrl.indexOf('/') > 0)
+        originalUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
+
+    // Url is in list of allowed apps?
+    return Object.keys(appsInfo).indexOf(originalUrl) > -1;
+};
+
+/**
  *	Handle CMS auth via passport/google
  */
 module.exports = {
@@ -41,20 +63,10 @@ module.exports = {
                     return logInErr;
                 }
 
-                const appsInfo = utils.GetPackagesData(
-                    false,
-                    user.permissions.join(',')
-                );
-                const originalUrl = req.session.redirectTo
-                    .replace('/cms/', '')
-                    .replace('@/', '');
-                // Get /appname from URL requested
-                const appUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
-                const allowed = Object.keys(appsInfo).indexOf(appUrl) > -1;
-
                 // Explicitly save the session before redirecting!
                 req.session.save(() => {
                     // Ensure user has permissions for this CMS
+                    const allowed = !UrlAllowed(user.permissions, req.session.redirectTo);
                     if (req.session.redirectTo === 'cms/' || allowed) {
                         res.redirect(req.session.redirectTo || '/');
                     } else res.redirect('/cms/error?type=permission');
@@ -83,17 +95,8 @@ module.exports = {
 
         if (req.isAuthenticated()) {
             const appsAllowed = req.session.passport.user.permissions;
-            const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
-            let originalUrl = req.originalUrl
-                .replace('/cms/', '')
-                .replace('@/', '');
-
-            // Get /appname from URL requested (only what is before ending / if present)
-            if (originalUrl.indexOf('/') > 0)
-                originalUrl = originalUrl.substring(0, originalUrl.indexOf('/'));
-            const allowed = Object.keys(appsInfo).indexOf(originalUrl) > -1;
-
-            if (!allowed) res.redirect('/cms/error?type=permission');
+            // If not allowed, send error page
+            if (!UrlAllowed(appsAllowed, req.originalUrl)) res.redirect('/cms/error?type=permission');
             else next();
 
         } else res.redirect('/cms/login');
