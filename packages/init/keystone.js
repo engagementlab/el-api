@@ -70,9 +70,8 @@ const KeystoneApp = (ksConfig, callback) => {
         };
 
         const schemaName = config.package.schema;
-        const dbAddress = process.env.NODE_ENV === 'development' ?
-            `mongodb://localhost/${config.package.database}` :
-            `${process.env.MONGO_CLOUD_URI}${config.package.database}?retryWrites=true&w=majority`;
+        const dbAddress = `${ksConfig.dbPrefix}${config.package.database}?retryWrites=true&w=majority`;
+
 
         // Add instantiated model to array of all
         config.models.forEach(modelFunc => {
