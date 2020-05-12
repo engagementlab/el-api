@@ -41,8 +41,18 @@ const cloudinaryAdapter = new CloudinaryAdapter({
 require('../logger');
 
 const CmsBuild = (currentApp, allApps) => {
+    // Create DB prefix for app
+    let dbPrefix = 'mongodb://localhost';
+    const env = process.env.NODE_ENV;
+    if (env !== 'development') {
+        if (env === 'staging' || env === 'ci')
+            dbPrefix = process.env.MONGO_CLOUD_STAGING_URI;
+        else
+            dbPrefix = process.env.MONGO_CLOUD_URI;
+    }
+
     try {
-    // Array to hold all model references
+        // Array to hold all model references
         const modelsMerged = [];
         let currentAppConfig = {};
         const schemaAdapters = {};
@@ -57,7 +67,10 @@ const CmsBuild = (currentApp, allApps) => {
 
             const packageInit = require(packagePath);
             // Load all data for API of currently used package
-            const appPackage = packageInit(null, true);
+            const appPackage = packageInit({
+                dbPrefix,
+                skipRoutes: true,
+            });
 
             // Export models, config for this app
             const config = {
