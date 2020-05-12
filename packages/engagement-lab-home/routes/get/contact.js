@@ -12,12 +12,12 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const contact = db.list('Contact').model;
+    const contact = db.collection('Contact').model;
     const fields = 'name blurb students community -_id';
 
 
     try {
-    // Get contact text
+        // Get contact text
         const query = contact.findOne({}, fields);
         // Execute queries
         const data = await query.exec();

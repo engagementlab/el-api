@@ -162,7 +162,7 @@ module.exports = buildsDir => {
     // Create route in router for all builds
     allDirs.forEach(name => {
         router.get(`/${name}`, authentication.isAllowedInApp, (req, res) => {
-            // Send index for this CMS
+            // Send index for this CMS 
             res.redirect(`/cms/@/${name}`);
         });
 

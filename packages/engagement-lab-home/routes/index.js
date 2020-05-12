@@ -38,7 +38,7 @@ const Routes = (importer, db) => {
 
     router.get('/get/about', routes.about);
     // router.get('/get/events/:key?', routes.event.data);
-    // router.get('/get/homepage', routes.homepage);
+    router.get('/get/homepage', routes.homepage);
     // router.get('/get/initiative/:key', routes.initiative.data);
     // router.get('/get/contact', routes.contact);
     // router.get('/get/jobs', routes.jobs);

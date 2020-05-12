@@ -13,21 +13,21 @@ const GetAdjacent = async (list, results, res) => {
     // Get one next/prev project from selected project's sortorder
     const nextProject = list
         .findOne({
-            enabled: true,
-            sortOrder: {
-                $gt: results.sortOrder,
+                enabled: true,
+                sortOrder: {
+                    $gt: results.sortOrder,
+                },
             },
-        },
-        fields)
+            fields)
         .limit(1);
     const prevProject = list
         .findOne({
-            enabled: true,
-            sortOrder: {
-                $lt: results.sortOrder,
+                enabled: true,
+                sortOrder: {
+                    $lt: results.sortOrder,
+                },
             },
-        },
-        fields)
+            fields)
         .sort({
             sortOrder: -1,
         })
@@ -50,7 +50,7 @@ const GetAdjacent = async (list, results, res) => {
 };
 
 const BuildData = async (req, res) => {
-    const list = res.locals.db.list('Project').model;
+    const list = res.locals.db.collection('Project').model;
     const options = {
         id: req.params.key,
     };
@@ -64,12 +64,12 @@ const BuildData = async (req, res) => {
     let data;
 
     try {
-    // Get one project
+        // Get one project
         if (options.id && !archived) {
             const addtlFields = '_id description challengeTxt strategyTxt resultsTxt externalLinkUrl githubUrl projectImages.public_id files showFiles';
             data = list.findOne({
-                key: options.id,
-            }, `${fields} ${addtlFields}`)
+                    key: options.id,
+                }, `${fields} ${addtlFields}`)
                 .populate({
                     path: 'principalInvestigator',
                     select: 'name -_id',
@@ -84,17 +84,17 @@ const BuildData = async (req, res) => {
                 });
         } else if (archived) {
             data = list.find({
-                enabled: true,
-                archived: true,
-            },
-            `${fields} -_id`)
+                        enabled: true,
+                        archived: true,
+                    },
+                    `${fields} -_id`)
                 .sort([
                     ['sortOrder', 'ascending']
                 ]);
         } else {
             data = list.find({
-                enabled: true,
-            }, `${fields} -_id`)
+                    enabled: true,
+                }, `${fields} -_id`)
                 .sort([
                     ['sortOrder', 'ascending']
                 ]);
@@ -122,7 +122,7 @@ const BuildData = async (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.list('Project').model;
+    const list = res.locals.db.collection('Project').model;
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

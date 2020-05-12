@@ -11,10 +11,10 @@ const BuildData = async (req, res) => {
     const {
         db,
     } = res.locals;
-    const initiative = db.list('Initiative').model;
+    const initiative = db.collection('Initiative').model;
     const fields = 'name key description longDescription projects -_id';
     try {
-    // Get initiative text
+        // Get initiative text
         const initiativeData = initiative.findOne({
             key: req.params.key,
         }, fields).populate({
@@ -46,7 +46,7 @@ exports.get = (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.list('Initiative').model;
+    const list = res.locals.db.collection('Initiative').model;
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

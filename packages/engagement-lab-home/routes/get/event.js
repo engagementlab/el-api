@@ -13,21 +13,21 @@ const GetAdjacent = async (list, results, res) => {
     // Get one next/prev event from selected event's sortorder
     const nextEvent = list
         .findOne({
-            enabled: true,
-            date: {
-                $gt: results.date,
+                enabled: true,
+                date: {
+                    $gt: results.date,
+                },
             },
-        },
-        fields)
+            fields)
         .limit(1);
     const prevEvent = list
         .findOne({
-            enabled: true,
-            date: {
-                $lt: results.date,
+                enabled: true,
+                date: {
+                    $lt: results.date,
+                },
             },
-        },
-        fields)
+            fields)
         .sort({
             sortOrder: -1,
         })
@@ -50,7 +50,7 @@ const GetAdjacent = async (list, results, res) => {
 };
 
 const BuildData = async (req, res) => {
-    const list = res.locals.db.list('Event').model;
+    const list = res.locals.db.collection('Event').model;
     const options = {
         id: req.params.key,
     };
@@ -59,7 +59,7 @@ const BuildData = async (req, res) => {
     let data;
 
     try {
-    // Get one event
+        // Get one event
         if (options.id) {
             const addtlFields = 'description.html images.public_id showButton buttonTxt';
             data = list.findOne({
@@ -67,16 +67,16 @@ const BuildData = async (req, res) => {
             }, `${fields} ${addtlFields}`);
         } else if (options.archived) {
             data = list.find({
-                enabled: true,
-            },
-            fields)
+                        enabled: true,
+                    },
+                    fields)
                 .sort([
                     ['sortOrder', 'descending']
                 ]);
         } else {
             data = list.find({
-                enabled: true,
-            }, `${fields} -_id`)
+                    enabled: true,
+                }, `${fields} -_id`)
                 .sort([
                     ['sortOrder', 'ascending']
                 ]);
@@ -103,7 +103,7 @@ const BuildData = async (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.list('Event').model;
+    const list = res.locals.db.collection('Event').model;
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

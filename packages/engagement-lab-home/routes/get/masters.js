@@ -13,8 +13,8 @@ const BuildData = async (req, res) => {
     } = res.locals;
     const getPeople = req.params.key === 'people';
 
-    const person = db.list('Person').model;
-    const masters = db.list('Masters').model;
+    const person = db.collection('Person').model;
+    const masters = db.collection('Masters').model;
 
     const fields = 'programDescription.html applicationLink buttonTxt cohortYear -_id';
     const personFields = 'name title key image.public_id url';
@@ -23,12 +23,12 @@ const BuildData = async (req, res) => {
     try {
         let data = {};
         if (getPeople) {
-            const filter = db.list('Filter').model;
+            const filter = db.collection('Filter').model;
 
             // We have to get all cohorts and then assign their respective students to them in data object
             const filterQuery = filter.find({
-                category: 'Cohort',
-            }, 'key name _id')
+                    category: 'Cohort',
+                }, 'key name _id')
                 .sort([
                     ['key', 'ascending']
                 ]);
@@ -38,9 +38,9 @@ const BuildData = async (req, res) => {
                 cohorts.map(async cohort => {
                     // Get all people in cohort and assign to object
                     const query = await person.find({
-                        cohortYear: cohort._id,
-                        category: 'Masters',
-                    }, `${personFields} ${personFieldsAddtl} cohortYear -_id`)
+                            cohortYear: cohort._id,
+                            category: 'Masters',
+                        }, `${personFields} ${personFieldsAddtl} cohortYear -_id`)
                         .sort([
                             ['sortOrder', 'ascending']
                         ])
@@ -65,9 +65,9 @@ const BuildData = async (req, res) => {
 
             // Get current cohort via filter year in masters page data
             const peopleQuery = person.find({
-                cohortYear: data.masters.cohortYear,
-                category: 'Masters',
-            }, `${personFields} -_id`)
+                    cohortYear: data.masters.cohortYear,
+                    category: 'Masters',
+                }, `${personFields} -_id`)
                 .sort([
                     ['sortOrder', 'ascending']
                 ]).lean();

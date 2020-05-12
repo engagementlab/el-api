@@ -12,12 +12,12 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const privacy = db.list('Privacy').model;
+    const privacy = db.collection('Privacy').model;
     const fields = 'content.html lastUpdated -_id';
 
 
     try {
-    // Get privacy text
+        // Get privacy text
         const query = privacy.findOne({}, fields);
         // Execute queries
         const data = await query.exec();

@@ -14,7 +14,7 @@ const BuildData = async (req, res) => {
     const options = {
         id: req.params.key,
     };
-    const person = db.list('Person').model;
+    const person = db.collection('Person').model;
     const fields = 'name title key category image.public_id url cohortYear';
     const personFields = 'bio.html twitterURL fbURL igURL linkedInURL githubURL websiteURL email phone';
 
@@ -36,7 +36,7 @@ const BuildData = async (req, res) => {
 
         // Get all people
         else {
-            const filter = db.list('Filter').model;
+            const filter = db.collection('Filter').model;
 
             // We have to get the current cohort year manually since mongoose can't join,
             // and returning all masters people is inefficient
@@ -46,19 +46,19 @@ const BuildData = async (req, res) => {
             }, '_id').exec(async (error, currentYr) => {
                 // Get faculty, staff, board
                 const peopleData = person.find({
-                    category: {
-                        $in: ['faculty leadership', 'staff', 'advisory board', 'faculty fellows'],
-                    },
-                }, `${fields} -_id`)
+                        category: {
+                            $in: ['faculty leadership', 'staff', 'advisory board', 'faculty fellows'],
+                        },
+                    }, `${fields} -_id`)
                     .sort([
                         ['sortOrder', 'ascending']
                     ]);
 
                 // Get current cohort
                 const studentData = person.find({
-                    cohortYear: currentYr,
-                    category: 'Masters',
-                }, `${fields} cohortYear -_id`)
+                        cohortYear: currentYr,
+                        category: 'Masters',
+                    }, `${fields} cohortYear -_id`)
                     .sort([
                         ['sortOrder', 'ascending']
                     ]);
@@ -89,7 +89,7 @@ exports.get = (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.list('Person').model;
+    const list = res.locals.db.collection('Person').model;
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

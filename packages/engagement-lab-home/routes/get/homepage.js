@@ -11,20 +11,20 @@ const BuildData = async (req, res) => {
     const {
         db,
     } = res.locals;
-    const initiative = db.list('Initiative').model;
-    const project = db.list('Project').model;
-    const event = db.list('Event').model;
-    const about = db.list('About').model;
+    const initiative = db.collection('Initiative').model;
+    const project = db.collection('Project').model;
+    const event = db.collection('Event').model;
+    const about = db.collection('About').model;
 
     const projectFields = 'name image.public_id key projectType byline -_id';
     const eventFields = 'name date key -_id';
     const initiativeFields = 'name description image.public_id key projects -_id';
 
     try {
-    // Get initiatives
+        // Get initiatives
         const initiativeData = initiative.find({}, initiativeFields).sort([
-            ['sortOrder', 'ascending']
-        ])
+                ['sortOrder', 'ascending']
+            ])
             .populate({
                 path: 'projects',
                 select: 'name key -_id',

@@ -12,11 +12,11 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const jobs = db.list('Job').model;
+    const jobs = db.collection('Job').model;
     const fields = 'title description url -_id';
 
     try {
-    // Get enabled jobs
+        // Get enabled jobs
         const data = await jobs.find({
             enabled: true,
         }, fields).sort([
