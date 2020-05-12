@@ -51,6 +51,7 @@ module.exports = {
    * @function
    */
   callback: (req, res) => {
+
     passport.authenticate(ciMode ? 'mocked' : 'google', (error, user, info) => {
       if (error) {
         res.status(401).send(error);
@@ -71,7 +72,7 @@ module.exports = {
         // Explicitly save the session before redirecting!
         req.session.save(() => {
           // Ensure user has permissions for this CMS
-          const allowed = !UrlAllowed(user.permissions, req.session.redirectTo);
+          const allowed = ciMode || !UrlAllowed(user.permissions, req.session.redirectTo);
           if (req.session.redirectTo === 'cms/' || allowed) {
             res.redirect(req.session.redirectTo || '/');
           } else res.redirect('/cms/error?type=permission');
@@ -101,10 +102,11 @@ module.exports = {
     // Cache URL to bring user to after auth
     req.session.redirectTo = req.originalUrl;
 
-    if (req.isAuthenticated()) {
-      const appsAllowed = req.session.passport.user.permissions;
+    // In ci env, user is fake
+    if (ciMode || req.isAuthenticated()) {
+      const appsAllowed = ciMode ? [] : req.session.passport.user.permissions;
       // If not allowed, send error page
-      if (!UrlAllowed(appsAllowed, req.originalUrl))
+      if (!ciMode && !UrlAllowed(appsAllowed, req.originalUrl))
         res.redirect('/cms/error?type=permission');
       else next();
     } else res.redirect('/cms/login');

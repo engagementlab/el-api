@@ -39,6 +39,8 @@ module.exports = {
             const {
                 body,
             } = req;
+            if (!body) res.status(500).send('no body');
+
             if (body.email && body.name) {
                 User.create({
                     name: body.name,
@@ -48,7 +50,7 @@ module.exports = {
                 }, (err, user) => {
                     if (err) {
                         // Catch dupe email
-                        if (err.name === 'MongoError' && err.keyPattern.email === 1)
+                        if (err.name === 'MongoError' && err.keyPattern && err.keyPattern.email === 1)
                             res.status(500).send({
                                 msg: 'email',
                             });
@@ -63,7 +65,11 @@ module.exports = {
             } else {
 
                 User.findOne({
-                    _id: body.userId,
+                    $or: [{
+                        _id: body.userId,
+                    }, {
+                        email: body.email,
+                    }],
                 }, async (err, user) => {
                     if (err) res.status(500).send(err);
                     else if (body.delete) {
