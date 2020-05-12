@@ -16,7 +16,7 @@ const parser = require('body-parser');
 
 // Passport
 const passport = require('passport');
-const GoogleStrategy = ciMode ?
+const AuthStrategy = ciMode ?
     require('passport-mocked').Strategy :
     require('passport-google-oauth20').Strategy;
 
@@ -97,7 +97,7 @@ module.exports = buildsDir => {
         done(null, user);
     });
 
-    const strategy = new GoogleStrategy({
+    const strategy = new AuthStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: process.env.AUTH_CALLBACK_URL,
@@ -174,20 +174,28 @@ module.exports = buildsDir => {
         });
     });
 
-    // If on dev instance, create dev user if none
-    if (process.env.NODE_ENV === 'development') {
-        User.findOne({
-                email: process.env.DEV_EMAIL,
-            },
-            (err, user) => {
-                if (!user) {
-                    User.create({
-                        email: process.env.DEV_EMAIL,
-                        name: 'Dev User',
-                    });
+    // If on dev or CI instance, create dev user if none
+    if (process.env.NODE_ENV === 'development' || ciMode) {
+        try {
+            User.findOne({
+                    email: process.env.DEV_EMAIL,
+                },
+                (err, user) => {
+                    if (err) throw new Error(err);
+                    global.logger.info(process.env.DEV_EMAIL);
+
+                    if (!user) {
+                        global.logger.info('Create dev user.');
+                        User.create({
+                            email: process.env.DEV_EMAIL,
+                            name: 'Dev User',
+                        });
+                    }
                 }
-            }
-        );
+            );
+        } catch (e) {
+            throw new Error(e);
+        }
     }
     return router;
 };
