@@ -24,23 +24,32 @@ describe('Engagement Lab Homepage API', () => {
         });
     });
     describe('Get all route content and ensure JSON response with required keys.', () => {
+        const routes = {
+            'about': [
+                'missionStatement',
+                'summary1',
+                'summary2',
+                'research',
+                'workshops',
+                'tools',
+                'teaching',
+                'design'
+            ],
+            'homepage': [],
+            'contact': [],
+            'jobs': [],
+            'masters': [],
+        };
 
-        it('About content', done => {
-            request
-                .get('/get/about').end((err, res) => {
-                    expect(res.statusCode).to.equal(200);
-                    expect(res.body).to.contain.keys(
-                        'missionStatement',
-                        'summary1',
-                        'summary2',
-                        'research',
-                        'workshops',
-                        'tools',
-                        'teaching',
-                        'design'
-                    );
-                    done(err);
-                });
+        Object.keys(routes).forEach(name => {
+            it(`${name} content`, done => {
+                request
+                    .get(`/get/${name}`).end((err, res) => {
+                        expect(res.statusCode).to.equal(200);
+                        expect(res.body).to.contain.keys(routes[name]);
+                        done(err);
+                    });
+            });
         });
     });
 });
