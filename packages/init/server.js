@@ -134,6 +134,9 @@ const init = callback => {
             }_ADMIN_URI.`
         );
     try {
+        if (process.env.NODE_ENV !== 'production')
+            global.logger.info(`Connecting to admin DB at ${process.env.MONGO_ADMIN_URI}`);
+
         mongoose.connect(dbAddress, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
