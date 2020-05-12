@@ -32,8 +32,6 @@ const ServerUtils = require('./utils');
 const keystone = require('./keystone');
 const buildsRouter = require('./routes');
 
-const appsJson = path.join(__dirname, 'apps.json');
-
 // Create logger
 require('./logger');
 
@@ -94,15 +92,27 @@ const start = (productionMode, appName) => {
     app.set('view engine', 'pug');
     app.set('views', `${__dirname}/views`);
 
+    let dbPrefix = 'mongodb://localhost';
+    const env = process.env.NODE_ENV;
+    if (env !== 'development') {
+        if (env === 'staging' || env === 'ci')
+            dbPrefix = process.env.MONGO_CLOUD_STAGING_URI;
+        else
+            dbPrefix = process.env.MONGO_CLOUD_URI;
+    }
     // Load all data for API of currently used package
     const packagePath = `@engagementlab/${currentApp}`;
 
-    // Pass our route importer util to package
+    // Pass our route importer util, DB string prefix to package
     const packageInit = require(packagePath);
-    packageInit(ServerUtils.routeImporter).then(pkg => {
+    packageInit({
+        importer: ServerUtils.routeImporter,
+        dbPrefix,
+    }).then(pkg => {
         // Export all models, routes, config for this app
         const bootConfig = {
             app,
+            dbPrefix,
             package: pkg.Config,
             models: pkg.Models,
             routes: pkg.Routes,

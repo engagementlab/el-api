@@ -58,7 +58,10 @@ const KeystoneApp = (ksConfig, callback) => {
         const packageInit = require(packagePath);
 
         // Load all data for API of currently used package
-        const appPackage = packageInit(null, true);
+        const appPackage = packageInit({
+            dbPrefix: ksConfig.dbPrefix,
+            skipRoutes: true,
+        });
 
         // Export models, config for this app
         const config = {
@@ -105,7 +108,7 @@ const KeystoneApp = (ksConfig, callback) => {
     });
 
     const keystone = new Keystone({
-    // Name of CMS to load in dev instance
+        // Name of CMS to load in dev instance
         name: ksConfig.package.name,
         schemaNames: Object.keys(schemaAdapters),
         adapters: schemaAdapters,
@@ -130,7 +133,6 @@ const KeystoneApp = (ksConfig, callback) => {
     Object.keys(allLists).forEach(modelName => {
         const list = allLists[modelName];
         // TODO: not hard-code and enable only on dev
-        // if (list.adapterName === 'test')
         keystone.createList(modelName, {
             fields: list.fields,
             ...list.options,
