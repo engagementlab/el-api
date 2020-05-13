@@ -1,7 +1,7 @@
 /**
- * Engagement Lab Content and Data API
+ * Engagement Lab Homepage API
  *
- * About page Model
+ * @file About page Model
  * @module models
  * @author Johnny Richardson
  *
@@ -11,13 +11,14 @@
 const {
     Text,
     Relationship,
+    CloudinaryImage,
 } = require('@keystonejs/fields');
 
 const About = cloudinary => {
     /**
-   * Model Fields
-   * @memberof About
-   */
+     * Model Fields
+     * @memberof About
+     */
     const fields = {
         name: {
             type: String,
@@ -37,6 +38,11 @@ const About = cloudinary => {
             isRequired: true,
             initial: true,
             isMultiline: true,
+        },
+
+        image: {
+            type: CloudinaryImage,
+            adapter: cloudinary,
         },
 
         summary1: {
@@ -83,10 +89,10 @@ const About = cloudinary => {
     };
 
     /**
-   * Model Options
-   * @memberof About
-   * See: https://www.keystonejs.com/api/create-list
-   */
+     * Model Options
+     * @memberof About
+     * @see https://www.keystonejs.com/api/create-list
+     */
     const options = {
         label: 'About Page',
         singular: 'About Page',

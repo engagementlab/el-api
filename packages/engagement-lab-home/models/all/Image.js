@@ -1,5 +1,5 @@
 /**
- * Engagement Lab Content and Data API
+ * Engagement Lab Homepage API
  *
  * Image
  * @module models
@@ -14,9 +14,9 @@ const {
 
 const Image = cloudinary => {
     /**
-   * Model Fields
-   * @memberof Image
-   */
+     * Model Fields
+     * @memberof Image
+     */
     const fields = {
         name: {
             type: String,
