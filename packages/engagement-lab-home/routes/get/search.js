@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Query elastisearch cluster
+ * @file Query elastisearch cluster
  *
  * ==========
  */

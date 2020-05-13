@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Route to retrieve get involved/contact data
+ * @file Route to retrieve get involved/contact data
  *
  * ==========
  */
@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const contact = db.collection('Contact').model;
+    const contact = db.collection('Contact');
     const fields = 'name blurb students community -_id';
 
 

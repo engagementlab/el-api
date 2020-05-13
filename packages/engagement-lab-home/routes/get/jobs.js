@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Route to retrieve jobs
+ * @file Route to retrieve jobs
  *
  * ==========
  */
@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const jobs = db.collection('Job').model;
+    const jobs = db.collection('Job');
     const fields = 'title description url -_id';
 
     try {

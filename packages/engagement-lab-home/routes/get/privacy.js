@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Route to retrieve privacy policy data
+ * @file Route to retrieve privacy policy data
  *
  * ==========
  */
@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const privacy = db.collection('Privacy').model;
+    const privacy = db.collection('Privacy');
     const fields = 'content.html lastUpdated -_id';
 
 

@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Project data route
+ * @file Project data route
  *
  * ==========
  */
@@ -50,7 +50,7 @@ const GetAdjacent = async (list, results, res) => {
 };
 
 const BuildData = async (req, res) => {
-    const list = res.locals.db.collection('Project').model;
+    const list = res.locals.db.collection('Project');
     const options = {
         id: req.params.key,
     };
@@ -122,7 +122,7 @@ const BuildData = async (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.collection('Project').model;
+    const list = res.locals.db.collection('Project');
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

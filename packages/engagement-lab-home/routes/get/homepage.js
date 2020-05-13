@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Route to retrieve home data
+ * @file Route to retrieve home data
  *
  * ==========
  */
@@ -11,20 +11,22 @@ const BuildData = async (req, res) => {
     const {
         db,
     } = res.locals;
-    const initiative = db.collection('Initiative').model;
-    const project = db.collection('Project').model;
-    const event = db.collection('Event').model;
-    const about = db.collection('About').model;
 
-    const projectFields = 'name image.public_id key projectType byline -_id';
+    const initiative = db.collection('Initiative');
+    // const project = db.collection('Project');
+    const event = db.collection('Event');
+    const about = db.collection('About');
+
+    // const projectFields = 'name image.public_id key projectType byline -_id';
     const eventFields = 'name date key -_id';
     const initiativeFields = 'name description image.public_id key projects -_id';
 
     try {
         // Get initiatives
-        const initiativeData = initiative.find({}, initiativeFields).sort([
-                ['sortOrder', 'ascending']
-            ])
+        const initiatives = await initiative.find({}, initiativeFields)
+            .sort({
+                sortOrder: 'ascending',
+            })
             .populate({
                 path: 'projects',
                 select: 'name key -_id',
@@ -34,24 +36,22 @@ const BuildData = async (req, res) => {
                 },
             });
         // Get a couple featured projects
-        const projectData = project.find({
-            featured: true,
-        }, projectFields).limit(2);
+        // const projects = await project.find({
+        //     featured: true,
+        // }, projectFields).limit(2);
         // Get 3 events most recent by date
-        const eventData = event.find({
+        const events = await event.find({
             enabled: true,
-        }, eventFields).sort([
-            ['date', 'descending']
-        ]).limit(3);
+        }, eventFields).sort({
+            date: 'descending',
+        }).limit(3);
         // Get tagline
-        const taglineData = about.findOne({}, 'tagline -_id');
-
-        const tagLineExec = await taglineData.exec();
+        const tagline = await about.findOne({}, 'tagline -_id');
         const data = {
-            initiatives: await initiativeData.exec(),
-            projects: await projectData.exec(),
-            events: await eventData.exec(),
-            tagline: tagLineExec.tagline,
+            initiatives,
+            projects,
+            events,
+            tagline,
         };
 
         res.json(data);

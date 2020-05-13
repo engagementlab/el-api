@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @description Route to retrieve masters program page datta
+ * @file Route to retrieve masters program page datta
  *
  * ==========
  */
@@ -13,8 +13,8 @@ const BuildData = async (req, res) => {
     } = res.locals;
     const getPeople = req.params.key === 'people';
 
-    const person = db.collection('Person').model;
-    const masters = db.collection('Masters').model;
+    const person = db.collection('Person');
+    const masters = db.collection('Masters');
 
     const fields = 'programDescription.html applicationLink buttonTxt cohortYear -_id';
     const personFields = 'name title key image.public_id url';
@@ -23,7 +23,7 @@ const BuildData = async (req, res) => {
     try {
         let data = {};
         if (getPeople) {
-            const filter = db.collection('Filter').model;
+            const filter = db.collection('Filter');
 
             // We have to get all cohorts and then assign their respective students to them in data object
             const filterQuery = filter.find({
