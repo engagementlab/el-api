@@ -92,7 +92,7 @@ const start = (productionMode, appName) => {
     app.set('view engine', 'pug');
     app.set('views', `${__dirname}/views`);
 
-    let dbPrefix = 'mongodb://localhost';
+    let dbPrefix = 'mongodb://localhost/';
     const env = process.env.NODE_ENV;
     if (env !== 'development') {
         if (env === 'staging' || env === 'ci')

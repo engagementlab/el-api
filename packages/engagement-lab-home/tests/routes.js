@@ -1,5 +1,5 @@
 /**
- * Engagement Lab Content and Data API
+ * Engagement Lab Homepage API
  * Developed by Engagement Lab, 2020
  * ==============
  * Homepage v2.x route tests
