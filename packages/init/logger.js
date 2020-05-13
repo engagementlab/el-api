@@ -58,10 +58,12 @@ module.exports = (() => {
             } = info;
             return message;
         }),
-        transports: [new winston.transports.File({
-            handleExceptions: true,
-            level: 'error',
-            filename: `${__dirname}/error.log`,
-        })],
+        transports: [
+            new winston.transports.Console(),
+            new winston.transports.File({
+                level: 'error',
+                filename: `${__dirname}/error.log`,
+            })
+        ],
     });
 })();
