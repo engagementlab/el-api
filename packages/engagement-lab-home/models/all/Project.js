@@ -17,6 +17,9 @@ const {
     Url,
 } = require('@keystonejs/fields');
 
+// Inherit Listing fields
+const Listing = require('../shared/Listing');
+
 /**
  * Model Fields
  * @main Project
@@ -30,29 +33,29 @@ const Project = cloudinary => {
         enabled: {
             type: Boolean,
             label: 'Enabled',
-            note: 'Determines if this project appears on the live site.',
+            adminDoc: 'Determines if this project appears on the live site.',
         },
         featured: {
             type: Boolean,
             label: 'Featured',
-            note: 'Determines if this project appears on the home page in the featured project slider.',
+            adminDoc: 'Determines if this project appears on the home page in the featured project slider.',
         },
         archived: {
             type: Boolean,
             label: 'Archived',
-            note: 'Determines if this project appears as archived (must also be "enabled").',
+            adminDoc: 'Determines if this project appears as archived (must also be "enabled").',
         },
         customUrl: {
             type: String,
             label: 'Custom URL',
-            note: 'Must be format of "projecturl". Overrides default "/projects/projectname".',
+            adminDoc: 'Must be format of "projecturl". Overrides default "/projects/projectname".',
         },
         projectType: {
             type: Select,
             label: 'Type',
             options: 'Curriculum, Event, Game, Tool',
             default: 'Curriculum',
-            required: true,
+            isRequired: true,
             initial: true,
         },
         /*             principalInvestigator: {
@@ -62,7 +65,7 @@ const Project = cloudinary => {
                                 category: 'Person',
                             },
                             label: 'Principal Investigator(s)',
-                            note: 'Appears on the individual project page.',
+                            adminDoc: 'Appears on the individual project page.',
                             many: true,
                         },
 
@@ -75,7 +78,7 @@ const Project = cloudinary => {
                             },
                             label: 'Type/Format of Product(s)',
                             many: true,
-                            note: 'What kind of project is this? Choose from below or add a Format Filter and choose \'Project\' as its destination.',
+                            adminDoc: 'What kind of project is this? Choose from below or add a Format Filter and choose \'Project\' as its destination.',
                         }, */
 
         challengeTxt: {
@@ -97,12 +100,12 @@ const Project = cloudinary => {
         externalLinkUrl: {
             type: Url,
             label: 'Project Website URL',
-            note: 'Must be in format "http://www.something.org" <br> Appears on the individual project page.',
+            adminDoc: 'Must be in format "http://www.something.org" <br> Appears on the individual project page.',
         },
         githubUrl: {
             type: Url,
             label: 'Github URL',
-            note: 'Must be in format "http://www.something.org" <br> Appears on the individual project page.',
+            adminDoc: 'Must be in format "http://www.something.org" <br> Appears on the individual project page.',
         },
 
         // Images for project page
@@ -110,7 +113,7 @@ const Project = cloudinary => {
                             type: Types.CloudinaryImages,
                             folder: 'homepage-2.0/projects',
                             autoCleanup: true,
-                            note: 'Images below/above main project info. Please use only high-quality images. To re-order, remove and upload again. **MAX of 3 images**',
+                            adminDoc: 'Images below/above main project info. Please use only high-quality images. To re-order, remove and upload again. **MAX of 3 images**',
                         },
                         // Resource model reference for videos
                         video: {
@@ -131,7 +134,7 @@ const Project = cloudinary => {
                                 type: 'file',
                             },
                             many: true,
-                            note: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
+                            adminDoc: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
                         }, */
         showFiles: {
             type: Boolean,
@@ -139,8 +142,9 @@ const Project = cloudinary => {
 
     };
 
+    const allFields = Object.assign(Listing(cloudinary).fields, fields);
     return {
-        fields,
+        fields: allFields,
     };
 };
 

@@ -12,9 +12,9 @@ const BuildData = async (req, res) => {
     db,
   } = res.locals;
 
-  const person = db.list('Person');
-  const partner = db.list('Partner');
-  const about = db.list('abouts');
+  const person = db.collection('Person');
+  const partner = db.collection('Partner');
+  const about = db.collection('abouts');
 
   const aboutFields =
     'missionStatement summary1 summary2 images.public_id research workshops tools teaching design -_id';

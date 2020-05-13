@@ -50,14 +50,14 @@ const About = cloudinary => {
             label: 'Summary Paragraph 1',
             isRequired: true,
             isMultiline: true,
-            note: 'First (required) paragraph',
+            adminDoc: 'First (required) paragraph',
         },
         summary2: {
             type: Text,
             label: 'Summart Paragraph 2',
             isRequired: true,
             isMultiline: true,
-            note: 'Second (required) paragraph',
+            adminDoc: 'Second (required) paragraph',
         },
 
         research: {

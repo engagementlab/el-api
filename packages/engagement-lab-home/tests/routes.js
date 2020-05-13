@@ -35,10 +35,10 @@ describe('Engagement Lab Homepage API', () => {
                 'teaching',
                 'design'
             ],
-            'homepage': [],
-            'contact': [],
-            'jobs': [],
-            'masters': [],
+            // 'homepage': [],
+            // 'contact': [],
+            // 'jobs': [],
+            // 'masters': [],
         };
 
         Object.keys(routes).forEach(name => {
