@@ -46,19 +46,19 @@ const BuildData = async (req, res) => {
             }, '_id').exec(async (error, currentYr) => {
                 // Get faculty, staff, board
                 const peopleData = person.find({
-                    category: {
-                        $in: ['faculty leadership', 'staff', 'advisory board', 'faculty fellows'],
-                    },
-                }, `${fields} -_id`)
+                        category: {
+                            $in: ['faculty leadership', 'staff', 'advisory board', 'faculty fellows'],
+                        },
+                    }, `${fields} -_id`)
                     .sort([
                         ['sortOrder', 'ascending']
                     ]);
 
                 // Get current cohort
                 const studentData = person.find({
-                    cohortYear: currentYr,
-                    category: 'Masters',
-                }, `${fields} cohortYear -_id`)
+                        cohortYear: currentYr,
+                        category: 'Masters',
+                    }, `${fields} cohortYear -_id`)
                     .sort([
                         ['sortOrder', 'ascending']
                     ]);

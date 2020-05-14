@@ -13,21 +13,21 @@ const GetAdjacent = async (list, results, res) => {
     // Get one next/prev event from selected event's sortorder
     const nextEvent = list
         .findOne({
-            enabled: true,
-            date: {
-                $gt: results.date,
+                enabled: true,
+                date: {
+                    $gt: results.date,
+                },
             },
-        },
-        fields)
+            fields)
         .limit(1);
     const prevEvent = list
         .findOne({
-            enabled: true,
-            date: {
-                $lt: results.date,
+                enabled: true,
+                date: {
+                    $lt: results.date,
+                },
             },
-        },
-        fields)
+            fields)
         .sort({
             sortOrder: -1,
         })
@@ -59,7 +59,7 @@ const BuildData = async (req, res) => {
     let data;
 
     try {
-    // Get one event
+        // Get one event
         if (options.id) {
             const addtlFields = 'description.html images.public_id showButton buttonTxt';
             data = list.findOne({
@@ -67,16 +67,16 @@ const BuildData = async (req, res) => {
             }, `${fields} ${addtlFields}`);
         } else if (options.archived) {
             data = list.find({
-                enabled: true,
-            },
-            fields)
+                        enabled: true,
+                    },
+                    fields)
                 .sort([
                     ['sortOrder', 'descending']
                 ]);
         } else {
             data = list.find({
-                enabled: true,
-            }, `${fields} -_id`)
+                    enabled: true,
+                }, `${fields} -_id`)
                 .sort([
                     ['sortOrder', 'ascending']
                 ]);

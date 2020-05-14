@@ -1,6 +1,6 @@
 /*
-    Borrowed from KeystoneJS classic/4.x:
-    https://github.com/keystonejs/keystone-classic/blob/d34f45662eb359e2cb18b397f2ffea21f9883141/lib/core/importer.js
+        Borrowed from KeystoneJS classic/4.x:
+        https://github.com/keystonejs/keystone-classic/blob/d34f45662eb359e2cb18b397f2ffea21f9883141/lib/core/importer.js
 */
 const fs = require('fs');
 const debug = require('debug')('keystone:core:importer');
@@ -12,12 +12,12 @@ const path = require('path');
  *
  * ####Example:
  *
- *     var importRoutes = keystone.importer(__dirname);
+ *         var importRoutes = keystone.importer(__dirname);
  *
- *     var routes = {
- *         site: importRoutes('./site'),
- *         api: importRoutes('./api')
- *     };
+ *         var routes = {
+ *                 site: importRoutes('./site'),
+ *                 api: importRoutes('./api')
+ *         };
  *
  * @param {String} rel__dirname
  * @api public

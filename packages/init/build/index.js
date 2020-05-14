@@ -45,7 +45,7 @@ const postBuild = paths => {
             try {
                 // Delete index; it is served by views/cms template
                 fs.unlinkSync(path.join(binPath, 'admin/secure/index.html'));
-                //  Move 'main' webpack bundle as [root]/bundle.js
+                //    Move 'main' webpack bundle as [root]/bundle.js
                 fs.renameSync(
                     path.join(jsPath, bundleFile),
                     path.join(binPath, 'bundle.js')
@@ -80,8 +80,8 @@ module.exports = (() => {
     let packages = [];
 
     /*
-            Handle app arguments
-            */
+                        Handle app arguments
+                        */
     // List all package names in repo
     if (argv.list) {
         utils.GetPackagesData(true);
@@ -131,7 +131,7 @@ module.exports = (() => {
 
                     if (exportsDone.length === keys.length) {
                         global.logger.info(
-                            '✨  All bundles done, organizing directories.  ✨'
+                            '✨    All bundles done, organizing directories.    ✨'
                         );
                         postBuild(exportsDone);
                     }

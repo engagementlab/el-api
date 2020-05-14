@@ -68,7 +68,7 @@ module.exports = buildsDir => {
         .map(dirent => dirent.name);
 
     // Session store
-    //  TODO: mongostore for prod
+    //    TODO: mongostore for prod
     router.use(
         session({
             secret: process.env.SESSION_COOKIE,

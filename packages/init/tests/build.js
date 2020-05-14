@@ -16,22 +16,22 @@ const {
 
 // describe('Start build process.', () => {
 
-//     const {
-//         spawn,
-//     } = require('child_process');
-//     it('test', function () {
-//         const child = spawn('node', ['../build']);
-//         child.stdout.on('data', chunk => {
-//             console.log(chunk);
-//         });
+//         const {
+//                 spawn,
+//         } = require('child_process');
+//         it('test', function () {
+//                 const child = spawn('node', ['../build']);
+//                 child.stdout.on('data', chunk => {
+//                         console.log(chunk);
+//                 });
 
-//         child.on('error', chunk => {
-//             console.log(chunk);
-//         });
-//         child.on('exit', (err, info) => {
-//             console.log('chunk');
-//         });
-//     }());
+//                 child.on('error', chunk => {
+//                         console.log(chunk);
+//                 });
+//                 child.on('exit', (err, info) => {
+//                         console.log('chunk');
+//                 });
+//         }());
 
 // });
 

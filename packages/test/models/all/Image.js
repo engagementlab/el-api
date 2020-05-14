@@ -14,9 +14,9 @@ const {
 
 const Image = cloudinary => {
     /**
-   * Model Fields
-   * @memberof Image
-   */
+     * Model Fields
+     * @memberof Image
+     */
     const fields = {
         name: {
             type: String,

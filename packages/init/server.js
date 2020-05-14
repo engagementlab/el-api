@@ -131,7 +131,7 @@ const init = callback => {
         process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
     /**
-     *  Create DB connection for admin database, which contains CMS privileges, etc.
+     *    Create DB connection for admin database, which contains CMS privileges, etc.
      */
     const dbAddress =
         process.env.NODE_ENV !== 'production' ?
@@ -158,7 +158,7 @@ const init = callback => {
     }
 
     /**
-     *  Load all possible apps from sibling packages (config defined in app.json)
+     *    Load all possible apps from sibling packages (config defined in app.json)
      */
     // const appConfigs = fs.readFileSync(appsJson);
     // packages = JSON.parse(appConfigs);

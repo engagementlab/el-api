@@ -19,13 +19,13 @@ require('dotenv').config({
 });
 
 /*
-    Since the production backend will have all possible CMS lists in-memory,
-    we have to load all models for all packages.
+        Since the production backend will have all possible CMS lists in-memory,
+        we have to load all models for all packages.
 
-    Create an object of all models loaded and check for duplicate names/keys,
-    as this can cause issues in keystone's list adapter global,
-    and leads to CRUD operations for one model to occur in model instantiated
-    following another.
+        Create an object of all models loaded and check for duplicate names/keys,
+        as this can cause issues in keystone's list adapter global,
+        and leads to CRUD operations for one model to occur in model instantiated
+        following another.
 */
 const allLists = {};
 

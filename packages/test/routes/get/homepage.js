@@ -21,10 +21,10 @@ const BuildData = async (req, res) => {
     const initiativeFields = 'name description image.public_id key projects -_id';
 
     try {
-    // Get initiatives
+        // Get initiatives
         const initiativeData = initiative.find({}, initiativeFields).sort([
-            ['sortOrder', 'ascending']
-        ])
+                ['sortOrder', 'ascending']
+            ])
             .populate({
                 path: 'projects',
                 select: 'name key -_id',

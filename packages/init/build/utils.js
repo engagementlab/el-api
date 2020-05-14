@@ -41,7 +41,7 @@ const GetPackagesData = (list, pkgNames) => {
                 name: configData.name,
                 dir: name,
             };
-            namesStr += `\n  🔸 ${colors.bold(configData.name)} (${colors.yellow(
+            namesStr += `\n    🔸 ${colors.bold(configData.name)} (${colors.yellow(
                 name
             )})`;
         }

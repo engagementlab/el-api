@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const initiative = db.collection('Initiative');
+    const initiative = db.collection('initiatives');
     // const project = db.collection('Project');
     const event = db.collection('Event');
     const about = db.collection('About');
@@ -23,21 +23,22 @@ const BuildData = async (req, res) => {
 
     try {
         // Get initiatives
-        const initiatives = await initiative.find({}, initiativeFields)
-            .sort({
-                sortOrder: 'ascending',
-            })
-            .populate({
-                path: 'projects',
-                select: 'name key -_id',
-                options: {
-                    limit: 3,
-                    sort: 'name',
-                },
-            });
+        const initiatives = await initiative.findOne({}, initiativeFields);
+        // .sort({
+        //         sortOrder: 'ascending',
+        // });
+        // .populate({
+        //         path: 'projects',
+        //         select: 'name key -_id',
+        //         options: {
+        //                 limit: 3,
+        //                 sort: 'name',
+        //         },
+        // });
+        console.log(initiatives);
         // Get a couple featured projects
         // const projects = await project.find({
-        //     featured: true,
+        //         featured: true,
         // }, projectFields).limit(2);
         // Get 3 events most recent by date
         const events = await event.find({
@@ -49,7 +50,6 @@ const BuildData = async (req, res) => {
         const tagline = await about.findOne({}, 'tagline -_id');
         const data = {
             initiatives,
-            projects,
             events,
             tagline,
         };

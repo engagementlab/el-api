@@ -16,8 +16,8 @@ const path = require('path');
 
 const ServerUtils = {
     /**
-   * Normalize a port into a number, string, or false.
-   */
+     * Normalize a port into a number, string, or false.
+     */
 
     normalizePort: val => {
         const port = parseInt(val, 10);
@@ -36,21 +36,21 @@ const ServerUtils = {
     },
 
     /*
-      Borrowed from KeystoneJS classic/4.x:
-      https://github.com/keystonejs/keystone-classic/blob/d34f45662eb359e2cb18b397f2ffea21f9883141/lib/core/importer.js
-  */
+            Borrowed from KeystoneJS classic/4.x:
+            https://github.com/keystonejs/keystone-classic/blob/d34f45662eb359e2cb18b397f2ffea21f9883141/lib/core/importer.js
+    */
     /**
-   * Returns a function that looks in a specified path relative to the current
-   * directory, and returns all .js modules in it (recursively).
-   *
-   * ####Example:
-   *
-   *  const importRoutes = importer(__dirname);
-   *  const routes = importRoutes('get')
-   *
-   * @param {String} relDirname
-   * @api public
-   */
+     * Returns a function that looks in a specified path relative to the current
+     * directory, and returns all .js modules in it (recursively).
+     *
+     * ####Example:
+     *
+     *    const importRoutes = importer(__dirname);
+     *    const routes = importRoutes('get')
+     *
+     * @param {String} relDirname
+     * @api public
+     */
     routeImporter: relDirname => {
         function importer(from) {
             const imported = {};
@@ -82,15 +82,15 @@ const ServerUtils = {
 };
 
 // const urlValidator = {
-//   validator(val) {
-//     return !val || validator.isURL(val, {
-//       protocols: ['http', 'https'],
-//       require_tld: true,
-//       require_protocol: false,
-//       allow_underscores: true,
-//     });
-//   },
-//   msg: 'Invalid link URL (e.g. needs http:// and .abc/)',
+//     validator(val) {
+//         return !val || validator.isURL(val, {
+//             protocols: ['http', 'https'],
+//             require_tld: true,
+//             require_protocol: false,
+//             allow_underscores: true,
+//         });
+//     },
+//     msg: 'Invalid link URL (e.g. needs http:// and .abc/)',
 // };
 
 
@@ -109,16 +109,16 @@ function onError(error) {
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
-    case 'EACCES':
-        console.error(`${bind} requires elevated privileges`);
-        process.exit(1);
-        break;
-    case 'EADDRINUSE':
-        console.error(`${bind} is already in use`);
-        process.exit(1);
-        break;
-    default:
-        throw error;
+        case 'EACCES':
+            console.error(`${bind} requires elevated privileges`);
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(`${bind} is already in use`);
+            process.exit(1);
+            break;
+        default:
+            throw error;
     }
 }
 

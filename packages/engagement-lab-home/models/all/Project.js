@@ -58,28 +58,28 @@ const Project = cloudinary => {
             isRequired: true,
             initial: true,
         },
-        /*             principalInvestigator: {
-                            type: Relationship,
-                            ref: 'Filter',
-                            filters: {
-                                category: 'Person',
-                            },
-                            label: 'Principal Investigator(s)',
-                            adminDoc: 'Appears on the individual project page.',
-                            many: true,
-                        },
+        /*                         principalInvestigator: {
+                                                        type: Relationship,
+                                                        ref: 'Filter',
+                                                        filters: {
+                                                                category: 'Person',
+                                                        },
+                                                        label: 'Principal Investigator(s)',
+                                                        adminDoc: 'Appears on the individual project page.',
+                                                        many: true,
+                                                },
 
-                        format: {
-                            type: Relationship,
-                            ref: 'Filter',
-                            filters: {
-                                category: 'Format',
-                                appears: 'Project',
-                            },
-                            label: 'Type/Format of Product(s)',
-                            many: true,
-                            adminDoc: 'What kind of project is this? Choose from below or add a Format Filter and choose \'Project\' as its destination.',
-                        }, */
+                                                format: {
+                                                        type: Relationship,
+                                                        ref: 'Filter',
+                                                        filters: {
+                                                                category: 'Format',
+                                                                appears: 'Project',
+                                                        },
+                                                        label: 'Type/Format of Product(s)',
+                                                        many: true,
+                                                        adminDoc: 'What kind of project is this? Choose from below or add a Format Filter and choose \'Project\' as its destination.',
+                                                }, */
 
         challengeTxt: {
             type: Text,
@@ -109,33 +109,33 @@ const Project = cloudinary => {
         },
 
         // Images for project page
-        /*             projectImages: {
-                            type: Types.CloudinaryImages,
-                            folder: 'homepage-2.0/projects',
-                            autoCleanup: true,
-                            adminDoc: 'Images below/above main project info. Please use only high-quality images. To re-order, remove and upload again. **MAX of 3 images**',
-                        },
-                        // Resource model reference for videos
-                        video: {
-                            type: Types.Relationship,
-                            ref: 'Resource',
-                            label: 'Project Videos',
-                            filters: {
-                                type: 'video',
-                            },
+        /*                         projectImages: {
+                                                        type: Types.CloudinaryImages,
+                                                        folder: 'homepage-2.0/projects',
+                                                        autoCleanup: true,
+                                                        adminDoc: 'Images below/above main project info. Please use only high-quality images. To re-order, remove and upload again. **MAX of 3 images**',
+                                                },
+                                                // Resource model reference for videos
+                                                video: {
+                                                        type: Types.Relationship,
+                                                        ref: 'Resource',
+                                                        label: 'Project Videos',
+                                                        filters: {
+                                                                type: 'video',
+                                                        },
 
-                        },
-                        // Resource model reference for files
-                        files: {
-                            type: Types.Relationship,
-                            ref: 'Resource',
-                            label: 'Project Files',
-                            filters: {
-                                type: 'file',
-                            },
-                            many: true,
-                            adminDoc: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
-                        }, */
+                                                },
+                                                // Resource model reference for files
+                                                files: {
+                                                        type: Types.Relationship,
+                                                        ref: 'Resource',
+                                                        label: 'Project Files',
+                                                        filters: {
+                                                                type: 'file',
+                                                        },
+                                                        many: true,
+                                                        adminDoc: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
+                                                }, */
         showFiles: {
             type: Boolean,
         },
@@ -155,38 +155,38 @@ const Project = cloudinary => {
 
 }
 Project.schema.pre('save', next => {
-    // Save state for post hook
-    this.wasNew = this.isNew;
+        // Save state for post hook
+        this.wasNew = this.isNew;
 
-    // Override key w/ custom URL if defined
-    if (this.customUrl && this.customUrl.length > 0) {
-        this.key = this.customUrl;
-    }
+        // Override key w/ custom URL if defined
+        if (this.customUrl && this.customUrl.length > 0) {
+                this.key = this.customUrl;
+        }
 
-    next();
+        next();
 });
 
 Project.schema.post('save', (doc, next) => {
-    // Make a post to slack when this Project is updated
-    // keystone.get('slack').Post(Project.model, this, true);
+        // Make a post to slack when this Project is updated
+        // keystone.get('slack').Post(Project.model, this, true);
 
-    if (process.env.SEARCH_ENABLED === true) {
-        // Index doc on elasticsearch
-        global.elasti.index({
-            index: 'listing',
-            type: 'project',
-            id: doc._id.toString(),
-            body: {
-                name: doc.name,
-                key: doc.key,
-                content: doc.byline,
-                description: doc.description,
-            },
-        }, (err, resp, status) => {
-            if (err) console.error(err);
-        });
-    }
-    next();
+        if (process.env.SEARCH_ENABLED === true) {
+                // Index doc on elasticsearch
+                global.elasti.index({
+                        index: 'listing',
+                        type: 'project',
+                        id: doc._id.toString(),
+                        body: {
+                                name: doc.name,
+                                key: doc.key,
+                                content: doc.byline,
+                                description: doc.description,
+                        },
+                }, (err, resp, status) => {
+                        if (err) console.error(err);
+                });
+        }
+        next();
 }); */
 
 /**

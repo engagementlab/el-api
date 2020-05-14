@@ -49,9 +49,9 @@ const Event = cloudinary => {
             adminDoc: 'You must specify a valid start time, or the date will not save properly.',
         },
         // images: {
-        //     type: Types.CloudinaryImages,
-        //     label: 'Event Images',
-        //     folder: 'homepage-2.0/events',
+        //         type: Types.CloudinaryImages,
+        //         label: 'Event Images',
+        //         folder: 'homepage-2.0/events',
         // },
         shortDescription: {
             type: Text,
@@ -61,11 +61,11 @@ const Event = cloudinary => {
             max: 200,
         },
         // description: {
-        //     type: Markdown,
-        //     label: 'Long Description',
-        //     adminDoc: 'Shown on individual event page. No character limit.',
-        //     isRequired: true,
-        //     initial: true,
+        //         type: Markdown,
+        //         label: 'Long Description',
+        //         adminDoc: 'Shown on individual event page. No character limit.',
+        //         isRequired: true,
+        //         initial: true,
         // },
         eventUrl: {
             type: Url,
@@ -120,25 +120,25 @@ const Event = cloudinary => {
 
 /* 
 Event.schema.post('save', (doc, next) => {
-    if (process.env.SEARCH_ENABLED === true) {
-        // Index doc on elasticsearch
-        global.elasti.index({
-            index: 'event',
-            type: 'event',
-            id: doc._id.toString(),
-            body: {
-                name: doc.name,
-                key: doc.key,
-                content: doc.shortDescription,
-            },
-        }, (err, resp, status) => {
-            if (err) console.error(err);
-        });
-    }
+        if (process.env.SEARCH_ENABLED === true) {
+                // Index doc on elasticsearch
+                global.elasti.index({
+                        index: 'event',
+                        type: 'event',
+                        id: doc._id.toString(),
+                        body: {
+                                name: doc.name,
+                                key: doc.key,
+                                content: doc.shortDescription,
+                        },
+                }, (err, resp, status) => {
+                        if (err) console.error(err);
+                });
+        }
 
-    next();
+        next();
 
-    next();
+        next();
 });
  */
 
