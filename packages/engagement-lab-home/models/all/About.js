@@ -25,18 +25,18 @@ const About = cloudinary => {
             default: 'About Page',
             hidden: true,
             isRequired: true,
-            initial: true,
+
         },
         tagline: {
             type: String,
             isRequired: true,
-            initial: true,
+
         },
         missionStatement: {
             type: String,
             label: 'Mission Statement',
             isRequired: true,
-            initial: true,
+
             isMultiline: true,
         },
 
@@ -105,6 +105,7 @@ const About = cloudinary => {
             delete: false,
         },
     };
+
     return {
         fields,
         options,

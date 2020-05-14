@@ -23,27 +23,27 @@ const Contact = cloudinary => {
             default: 'Contact/Get Involved Page',
             hidden: true,
             isRequired: true,
-            initial: true,
+
         },
         blurb: {
             type: String,
             label: 'Page Blurb',
             isRequired: true,
-            initial: true,
+
         },
         students: {
             type: Text,
             label: 'Students and Researchers Text',
             isMultiline: true,
             isRequired: true,
-            initial: true,
+
         },
         community: {
             type: Text,
             label: 'Community Partnerships Text',
             isMultiline: true,
             isRequired: true,
-            initial: true,
+
         },
     };
 

@@ -56,7 +56,6 @@ const Project = cloudinary => {
             options: 'Curriculum, Event, Game, Tool',
             default: 'Curriculum',
             isRequired: true,
-            initial: true,
         },
         /*                         principalInvestigator: {
                                                         type: Relationship,
@@ -68,18 +67,18 @@ const Project = cloudinary => {
                                                         adminDoc: 'Appears on the individual project page.',
                                                         many: true,
                                                 },
-
-                                                format: {
-                                                        type: Relationship,
-                                                        ref: 'Filter',
-                                                        filters: {
-                                                                category: 'Format',
-                                                                appears: 'Project',
-                                                        },
-                                                        label: 'Type/Format of Product(s)',
-                                                        many: true,
-                                                        adminDoc: 'What kind of project is this? Choose from below or add a Format Filter and choose \'Project\' as its destination.',
-                                                }, */
+ */
+        format: {
+            type: Relationship,
+            ref: 'Filter',
+            filters: {
+                category: 'Format',
+                appears: 'Project',
+            },
+            label: 'Type/Format of Product(s)',
+            many: true,
+            adminDoc: 'What kind of project is this? Choose from below or add a Format Filter and choose \'Project\' as its destination.',
+        },
 
         challengeTxt: {
             type: Text,
@@ -110,32 +109,32 @@ const Project = cloudinary => {
 
         // Images for project page
         /*                         projectImages: {
-                                                        type: Types.CloudinaryImages,
-                                                        folder: 'homepage-2.0/projects',
-                                                        autoCleanup: true,
-                                                        adminDoc: 'Images below/above main project info. Please use only high-quality images. To re-order, remove and upload again. **MAX of 3 images**',
-                                                },
-                                                // Resource model reference for videos
-                                                video: {
-                                                        type: Types.Relationship,
-                                                        ref: 'Resource',
-                                                        label: 'Project Videos',
-                                                        filters: {
-                                                                type: 'video',
-                                                        },
+		                                                type: CloudinaryImages,
+		                                                folder: 'homepage-2.0/projects',
+		                                                autoCleanup: true,
+		                                                adminDoc: 'Images below/above main project info. Please use only high-quality images. To re-order, remove and upload again. **MAX of 3 images**',
+		                                        },
+		                                        // Resource model reference for videos
+		                                        video: {
+		                                                type: Relationship,
+		                                                ref: 'Resource',
+		                                                label: 'Project Videos',
+		                                                filters: {
+		                                                        type: 'video',
+		                                                },
 
-                                                },
-                                                // Resource model reference for files
-                                                files: {
-                                                        type: Types.Relationship,
-                                                        ref: 'Resource',
-                                                        label: 'Project Files',
-                                                        filters: {
-                                                                type: 'file',
-                                                        },
-                                                        many: true,
-                                                        adminDoc: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
-                                                }, */
+		                                        },
+		                                        // Resource model reference for files
+		                                        files: {
+		                                                type: Relationship,
+		                                                ref: 'Resource',
+		                                                label: 'Project Files',
+		                                                filters: {
+		                                                        type: 'file',
+		                                                },
+		                                                many: true,
+		                                                adminDoc: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
+		                                        }, */
         showFiles: {
             type: Boolean,
         },

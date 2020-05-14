@@ -26,13 +26,13 @@ const Privacy = cloudinary => {
             default: 'Privacy Policy',
             hidden: true,
             isRequired: true,
-            initial: true,
+
         },
         content: {
             type: Markdown,
             label: 'Page Content',
             isRequired: true,
-            initial: true,
+
         },
         lastUpdated: {
             type: DateTime,

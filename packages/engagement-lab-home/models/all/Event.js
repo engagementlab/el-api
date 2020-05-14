@@ -32,7 +32,7 @@ const Event = cloudinary => {
         name: {
             type: String,
             isRequired: true,
-            initial: true,
+
             index: true,
             adminDoc: 'Name of Event',
         },
@@ -41,7 +41,7 @@ const Event = cloudinary => {
             label: 'Event Date',
             default: Date.now,
             isRequired: true,
-            initial: true,
+
             format: 'MM/DD/YYYY h:mm A',
             yearRangeFrom: 1901,
             yearRangeTo: 2018,
@@ -49,7 +49,7 @@ const Event = cloudinary => {
             adminDoc: 'You must specify a valid start time, or the date will not save properly.',
         },
         // images: {
-        //         type: Types.CloudinaryImages,
+        //         type: CloudinaryImages,
         //         label: 'Event Images',
         //         folder: 'homepage-2.0/events',
         // },
@@ -57,7 +57,7 @@ const Event = cloudinary => {
             type: Text,
             adminDoc: 'Shown on event index page. Limit 200 characters.',
             isRequired: true,
-            initial: true,
+
             max: 200,
         },
         // description: {
@@ -65,7 +65,7 @@ const Event = cloudinary => {
         //         label: 'Long Description',
         //         adminDoc: 'Shown on individual event page. No character limit.',
         //         isRequired: true,
-        //         initial: true,
+        //         
         // },
         eventUrl: {
             type: Url,

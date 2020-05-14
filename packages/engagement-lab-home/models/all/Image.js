@@ -23,7 +23,7 @@ const Image = cloudinary => {
             default: 'Image',
             hidden: true,
             isRequired: true,
-            initial: true,
+
             adminDoc: 'el-home-img',
         },
         // TODO: Custom multi-image field

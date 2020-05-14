@@ -27,20 +27,20 @@ const Initiative = cloudinary => {
             type: String,
             label: 'Initiative Name',
             isRequired: true,
-            initial: true,
+
             index: true,
             adminDoc: 'This is the name or title of the directory',
         },
         description: {
             type: String,
             isRequired: true,
-            initial: true,
+
             adminDoc: 'This displays next to/near the initiative name',
         },
         longDescription: {
             type: Text,
             isRequired: true,
-            initial: true,
+
             isMultiline: true,
             adminDoc: 'This displays on the initiative landing',
         },
@@ -57,7 +57,7 @@ const Initiative = cloudinary => {
             adminDoc: 'Projects that are part of this initiative',
             isRequired: true,
             many: true,
-            initial: true,
+
         },
     };
 

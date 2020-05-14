@@ -22,19 +22,19 @@ const Listing = cloudinary => {
                 type: String,
                 label: 'Name',
                 isRequired: true,
-                initial: true,
+
                 index: true,
             },
             byline: {
                 type: String,
                 isRequired: true,
-                initial: true,
+
                 adminDoc: 'This displays under the project/event name on its page.',
             },
             description: {
                 type: String,
                 isRequired: true,
-                initial: true,
+
             },
             image: {
                 type: CloudinaryImage,
