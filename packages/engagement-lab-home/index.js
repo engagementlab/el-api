@@ -7,13 +7,10 @@
  * ==========
  */
 
-const {
-    MongoClient,
-} = require('mongodb');
-
 const fs = require('fs');
 const routes = require('./routes');
 const models = require('./models')();
+const mongoose = require('mongoose');
 
 /**
  * Module API instantiation or CMS static build config.
@@ -42,16 +39,21 @@ module.exports = config => {
         // Create DB connection and import API routes if not generating CMS build
         const dbAddress = `${config.dbPrefix}${pkgData.database}?retryWrites=true&w=majority`;
 
-        MongoClient.connect(dbAddress, {
+        mongoose.connect(dbAddress, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-        }).then(client => {
-            const db = client.db(pkgData.database);
-            const appRoutes = routes(config.importer, db);
-            // TODO: give all routes a namespace prefix, e.g. 'homepage/'
-            packageConfig.Routes = appRoutes;
-            resolve(packageConfig);
-            global.logger.info('🚀 Homepage API ready.');
+            useCreateIndex: true,
         });
+
+        models.forEach(m => {
+            mongoose.model(m.name, new mongoose.Schema(m.schema));
+        });
+        const appRoutes = routes(config.importer, mongoose);
+        // TODO: give all routes a namespace prefix, e.g. 'homepage/'
+        packageConfig.Routes = appRoutes;
+        resolve(packageConfig);
+        global.logger.info('🚀 Homepage API ready');
+
+
     });
 };

@@ -12,34 +12,34 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const initiative = db.collection('initiatives');
-    // const project = db.collection('Project');
-    const event = db.collection('Event');
-    const about = db.collection('About');
+    const initiative = db.model('Initiative');
+    const project = db.model('Project');
+    const event = db.model('Event');
+    const about = db.model('About');
 
-    // const projectFields = 'name image.public_id key projectType byline -_id';
+    const projectFields = 'name image.public_id key projectType byline -_id';
     const eventFields = 'name date key -_id';
     const initiativeFields = 'name description image.public_id key projects -_id';
 
     try {
         // Get initiatives
-        const initiatives = await initiative.findOne({}, initiativeFields);
-        // .sort({
-        //         sortOrder: 'ascending',
-        // });
-        // .populate({
-        //         path: 'projects',
-        //         select: 'name key -_id',
-        //         options: {
-        //                 limit: 3,
-        //                 sort: 'name',
-        //         },
-        // });
-        console.log(initiatives);
+        const initiatives = await initiative.find({}, initiativeFields)
+            .sort({
+                sortOrder: 'ascending',
+            })
+            .populate({
+                path: 'projects',
+                select: 'name key -_id',
+                options: {
+                    limit: 3,
+                    sort: 'name',
+                },
+            });
+
         // Get a couple featured projects
-        // const projects = await project.find({
-        //         featured: true,
-        // }, projectFields).limit(2);
+        const projects = await project.find({
+            featured: true,
+        }, projectFields).limit(2);
         // Get 3 events most recent by date
         const events = await event.find({
             enabled: true,
@@ -50,6 +50,7 @@ const BuildData = async (req, res) => {
         const tagline = await about.findOne({}, 'tagline -_id');
         const data = {
             initiatives,
+            projects,
             events,
             tagline,
         };

@@ -14,7 +14,7 @@ const BuildData = async (req, res) => {
     const options = {
         id: req.params.key,
     };
-    const person = db.collection('Person');
+    const person = db.model('Person');
     const fields = 'name title key category image.public_id url cohortYear';
     const personFields = 'bio.html twitterURL fbURL igURL linkedInURL githubURL websiteURL email phone';
 
@@ -36,7 +36,7 @@ const BuildData = async (req, res) => {
 
         // Get all people
         else {
-            const filter = db.collection('Filter');
+            const filter = db.model('Filter');
 
             // We have to get the current cohort year manually since mongoose can't join,
             // and returning all masters people is inefficient
@@ -89,7 +89,7 @@ exports.get = (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.collection('Person');
+    const list = res.locals.db.model('Person');
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

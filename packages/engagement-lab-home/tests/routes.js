@@ -35,8 +35,8 @@ describe('Engagement Lab Homepage API', () => {
                 'teaching',
                 'design'
             ],
-            // 'homepage': [],
-            // 'contact': [],
+            'homepage': ['initiatives', 'projects', 'events', 'tagline'],
+            'contact': ['community', 'students', 'blurb', 'name'],
             // 'jobs': [],
             // 'masters': [],
         };
@@ -46,7 +46,9 @@ describe('Engagement Lab Homepage API', () => {
                 request
                     .get(`/get/${name}`).end((err, res) => {
                         expect(res.statusCode).to.equal(200);
-                        expect(res.body).to.contain.keys(routes[name]);
+                        if (routes[name].length > 0)
+                            expect(res.body).to.contain.keys(routes[name]);
+
                         done(err);
                     });
             });

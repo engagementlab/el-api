@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const jobs = db.collection('Job');
+    const jobs = db.model('Job');
     const fields = 'title description url -_id';
 
     try {

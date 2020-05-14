@@ -50,7 +50,7 @@ const GetAdjacent = async (list, results, res) => {
 };
 
 const BuildData = async (req, res) => {
-    const list = res.locals.db.collection('Project');
+    const list = res.locals.db.model('Project');
     const options = {
         id: req.params.key,
     };
@@ -122,7 +122,7 @@ const BuildData = async (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.collection('Project');
+    const list = res.locals.db.model('Project');
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

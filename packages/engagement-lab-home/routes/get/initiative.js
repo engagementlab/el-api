@@ -11,7 +11,7 @@ const buildData = async (req, res) => {
     const {
         db,
     } = res.locals;
-    const initiative = db.collection('Initiative');
+    const initiative = db.model('Initiative');
     const fields = 'name key description longDescription projects -_id';
     try {
         // Get initiative text
@@ -46,7 +46,7 @@ exports.get = (req, res) => {
 
 exports.data = (req, res) => BuildData(req, res);
 exports.keys = async (req, res) => {
-    const list = res.locals.db.collection('Initiative');
+    const list = res.locals.db.model('Initiative');
     const keys = await list.find({}, 'key -_id').exec();
 
     res.status(200).json(keys);

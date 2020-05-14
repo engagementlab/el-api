@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const contact = db.collection('Contact');
+    const contact = db.model('Contact');
     const fields = 'name blurb students community -_id';
 
 

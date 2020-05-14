@@ -13,8 +13,8 @@ const BuildData = async (req, res) => {
     } = res.locals;
     const getPeople = req.params.key === 'people';
 
-    const person = db.collection('Person');
-    const masters = db.collection('Masters');
+    const person = db.model('Person');
+    const masters = db.model('Masters');
 
     const fields = 'programDescription.html applicationLink buttonTxt cohortYear -_id';
     const personFields = 'name title key image.public_id url';
@@ -23,7 +23,7 @@ const BuildData = async (req, res) => {
     try {
         let data = {};
         if (getPeople) {
-            const filter = db.collection('Filter');
+            const filter = db.model('Filter');
 
             // We have to get all cohorts and then assign their respective students to them in data object
             const filterQuery = filter.find({

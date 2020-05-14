@@ -12,7 +12,7 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const privacy = db.collection('Privacy');
+    const privacy = db.model('Privacy');
     const fields = 'content.html lastUpdated -_id';
 
 

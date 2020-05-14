@@ -12,9 +12,9 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const person = db.collection('Person');
-    const partner = db.collection('Partner');
-    const about = db.collection('abouts');
+    // const person = db.model('Person');
+    // const partner = db.model('Partner');
+    const about = db.model('About');
 
     const aboutFields =
         'missionStatement summary1 summary2 images.public_id research workshops tools teaching design -_id';
@@ -25,19 +25,19 @@ const BuildData = async (req, res) => {
         // Get about
         const aboutData = await about.findOne({}, aboutFields);
         // Get a couple featured projects
-        const partnersData = await partner.find({}, partnerFields);
+        // const partnersData = await partner.find({}, partnerFields);
         // Get faculty and staff
-        const peopleData = await person
-            .find({
-                    category: {
-                        $in: ['faculty leadership', 'staff'],
-                    },
-                },
-                personFields
-            )
-            .sort({
-                sortOrder: 'ascending',
-            });
+        // const peopleData = await person
+        //     .find({
+        //             category: {
+        //                 $in: ['faculty leadership', 'staff'],
+        //             },
+        //         },
+        //         personFields
+        //     )
+        //     .sort({
+        //         sortOrder: 'ascending',
+        //     });
         const data = aboutData;
 
         /*         const query = await db.executeQuery(`
