@@ -29,7 +29,7 @@ const Job = cloudinary => {
         title: {
             type: String,
             label: 'Title',
-            required: true,
+            isRequired: true,
 
             index: true,
             note: 'Will appear before the job description',
@@ -37,7 +37,7 @@ const Job = cloudinary => {
         description: {
             type: Markdown,
             label: 'Description',
-            required: true,
+            isRequired: true,
 
             note: 'This is the full description, including any and all relevant information about the job or its requirements',
         },
@@ -45,7 +45,7 @@ const Job = cloudinary => {
             type: Url,
             label: 'Application URL',
             note: 'Link to Emerson job posting. Must be in format "http://www.something.org".',
-            required: true,
+            isRequired: true,
 
         },
     };

@@ -18,11 +18,11 @@ const userSchema = new Schema({
     },
     name: {
         type: String,
-        required: true,
+        isRequired: true,
     },
     email: {
         type: String,
-        required: true,
+        isRequired: true,
         unique: true,
         index: true,
     },

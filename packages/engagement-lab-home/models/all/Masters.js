@@ -8,8 +8,13 @@
  * ==========
  */
 
-const { Relationship, Url } = require('@keystonejs/fields');
-const { Markdown } = require('@keystonejs/fields-markdown');
+const {
+  Relationship,
+  Url,
+} = require('@keystonejs/fields');
+const {
+  Markdown,
+} = require('@keystonejs/fields-markdown');
 
 const Masters = cloudinary => {
   /**
@@ -21,13 +26,13 @@ const Masters = cloudinary => {
       type: String,
       default: 'Masters Program Page',
       hidden: true,
-      required: true,
+      isRequired: true,
     },
     programDescription: {
       type: Markdown,
       label: 'Blurb',
       note: 'This text follows logo.',
-      required: true,
+      isRequired: true,
     },
     applicationLink: {
       type: Url,
@@ -36,7 +41,7 @@ const Masters = cloudinary => {
     buttonTxt: {
       type: String,
       label: 'Application link/button text',
-      required: true,
+      isRequired: true,
     },
     cohortYear: {
       type: Relationship,
@@ -46,8 +51,7 @@ const Masters = cloudinary => {
         category: 'Cohort',
       },
 
-      note:
-        'This field is for students and board members, and will display below the title.',
+      note: 'This field is for students and board members, and will display below the title.',
     },
   };
   /**

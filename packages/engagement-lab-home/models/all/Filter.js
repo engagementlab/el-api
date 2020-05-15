@@ -8,7 +8,9 @@
  * ==========
  */
 
-const { Select } = require('@keystonejs/fields');
+const {
+  Select,
+} = require('@keystonejs/fields');
 
 const Filter = cloudinary => {
   /**
@@ -18,7 +20,7 @@ const Filter = cloudinary => {
   const fields = {
     name: {
       type: String,
-      required: true,
+      isRequired: true,
 
       index: true,
     },
@@ -26,7 +28,7 @@ const Filter = cloudinary => {
       type: Select,
       label: 'Category of Filter',
       options: 'Person, Format, Keyword, Cohort',
-      required: true,
+      isRequired: true,
     },
     appears: {
       type: Select,
