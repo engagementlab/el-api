@@ -37,15 +37,15 @@ const Routes = (importer, db) => {
     });
 
     router.get('/get/about', routes.about);
-    // router.get('/get/events/:key?', routes.event.data);
+    router.get('/get/events/:key?', routes.event.data);
     router.get('/get/homepage', routes.homepage);
-    // router.get('/get/initiative/:key', routes.initiative.data);
+    router.get('/get/initiative/:key', routes.initiative.data);
     router.get('/get/contact', routes.contact);
     router.get('/get/jobs', routes.jobs);
-    // router.get('/get/masters/:key?', routes.masters);
+    router.get('/get/masters/:key?', routes.masters);
     router.get('/get/privacy', routes.privacy);
-    // router.get('/get/projects/:key?', routes.project.data);
-    // router.get('/get/publications/:key?', routes.publication.data);
+    router.get('/get/projects/:key?', routes.project.data);
+    router.get('/get/publications/:key?', routes.publication.data);
 
     // router.get('/get/search/:string', routes.search);
     // router.get('/get/team/:key?', routes.team.data);
