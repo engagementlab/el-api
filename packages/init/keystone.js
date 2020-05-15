@@ -72,7 +72,6 @@ const KeystoneApp = (ksConfig, callback) => {
         const schemaName = config.package.schema;
         const dbAddress = `${ksConfig.dbPrefix}${config.package.database}?retryWrites=true&w=majority`;
 
-
         // Add instantiated model to array of all
         config.models.forEach(modelFunc => {
             // All models need access to cloudinary adapter
@@ -112,6 +111,7 @@ const KeystoneApp = (ksConfig, callback) => {
         schemaNames: Object.keys(schemaAdapters),
         adapters: schemaAdapters,
         defaultAdapter: Object.keys(schemaAdapters)[0],
+        cookieSecret: process.env.SESSION_COOKIE,
     });
 
     // Create an object of all models loaded and check for duplicate names/keys,

@@ -89,6 +89,7 @@ const start = (productionMode, appName) => {
             extended: false,
         })
     );
+
     app.set('view engine', 'pug');
     app.set('views', `${__dirname}/views`);
 
