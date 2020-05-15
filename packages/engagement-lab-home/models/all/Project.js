@@ -10,7 +10,6 @@
  */
 
 const {
-    CloudinaryImage,
     Select,
     Relationship,
     Text,
@@ -20,10 +19,6 @@ const {
 // Inherit Listing fields
 const Listing = require('../shared/Listing');
 
-/**
- * Model Fields
- * @main Project
- */
 const Project = cloudinary => {
     /**
      * Model Fields
