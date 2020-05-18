@@ -14,6 +14,7 @@ module.exports = {
     views: {
         // Note: You cannot currently import and extend a controller
         // outside this monorepo.
+        Cell: require.resolve('./views/Cell'),
         Controller: require.resolve('./views/Controller'),
         Field: require.resolve('./views/Field'),
         Filter: Text.views.Filter,

@@ -3,10 +3,11 @@ import FieldController from '@keystonejs/fields/Controller';
 export default class NameController extends FieldController {
   getFilterGraphQL = ({
     type,
-    valueFirst
+    value
   }) => {
     const key = type === 'is_i' ? `${this.path}_i` : `${this.path}_${type}`;
-    return `${key}: "${valueFirst}"`;
+    const valueNew = value.join(',')
+    return `${key}: "${valueNew}"`;
   };
   getFilterLabel = ({
     label
@@ -17,47 +18,26 @@ export default class NameController extends FieldController {
     label,
     value
   }) => {
-    return `${this.getFilterLabel({ label })}: "${value}"`;
+    const valueNew = value.join(',')
+
+    return `${this.getFilterLabel({ label })}: "${valueNew}"`;
   };
+  getQueryFragment = () => `
+    ${this.path} {
+      first
+      last
+  }`;
+
+  deserialize = data => {
+    return data[this.path];
+  };
+
   getFilterTypes = () => [{
-      type: 'contains_i',
-      label: 'Contains',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'not_contains_i',
-      label: 'Does not contain',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'is_i',
-      label: 'Is exactly',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'not_i',
-      label: 'Is not exactly',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'starts_with_i',
-      label: 'Starts with',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'not_starts_with_i',
-      label: 'Does not start with',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'ends_with_i',
-      label: 'Ends with',
-      getInitialValue: () => '',
-    },
-    {
-      type: 'not_ends_with_i',
-      label: 'Does not end with',
-      getInitialValue: () => '',
-    },
-  ];
+    type: 'is',
+    label: 'Matches',
+    getInitialValue: () => ({
+      first: 'None',
+      last: 'None',
+    }),
+  }, ];
 }

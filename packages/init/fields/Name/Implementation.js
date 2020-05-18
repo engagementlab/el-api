@@ -7,7 +7,7 @@ const {
 // We could store this in another table, but this would require writing a complex controller.
 // JSON.stringify feels good enough for this simple field.
 class Name extends Text.implementation {
-  constructor(path) {
+  constructor(path, spec) {
     console.trace();
 
     super(...arguments);
@@ -25,14 +25,16 @@ class Name extends Text.implementation {
   }
 
   getTypeName() {
-    return `${this.listKey}${inflection.classify(this.path)}Type`;
+    return `Name`;
   }
 
+
   gqlQueryInputFields() {
+    console.log(this);
     return [
-      ...this.equalityInputFields('String'),
-      ...this.stringInputFields('String'),
-      ...this.inInputFields('String')
+      `${this.path}: String`
+      // Create a graphQL query for each individual option
+      // ...this.options.map(option => `${this.path}_${option}: Boolean`)
     ];
   }
 
@@ -40,9 +42,9 @@ class Name extends Text.implementation {
     return [`${this.path}: String`];
   }
 
-  // get gqlCreateInputFields() {
-  //   return [`${this.path}: Name`];
-  // }
+  get gqlCreateInputFields() {
+    return [`${this.path}: String`];
+  }
 
   getGqlAuxTypes() {
     return [

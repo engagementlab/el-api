@@ -14,7 +14,7 @@ const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) =
     console.log(event.target)
     onChange(event.target.value);
   };
-
+  
   const value = serverValue || '';
   const canRead = errors.every(
     error => !(error instanceof Error && error.name === 'AccessDeniedError')
@@ -30,7 +30,7 @@ const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) =
           autoComplete="off"
           autoFocus={autoFocus}
           type="text"
-          value={canRead ? value : undefined}
+          value={canRead ? value.first : undefined}
           placeholder={canRead? `First`: error.message}
           onChange={handleChangeFirst}
           id={`ks-input-name-first`}
@@ -39,7 +39,7 @@ const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) =
         autoComplete="off"
         autoFocus={autoFocus}
         type="text"
-        value={canRead ? value : undefined}
+        value={canRead ? value.last : undefined}
         placeholder={canRead? `Last`: error.message}
         onChange={handleChangeLast}
         id={`ks-input-name-last`}

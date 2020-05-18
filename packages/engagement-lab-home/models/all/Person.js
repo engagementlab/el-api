@@ -27,14 +27,10 @@ const Person = cloudinary => {
      * @main Person
      */
     const fields = {
-        // name: {
-        //     type: String,
-        //     isRequired: true,
-        //     initial: true,
-        //     index: true,
-        // },
         name: {
             type: Name,
+            isRequired: true,
+            index: true,
         },
 
         category: {
