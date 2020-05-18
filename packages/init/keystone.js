@@ -8,6 +8,9 @@ const {
     GraphQLApp,
 } = require('@keystonejs/app-graphql');
 const {
+    GraphQLPlaygroundApp,
+} = require('@keystonejs/app-graphql-playground');
+const {
     SchemaRouterApp,
 } = require('@keystonejs/app-schema-router');
 const {
@@ -147,9 +150,18 @@ const KeystoneApp = (ksConfig, callback) => {
             apps: schemaApps,
         })
     ];
+    const playgroundApp =
+        new GraphQLPlaygroundApp({
+            graphiqlPath: '/graphiql',
+            apiPath: `http://localhost:3000/cms/api/?schema=home`,
+            schemaName: 'home',
+        });
 
-    // Include admin UI if on dev instance
-    if (process.env.NODE_ENV === 'development') Array.prototype.push.apply(ksApps, adminApps);
+    // Include admin UI and graphiql playground if on dev instance
+    if (process.env.NODE_ENV === 'development') {
+        Array.prototype.push.apply(ksApps, adminApps);
+        Array.prototype.push.apply(ksApps, [playgroundApp]);
+    }
 
     keystone
         .prepare({
