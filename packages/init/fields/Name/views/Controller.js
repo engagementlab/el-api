@@ -1,35 +1,45 @@
 import FieldController from '@keystonejs/fields/Controller';
 
 export default class NameController extends FieldController {
-  getFilterGraphQL = ({
-    type,
-    value
-  }) => {
-    const key = type === 'is_i' ? `${this.path}_i` : `${this.path}_${type}`;
-    const valueNew = value.join(',')
-    return `${key}: "${valueNew}"`;
-  };
+
+
   getFilterLabel = ({
     label
   }) => {
-    return `${this.label} ${label.toLowerCase()}`;
+    console.log('label', label)
+    return `${this.label}`;
   };
+
   formatFilter = ({
     label,
     value
   }) => {
     const valueNew = value.join(',')
-
+    console.log(valueNew)
     return `${this.getFilterLabel({ label })}: "${valueNew}"`;
   };
-  getQueryFragment = () => `
-    ${this.path} {
-      first
-      last
-  }`;
+
+  serialize = data => {
+    console.log('serialize', data[this.path])
+    console.trace()
+
+    if (data[this.path]) {
+      return {
+        first: data[this.path].first,
+        last: data[this.path].last
+      };
+    } else return undefined;
+  };
 
   deserialize = data => {
-    return data[this.path];
+    console.log('deserialize', data)
+
+    if (data[this.path]) {
+      return {
+        first: data[this.path].first,
+        last: data[this.path].last
+      };
+    } else return undefined;
   };
 
   getFilterTypes = () => [{

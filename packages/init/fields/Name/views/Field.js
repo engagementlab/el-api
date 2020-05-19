@@ -11,7 +11,6 @@ const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) =
     onChange(event.target.value);
   };
   const handleChangeLast = event => {
-    console.log(event.target)
     onChange(event.target.value);
   };
   
@@ -31,16 +30,15 @@ const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) =
           autoFocus={autoFocus}
           type="text"
           value={canRead ? value.first : undefined}
-          placeholder={canRead? `First`: error.message}
+          placeholder={canRead ? `First`: error.message}
           onChange={handleChangeFirst}
           id={`ks-input-name-first`}
         />
         <Input
         autoComplete="off"
-        autoFocus={autoFocus}
         type="text"
         value={canRead ? value.last : undefined}
-        placeholder={canRead? `Last`: error.message}
+        placeholder={canRead ? `Last`: error.message}
         onChange={handleChangeLast}
         id={`ks-input-name-last`}
       />

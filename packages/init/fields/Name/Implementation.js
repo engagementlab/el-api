@@ -1,71 +1,87 @@
-const inflection = require('inflection');
 const {
-  Text,
+    GraphQLScalarType,
+    Kind,
+} = require('graphql');
+const {
+    Text,
 } = require('@keystonejs/fields');
 
 // Using the text implementation because we're going to stringify the array of results.
 // We could store this in another table, but this would require writing a complex controller.
 // JSON.stringify feels good enough for this simple field.
 class Name extends Text.implementation {
-  constructor(path, spec) {
-    console.trace();
+    constructor(path, spec) {
+        super(...arguments);
+        this.isOrderable = true;
+    }
 
-    super(...arguments);
-    this.isOrderable = true;
-  }
+    gqlOutputFields() {
+        return [`${this.path}: ${this.getTypeName()}`];
+    }
 
-  gqlOutputFields() {
-    return [`${this.path}: ${this.getTypeName()}`];
-  }
+    gqlOutputFieldResolvers() {
+        return {
+            [`${this.path}`]: item => item[this.path],
+        };
+    }
 
-  gqlOutputFieldResolvers() {
-    return {
-      [`${this.path}`]: item => item[this.path],
-    };
-  }
+    getTypeName() {
+        return `Name`;
+    }
 
-  getTypeName() {
-    return `Name`;
-  }
+    gqlQueryInputFields() {
+        return [
+            `${this.path}: ${this.getTypeName()}`
+        ];
+    }
 
+    get gqlUpdateInputFields() {
+        return [`${this.path}: ${this.getTypeName()}`];
+    }
 
-  gqlQueryInputFields() {
-    console.log(this);
-    return [
-      `${this.path}: String`
-      // Create a graphQL query for each individual option
-      // ...this.options.map(option => `${this.path}_${option}: Boolean`)
-    ];
-  }
+    get gqlCreateInputFields() {
 
-  get gqlUpdateInputFields() {
-    return [`${this.path}: String`];
-  }
+        return [`${this.path}: ${this.getTypeName()}`];
+    }
 
-  get gqlCreateInputFields() {
-    return [`${this.path}: String`];
-  }
+    getGqlAuxTypes() {
+        return [`scalar ${this.getTypeName()}`];
+    }
 
-  getGqlAuxTypes() {
-    return [
-      `
-      type ${this.getTypeName()} {
-        first: String
-        last: String
-      }
-    `
-    ];
-  }
+    extendAdminMeta(meta) {
+        return {
+            ...meta,
+        };
+    }
 
-  extendAdminMeta(meta) {
-    return {
-      ...meta,
-    };
-  }
+    gqlAuxFieldResolvers() {
+        return {
+            Name: new GraphQLScalarType({
+                name: this.getTypeName(),
+                description: 'Name custom scalar represents an Object with keys {first, last}',
+                parseValue(value) {
+                    console.log('parse', value);
+                    return value; // value from the client
+                },
+                serialize(value) {
+                    console.log('serialize', value);
+                    return value; // value sent to the client
+                },
+                parseLiteral(ast) {
+                    console.log('lit', ast);
+
+                    if (ast.kind === Kind.STRING) {
+                        return ast.value; // ast value is always in string format
+                    }
+                    return null;
+                },
+            }),
+        };
+    }
 }
 
 module.exports = {
-  Implementation: Name,
-  MongoIntegerInterface: Text.adapters.mongoose,
-  KnexIntegerInterface: Text.adapters.knex,
+    Implementation: Name,
+    MongoIntegerInterface: Text.adapters.mongoose,
+    KnexIntegerInterface: Text.adapters.knex,
 };

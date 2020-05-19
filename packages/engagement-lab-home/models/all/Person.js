@@ -140,8 +140,17 @@ const Person = cloudinary => {
             note: 'This will display on the person\'s individual page',
         },
     };
+    const options = {
+
+        adminConfig: {
+            defaultColumns: 'category',
+        },
+        // Required for our custom Name type
+        labelResolver: item => `${item.name.last}, ${item.name.first}`,
+    };
     return {
         fields,
+        options,
     };
 };
 /**
