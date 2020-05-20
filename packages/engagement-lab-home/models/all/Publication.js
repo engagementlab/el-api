@@ -11,6 +11,7 @@
 
 const {
     DateTime,
+    File,
     Relationship,
     Text,
     Url,
@@ -21,6 +22,8 @@ const {
 
 // Inherit Listing fields
 const Listing = require('../shared/Listing');
+
+const AzureAdapter = require('../../../init/adapters/Azure');
 
 const Publication = cloudinary => {
     /**

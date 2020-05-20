@@ -19,18 +19,10 @@ export default class NameController extends FieldController {
     return `${this.getFilterLabel({ label })}: "${valueNew}"`;
   };
 
-  getQueryFragment = () => `
-    ${this.path} {
-      first
-      last
-  }`;
 
   serialize = data => {
     if (data[this.path]) {
-      return {
-        first: data[this.path].first,
-        last: data[this.path].last
-      };
+      return JSON.parse(data[this.path])
     } else return undefined;
   };
 
