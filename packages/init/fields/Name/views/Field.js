@@ -2,19 +2,24 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/core';
+import { useState, useEffect } from 'react';
 
 import { FieldContainer, FieldLabel, FieldDescription, FieldInput } from '@arch-ui/fields';
 import { Input } from '@arch-ui/input';
 
 const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) => {
-  const handleChangeFirst = event => {
-    onChange(event.target.value);
-  };
-  const handleChangeLast = event => {
-    onChange(event.target.value);
+  
+  const initialState = serverValue ? serverValue : {first: undefined, last: undefined};
+  
+  const [values, setValues] = useState(initialState);
+  useEffect(() => {
+    onChange(values);
+  }, [values]);
+
+  const handleChange = e => {
+    setValues({ ...values, [e.target.name]: e.target.value });
   };
   
-  const value = serverValue || '';
   const canRead = errors.every(
     error => !(error instanceof Error && error.name === 'AccessDeniedError')
   );
@@ -29,17 +34,19 @@ const TextField = ({ onChange, autoFocus, field, errors, value: serverValue }) =
           autoComplete="off"
           autoFocus={autoFocus}
           type="text"
-          value={canRead ? value.first : undefined}
+          name="first"
+          value={canRead ? values.first : undefined}
           placeholder={canRead ? `First`: error.message}
-          onChange={handleChangeFirst}
+          onChange={handleChange}
           id={`ks-input-name-first`}
         />
         <Input
         autoComplete="off"
         type="text"
-        value={canRead ? value.last : undefined}
+        name="last"
+        value={canRead ? values.last : undefined}
         placeholder={canRead ? `Last`: error.message}
-        onChange={handleChangeLast}
+        onChange={handleChange}
         id={`ks-input-name-last`}
       />
       </FieldInput>

@@ -19,10 +19,13 @@ export default class NameController extends FieldController {
     return `${this.getFilterLabel({ label })}: "${valueNew}"`;
   };
 
-  serialize = data => {
-    console.log('serialize', data[this.path])
-    console.trace()
+  getQueryFragment = () => `
+    ${this.path} {
+      first
+      last
+  }`;
 
+  serialize = data => {
     if (data[this.path]) {
       return {
         first: data[this.path].first,
@@ -32,8 +35,6 @@ export default class NameController extends FieldController {
   };
 
   deserialize = data => {
-    console.log('deserialize', data)
-
     if (data[this.path]) {
       return {
         first: data[this.path].first,
