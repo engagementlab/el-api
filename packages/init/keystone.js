@@ -16,9 +16,7 @@ const {
 const {
     AdminUIApp,
 } = require('@keystonejs/app-admin-ui');
-const {
-    CloudinaryAdapter,
-} = require('@keystonejs/file-adapters');
+const CloudinaryAdapter = require('./adapters/Cloudinary');
 
 // Build utils
 const utils = require('./build/utils')();

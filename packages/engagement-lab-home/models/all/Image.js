@@ -8,9 +8,7 @@
  * ==========
  */
 
-const {
-    CloudinaryImage,
-} = require('@keystonejs/fields');
+const CloudinaryImage = require('../../../init/fields/CloudinaryImage');
 
 const Image = cloudinary => {
     /**
@@ -21,19 +19,20 @@ const Image = cloudinary => {
         name: {
             type: String,
             default: 'Image',
-            hidden: true,
             isRequired: true,
-
             adminDoc: 'el-home-img',
+
         },
         // TODO: Custom multi-image field
         image: {
             type: CloudinaryImage,
             adapter: cloudinary,
+            folder: 'test',
         },
     };
     return {
         fields,
+
     };
 };
 
