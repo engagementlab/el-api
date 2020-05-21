@@ -10,12 +10,22 @@
 
 const {
     CloudinaryImage,
+    CalendarDay,
     DateTime,
+    File,
     Select,
 } = require('@keystonejs/fields');
 const {
     Markdown,
 } = require('@keystonejs/fields-markdown');
+
+const AzureAdapter = require('../../../init/adapters/Azure');
+
+const fileAdapter = new AzureAdapter({
+    accountName: process.env.AZURE_STORAGE_ACCOUNT,
+    accountKey: process.env.AZURE_STORAGE_ACCESS_KEY,
+    containerName: 'resources',
+});
 
 const Resource = cloudinary => {
     /**
@@ -69,14 +79,11 @@ const Resource = cloudinary => {
             },
         },
 
-        /*     file: {
-      type: Types.File,
-      dependsOn: {
-        type: 'file',
-      },
-      label: 'File',
-      storage: azureFile,
-    }, */
+        file: {
+            type: File,
+            label: 'File',
+            adapter: fileAdapter,
+        },
         fileSummary: {
             type: Markdown,
             label: 'File Summary',
