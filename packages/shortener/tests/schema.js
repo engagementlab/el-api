@@ -9,29 +9,29 @@
  * ==========
  */
 const request = require('supertest')('http://localhost:3000');
-const {
-    expect,
-} = require('chai');
+const chai = require('chai');
 
-describe('GraphQL', () => {
+const { assert } = chai;
+chai.use(require('chai-graphql'));
+
+describe('URL shortener GraphQL', () => {
+  it('Try to get link.', done => {
     request
-        .post('/graphql')
-        .send({
-            query: `{getLinks{
+      .post('/graphql')
+      .send({
+        query: `{getLinks{
                     id
                     shortUrl
                     originalUrl
                     label
                 }}`,
-        })
-        .expect(200)
-        .end((err, res) => {
-            // res will contain array with one user
-            if (err) return done(err);
-            res.body.user.should.have.property('id');
-            res.body.user.should.have.property('name');
-            res.body.user.should.have.property('username');
-            res.body.user.should.have.property('email');
-            done();
-        });
+      })
+      .expect(200)
+      .end((err, res) => {
+        // res will be valid graphql response
+        if (err) return done(err);
+        assert.graphQL(res);
+        done();
+      });
+  });
 });
