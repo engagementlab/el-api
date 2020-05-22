@@ -32,6 +32,8 @@ const ServerUtils = require('./utils');
 const keystone = require('./keystone');
 const buildsRouter = require('./routes');
 
+const elShortener = require('../shortener');
+
 // Create logger
 require('./logger');
 
@@ -54,6 +56,11 @@ const boot = config => {
         }
 
         /**
+         * Use middleware for GraphQL instance of URL shortener service 
+         */
+        config.app.use(elShortener());
+
+        /**
          * Get port from environment and store in Express.
          */
         const port = ServerUtils.normalizePort(process.env.PORT || '3000');
@@ -61,6 +68,7 @@ const boot = config => {
         /**
          * Listen on provided port w/ both keystone instance and API routes
          */
+        // console.log(shortener);
         server = config.app.use([middleware, config.routes]).listen(port, () => {
             global.logger.info(
                 colors.bgCyan.bold.black(
