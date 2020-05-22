@@ -58,7 +58,7 @@ const boot = config => {
         /**
          * Use middleware for GraphQL instance of URL shortener service 
          */
-        config.app.use(elShortener());
+        config.app.use('/shortener', elShortener());
 
         /**
          * Get port from environment and store in Express.
@@ -77,6 +77,11 @@ const boot = config => {
                     } Mode).`
                 )
             );
+
+            // Error
+            config.app.get('*', (req, res) => {
+                res.status(500).send(`No route found for path ${req.url}.`);
+            });
 
             // Call class callback if defined (for tests)
             if (startCallback) startCallback(app);

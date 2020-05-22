@@ -55,12 +55,6 @@ const Routes = (importer, db) => {
     // router.get('/keys/projects', routes.project.keys);
     // router.get('/keys/publications', routes.publication.keys);
     // router.get('/keys/team', routes.team.keys);
-
-    // Error
-    router.get('*', (req, res) => {
-        res.status(500).send(`No route found for path ${req.url}.`);
-    });
-
     return router;
 };
 
