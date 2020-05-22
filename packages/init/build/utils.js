@@ -32,6 +32,8 @@ const GetPackagesData = (list, pkgNames) => {
 
     dirsFiltered.forEach(name => {
         if (fs.statSync(path.join(pkgsPath, name)).isDirectory()) {
+            // Skip if no config.json
+            if (!fs.existsSync(path.join(pkgsPath, name, 'config.json'))) return;
             // Get formal app name
             const configData = JSON.parse(
                 fs.readFileSync(path.join(pkgsPath, name, 'config.json'))
