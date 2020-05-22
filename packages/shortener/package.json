@@ -10,5 +10,8 @@
   "dependencies": {
     "apollo-server-express": "^2.13.1",
     "randexp": "^0.5.3"
+  },
+  "devDependencies": {
+    "chai-graphql": "^4.0.0"
   }
 }
