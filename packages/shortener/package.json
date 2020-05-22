@@ -1,0 +1,14 @@
+{
+  "name": "@engagementlab/shortener",
+  "version": "0.0.1",
+  "description": "URL shortener for Engagement Lab communications.",
+  "main": "index.js",
+  "repository": "https://github.com/engagementlab/el-api",
+  "author": "Johnny Richardson <johnny.c.rich@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "apollo-server-express": "^2.13.1",
+    "randexp": "^0.5.3"
+  }
+}
