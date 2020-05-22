@@ -11,12 +11,19 @@ const {
     gql,
 } = require('apollo-server-express');
 const RandExp = require('randexp');
+const express = require('express');
 
 require('./db');
 const {
     Link,
 } = require('./Link');
 
+/**
+ * Instantiate schema and return app router.
+ * @function
+ * @returns express.Router
+ *
+ */
 module.exports = () => {
     const typeDefs = gql `
     type Link {
@@ -29,7 +36,7 @@ module.exports = () => {
       getLinks: [Link]
     }
     type Mutation {
-      addLink(originalUrl: String!, Label: String!): Link
+      addLink(originalUrl: String!, label: String!): Link
     }
   `;
 
@@ -41,13 +48,15 @@ module.exports = () => {
             addLink: async (_, args) => {
                 try {
                     // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
-                    const shortUrl = new RandExp(/([a-z0-9]\w{0,3})/).gen();
+                    const shortUrl = new RandExp(/([a-z0-9]\w{0,4})/).gen().toLowerCase();
                     const response = await Link.create({
                         shortUrl,
                         ...args,
                     });
+                    console.log(response);
                     return response;
                 } catch (e) {
+                    console.error(e);
                     return e.message;
                 }
             },
@@ -56,16 +65,21 @@ module.exports = () => {
 
     // The ApolloServer constructor requires two parameters: your schema
     // definition and your set of resolvers.
-    const server = new ApolloServer({
+    const apollo = new ApolloServer({
         typeDefs,
         resolvers,
     });
-    return server.getMiddleware({
-        path: '/shortener/graphql',
+
+    const router = express.Router();
+
+    // Mount apollo middleware (/graphql)
+    router.use(apollo.getMiddleware());
+
+    //   TODO: Serve build of react app on prod
+    // if (process.env.NODE_ENV !== 'production')
+    router.get('/', (req, res) => {
+        res.send('Not prod');
     });
 
-    //   // The `listen` method launches a web server.
-    //   app.listen().then(({ url }) => {
-    //     console.log(`🚀  Server ready at ${url}`);
-    //   });
+    return router;
 };
