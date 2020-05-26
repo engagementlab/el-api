@@ -25,6 +25,7 @@ if (process.env.NODE_ENV !== 'ci') {
 
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const colors = require('colors');
 
@@ -114,6 +115,10 @@ const start = (productionMode, appName) => {
         else
             dbPrefix = process.env.MONGO_CLOUD_URI;
     }
+    // Allow all origins on dev
+    else
+        app.use(cors());
+
     // Load all data for API of currently used package
     const packagePath = `@engagementlab/${currentApp}`;
 
