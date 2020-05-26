@@ -1,10 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { Box, Button } from '@material-ui/core';
 
-import Button from '@material-ui/core/Button';
+import List from './List';
+
 
 const ADD_LINK = gql`
   mutation AddLink($label: String!, $url: String!) {
@@ -21,18 +23,21 @@ function App() {
 
   return (
     <div className="App">
+      <Box color="text.primary" width="75%">
       <Button
         variant="contained"
         color="primary"
         onClick={e => {
           e.preventDefault();
           addLink({
-            variables: { label: 'testfdxgv', url: 'http://sglmgvd.comsfxg' },
+            variables: { label: `${Math.random()}`, url: `http://${Math.random()}` },
           });
         }}
       >
         Hello World
       </Button>
+      <List />
+      </Box>
     </div>
   );
 }
