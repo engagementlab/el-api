@@ -13,10 +13,8 @@ const {
 const RandExp = require('randexp');
 const express = require('express');
 
-require('./db');
-const {
-    Link,
-} = require('./Link');
+const connection = require('./db')();
+const Link = require('./Link')(connection);
 
 /**
  * Instantiate schema and return app router.
@@ -49,15 +47,17 @@ module.exports = () => {
                 try {
                     // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
                     const shortUrl = new RandExp(/([a-z0-9]\w{0,4})/).gen().toLowerCase();
-                    const response = await Link.create({
+                    const newLink = new Link({
                         shortUrl,
                         ...args,
                     });
+                    const response = await newLink.save();
                     console.log(response);
+
+                    console.log(Link.db.name); // myDatabase
                     return response;
                 } catch (e) {
-                    console.error(e);
-                    return e.message;
+                    throw new Error(e);
                 }
             },
         },
@@ -68,6 +68,16 @@ module.exports = () => {
     const apollo = new ApolloServer({
         typeDefs,
         resolvers,
+        formatError: err => {
+            // Don't give the specific errors to the client.
+            if (err.message.startsWith('Database Error: ')) {
+                return new Error('Internal server error');
+            }
+
+            // Otherwise return the original error.  The error can also
+            // be manipulated in other ways, so long as it's returned.
+            return err;
+        },
     });
 
     const router = express.Router();
