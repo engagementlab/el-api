@@ -45,16 +45,10 @@ module.exports = () => {
         Mutation: {
             addLink: async (_, args) => {
                 try {
-                    // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
-                    const shortUrl = new RandExp(/([a-z0-9]\w{0,4})/).gen().toLowerCase();
                     const newLink = new Link({
-                        shortUrl,
-                        ...args,
+                        args,
                     });
                     const response = await newLink.save();
-                    console.log(response);
-
-                    console.log(Link.db.name); // myDatabase
                     return response;
                 } catch (e) {
                     throw new Error(e);
@@ -89,6 +83,15 @@ module.exports = () => {
     // if (process.env.NODE_ENV !== 'production')
     router.get('/', (req, res) => {
         res.send('Not prod');
+    });
+
+    router.get('/generate', (req, res) => {
+
+        // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
+        const shortUrl = new RandExp(/([a-z0-9]{4,4})/).gen().toLowerCase();
+
+        res.send(shortUrl);
+
     });
 
     return router;
