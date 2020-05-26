@@ -10,7 +10,7 @@ import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/shortener/graphql'
+  uri: 'https://d0e24e1e.ngrok.io/shortener/graphql'
 });
 const client = new ApolloClient({
   link: httpLink,

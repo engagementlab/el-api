@@ -10,16 +10,19 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const url = 'mongodb://localhost:27017/el-admin';
+const url = 'mongodb://localhost/elab-admin';
+module.exports = () => {
+    try {
 
-try {
+        const conn = mongoose.createConnection(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        mongoose.set('useCreateIndex', true);
+        return conn;
 
-    mongoose.connect(url, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-
-} catch (e) {
-    global.logger.error(e);
-    throw new Error(e);
-}
+    } catch (e) {
+        global.logger.error(e);
+        throw new Error(e);
+    }
+};
