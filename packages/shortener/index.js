@@ -31,7 +31,7 @@ module.exports = () => {
       getLinks: [Link]
     }
     type Mutation {
-      addLink(originalUrl: String!, label: String!): Link
+      addLink(originalUrl: String!, shortUrl: String!, label: String!): Link
     }
   `;
 
@@ -42,10 +42,7 @@ module.exports = () => {
     Mutation: {
       addLink: async (_, args) => {
         try {
-          const newLink = new Link({
-            args,
-          });
-          const response = await newLink.save();
+          const response = await Link.create(args);
           return response;
         } catch (e) {
           throw new Error(e);
@@ -87,6 +84,11 @@ module.exports = () => {
     const shortUrl = new RandExp(/([a-z0-9]{4,4})/).gen().toLowerCase();
 
     res.send(shortUrl);
+  });
+
+  //   Nginx rules sends all elab.works/ urls here
+  router.get('/go/:url', (req, res) => {
+    // TODO: Do redirect here.
   });
 
   return router;

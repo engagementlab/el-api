@@ -25,6 +25,10 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  shortLabel:  {
+      color: 'grey',
+      fontSize: 'x-small',
+  }
 });
 
 /**
@@ -68,7 +72,7 @@ export default function DenseTable() {
              <TableHead>
                  <TableRow>
                      <TableCell>Label</TableCell>
-                     <TableCell>Short URL</TableCell>
+                     <TableCell>Short URL <span className={classes.shortLabel}>elab.works/...</span></TableCell>
                      <TableCell>Original URL</TableCell>
                      <TableCell align="right">Clicks</TableCell>
                  </TableRow>
