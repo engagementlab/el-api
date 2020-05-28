@@ -177,6 +177,9 @@ class Add extends PureComponent {
             urlInput: '',
         });
 
+        // Tell app that data changed
+        this.props.updated();
+
     }
 
 
@@ -328,6 +331,7 @@ class Add extends PureComponent {
 
 Add.propTypes = {
   classes: PropTypes.object.isRequired,
+  updated: PropTypes.func.isRequired,
 };
 
 Add.defaultProps = {
