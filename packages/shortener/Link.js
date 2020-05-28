@@ -22,6 +22,9 @@ module.exports = connection => {
             unique: true,
             required: true,
         },
+        date: {
+            type: String,
+        }
     });
 
     return connection.model('Link', linkSchema);
