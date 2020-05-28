@@ -41,12 +41,12 @@ module.exports = () => {
 
     const resolvers = {
         Query: {
-            getLinks: async () => Link.find({}).exec(),
+            getLinks: async () => Link.find({}).sort({'date': 'desc'}).exec(),
         },
         Mutation: {
             addLink: async (_, args) => {
                 try {
-                    const response = await Link.create(args);
+                    const response = await Link.create({date: Date.now(), ...args});
                     return response;
                 } catch (e) {
                     return e;
