@@ -2,7 +2,6 @@ import React, { PureComponent, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
 import { Mutation } from '@apollo/react-components';
 
 import { Box, Fab, Snackbar, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Tooltip } from '@material-ui/core';
@@ -19,43 +18,48 @@ const styles = theme => ({
     },
     fab: {
         background: '#00ab9e',
+    },
+    hidden: {
+        display: 'none'
     }
   });
 
 const ADD_LINK = gql`
-mutation AddLink($label: String!, $originalUrl: String!, $shortUrl: String!) {
-  addLink(label: $label, originalUrl: $originalUrl, shortUrl: $shortUrl) {
-    id
-    originalUrl
-    shortUrl
-    label
-  }
+    mutation AddLink($label: String!, $originalUrl: String!, $shortUrl: String!) {
+    addLink(label: $label, originalUrl: $originalUrl, shortUrl: $shortUrl) {
+        id
+        originalUrl
+        shortUrl
+        label
+    }
 }
 `;
 
 function Alert(props) {
-    return <MuiAlert elevation ={6} variant ="filled" {...props} />;
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
 
 class Add extends PureComponent {
     constructor(props) {
         super(props);
 
         this.state = {
-            hasError: false,
+            error: false,
+            errorHelper: '',
             isValid: false,
             labelEntered: false,
             labelHelper: null,
             labelInput: '',
             shortUrl: '',
             shortUrlError: false,
-            shortUrlGenerated: null,
+            shortUrlGenerated: '',
             shortUrlHelper: null,
             success: false,
             urlError: null,
             urlInput: '',
+            urlFull: '',
         };
+        
         this.isMac = navigator.appVersion.indexOf("Mac") !== -1;
         this.shortUrlCount = 0;
         this.shortUrlMax = 10;
@@ -65,14 +69,15 @@ class Add extends PureComponent {
     componentDidUpdate = () => {
 
         // Check if all fields valid per update
+        const s = this.state;
         const isValid =
-            this.state.labelEntered &&
-            !this.state.labelHelper &&
-            !this.state.urlError &&
-            this.state.shortUrlGenerated &&
-            !this.state.shortUrlError &&
+            s.labelEntered &&
+            !s.labelHelper &&
+            !s.urlError &&
+            !s.shortUrlError &&
+            s.shortUrlGenerated !== null &&
+            (s.urlInput.length >= 8) &&
             (this.shortUrlCount <= this.shortUrlMax);
-            console.log(isValid)
 
         this.setState({
             isValid
@@ -80,11 +85,12 @@ class Add extends PureComponent {
 
     }
 
-    componentWillUnmount = () => {
-        console.log('Add will unmount');
-    }
-
     generateLink = (evt) => {
+
+        this.setState({
+            urlError: null,
+            urlInput: evt.target.value,
+        });
 
         if (evt.target.value.length < 8) {
             this.setState({
@@ -99,10 +105,6 @@ class Add extends PureComponent {
             });
             return;
         }
-        this.setState({
-            urlError: null,
-            urlInput: evt.target.value,
-        });
 
         fetch('http://localhost:3000/shortener/generate')
             .then((response) => {
@@ -111,7 +113,8 @@ class Add extends PureComponent {
                 this.setState({
                     shortUrlGenerated: data,
                     shortUrl: data,
-                    shortUrlHelper: '(This can be customized if desired.)'
+                    shortUrlHelper: '(This can be customized if desired.)',
+                    urlFull: `https://elab.works/${data}`
                 });
             });
 
@@ -159,39 +162,51 @@ class Add extends PureComponent {
     };
 
     linkAdded = () => {
-
-        // Copy short url submitted to clipboard
-        // Create ranges for url prefix and short url elements
-        const prefixRange = document.createRange();  
-        const shortRange = document.createRange();  
-
-        const hiddenInput = document.createElement('span');
-        hiddenInput.innerText = `https://elab.works/${document.getElementById('short-url').innerText}`;
-       
-        shortRange.selectNodeContents(hiddenInput);
-
-        // window.getSelection().addRange(prefixRange);
-        window.getSelection().addRange(shortRange);
-
-        const copied = document.execCommand('copy');
-        console.log(window.getSelection())
-        // window.getSelection().removeRange(prefixRange);
-        // window.getSelection().removeRange(shortRange);
-
+        
+        
         this.setState({
             isValid: false,
-            labelHelper: null,
+            labelHelper: '',
             labelInput: '',
             success: true,
             shortUrl: '',
             shortUrlError: false,
             shortUrlGenerated: '',
-            shortUrlHelper: null,
+            shortUrlHelper: '',
             urlError: null,
             urlInput: '',
         });
 
     }
+
+
+    handleError = (err) => {
+        
+        let errorHelper = 'Something went wrong. :(';
+
+        // Handle duplicate errors
+        if(err.graphQLErrors && err.graphQLErrors[0].extensions.code === 11000) {
+            switch(err.graphQLErrors[0].message) {
+                case 'label':
+                    errorHelper = 'A link with this label already exists.'; 
+                    break;
+                case 'url':
+                    errorHelper = 'This link has already been shortened. Please locate it in link history.'; 
+                    break;
+                case 'shorturl':
+                    errorHelper = 'This shortened URL is already in use.'; 
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        this.setState({
+            error: true,
+            errorHelper
+        });
+
+    };
 
     snackbarClose = (event, reason) => {
 
@@ -205,6 +220,8 @@ class Add extends PureComponent {
   render () {
     const { classes } = this.props;
     const {
+        error,
+        errorHelper,
         isValid,
         labelHelper,
         labelInput,
@@ -214,15 +231,13 @@ class Add extends PureComponent {
         success,
         shortUrlError,
         urlError,
-        urlInput
+        urlInput,
+        urlFull
     } = this.state;
 
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
-    }
     return (
-        <Mutation mutation={ADD_LINK} onCompleted={this.linkAdded}>
-            {(addLink, { data, error }) => (
+        <Mutation mutation={ADD_LINK} errorPolicy="all" onCompleted={this.linkAdded} onError={this.handleError}>
+            {(addLink, { data, mutationErr }) => (
             
                 <Box>
                     <TableContainer component={Paper}>
@@ -261,13 +276,18 @@ class Add extends PureComponent {
                                                 error={this.shortUrlCount > this.shortUrlMax || shortUrlError}
                                                 helperText={shortUrlHelper}
                                                 onChange={(e) => this.measureShortUrl(e)}
-                                                InputProps={{ startAdornment: <span id="url-prefix" className={classes.rootUrl}>elab.works/</span> }}
+                                                InputProps={{ 
+                                                    startAdornment: <span id="url-prefix" className={classes.rootUrl}>elab.works/</span>,
+                                                    endAdornment: <input id="url-full" readOnly={true} className={classes.hidden} value={urlFull} />
+                                                }}
                                             />
                                         <Zoom in={isValid}>
                                             <Fab 
+                                                id="btn-add"
                                                 size="small" 
                                                 color="secondary" 
                                                 aria-label="add"
+                                                data-clipboard-target="#url-full"
                                                 className={classes.fab}
                                                 onClick={e => {
                                                     e.preventDefault();
@@ -291,12 +311,12 @@ class Add extends PureComponent {
                         
                     <Snackbar open={error} autoHideDuration={3000} onClose={this.snackbarClose}>
                         <Alert severity="error">
-                            Sorry, something went wrong.
+                            {errorHelper}
                         </Alert>
                     </Snackbar>    
                     <Snackbar open={success} autoHideDuration={4500} onClose={this.snackbarClose}>
                         <Alert severity="success">
-                            Link added! Short URL copied to clipboard.
+                            Link added!
                         </Alert>
                     </Snackbar>
                 </Box>

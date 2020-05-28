@@ -6,7 +6,11 @@
  * Entry
  * ==========
  */
-const { ApolloServer, gql } = require('apollo-server-express');
+const {
+    ApolloServer,
+    ApolloError,
+    gql,
+} = require('apollo-server-express');
 const RandExp = require('randexp');
 const express = require('express');
 
@@ -20,7 +24,7 @@ const Link = require('./Link')(connection);
  *
  */
 module.exports = () => {
-  const typeDefs = gql`
+    const typeDefs = gql `
     type Link {
       id: ID!
       originalUrl: String
@@ -35,61 +39,78 @@ module.exports = () => {
     }
   `;
 
-  const resolvers = {
-    Query: {
-      getLinks: async () => Link.find({}).exec(),
-    },
-    Mutation: {
-      addLink: async (_, args) => {
-        try {
-          const response = await Link.create(args);
-          return response;
-        } catch (e) {
-          throw new Error(e);
-        }
-      },
-    },
-  };
+    const resolvers = {
+        Query: {
+            getLinks: async () => Link.find({}).exec(),
+        },
+        Mutation: {
+            addLink: async (_, args) => {
+                try {
+                    const response = await Link.create(args);
+                    return response;
+                } catch (e) {
+                    return e;
+                }
+            },
+        },
+    };
 
-  // The ApolloServer constructor requires two parameters: your schema
-  // definition and your set of resolvers.
-  const apollo = new ApolloServer({
-    typeDefs,
-    resolvers,
-    formatError: err => {
-      // Don't give the specific errors to the client.
-      if (err.message.startsWith('Database Error: ')) {
-        return new Error('Internal server error');
-      }
+    // The ApolloServer constructor requires two parameters: your schema
+    // definition and your set of resolvers.
+    const apollo = new ApolloServer({
+        typeDefs,
+        resolvers,
+        formatError: err => {
 
-      // Otherwise return the original error.  The error can also
-      // be manipulated in other ways, so long as it's returned.
-      return err;
-    },
-  });
+            // Dupe index errors
+            if (err.extensions && err.extensions.exception.code === 11000) {
+                const msg = err.extensions.exception.errmsg;
+                let type = '';
 
-  const router = express.Router();
+                if (msg.indexOf('label_1') > -1)
+                    type = 'label';
+                else if (msg.indexOf('originalUrl_1') > -1)
+                    type = 'url';
+                else if (msg.indexOf('shortUrl_1') > -1)
+                    type = 'shorturl';
 
-  // Mount apollo middleware (/graphql)
-  router.use(apollo.getMiddleware());
+                return new ApolloError(type, 11000);
+            }
 
-  //   TODO: Serve build of react app on prod
-  // if (process.env.NODE_ENV !== 'production')
-  router.get('/', (req, res) => {
-    res.send('Not prod');
-  });
+            // Don't give the specific errors to the client.
+            if (err.message.startsWith('Database Error: ')) {
+                return new Error('Internal server error');
+            }
 
-  router.get('/generate', (req, res) => {
-    // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
-    const shortUrl = new RandExp(/([a-z0-9]{4,4})/).gen().toLowerCase();
 
-    res.send(shortUrl);
-  });
+            // Otherwise return the original error.  The error can also
+            // be manipulated in other ways, so long as it's returned.
+            return err;
+        },
+    });
 
-  //   Nginx rules sends all elab.works/ urls here
-  router.get('/go/:url', (req, res) => {
-    // TODO: Do redirect here.
-  });
+    const router = express.Router();
 
-  return router;
+    // Mount apollo middleware (/graphql)
+    router.use(apollo.getMiddleware());
+
+    //   TODO: Serve build of react app on prod
+    // if (process.env.NODE_ENV !== 'production')
+    router.get('/', (req, res) => {
+        res.send('Not prod');
+    });
+
+    router.get('/generate', (req, res) => {
+        // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
+        const shortUrl = new RandExp(/([a-z0-9]{4,4})/).gen().toLowerCase();
+
+        res.send(shortUrl);
+    });
+
+    //   Nginx rules sends all elab.works/ urls here
+    router.get('/go/:url', (req, res) => {
+        // TODO: Do redirect here.
+    });
+
+    return router;
 };
