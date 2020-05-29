@@ -7,17 +7,17 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "bootstrap:quick": "npm run bootstrap -- --scope=@engagementlab/*",
-    "build": "cd ./packages/init; node build/",
+    "build": "cd ./packages/core; node build/",
     "ci": "start-server-and-test start-ci http://localhost:3000 test",
-    "css": "node-sass --include-path scss ./packages/init/styles/ --output ./bin --output-style compressed",
-    "dev": "nodemon ./packages/init/app.js",
+    "css": "node-sass --include-path scss ./packages/core/styles/ --output ./bin --output-style compressed",
+    "dev": "nodemon ./packages/core/app.js",
     "fix": "eslint --fix ./",
-    "inspect": "nodemon --inspect ./packages/init/app.js",
-    "start": "node ./packages/init/app.js",
+    "inspect": "nodemon --inspect ./packages/core/app.js",
+    "start": "node ./packages/core/app.js",
     "start-ci": "./node_modules/.bin/nyc yarn run start",
     "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
     "watch": "npm-run-all --parallel watch-js watch-sass",
-    "watch-js": "nodemon ./packages/init/app.js",
+    "watch-js": "nodemon ./packages/core/app.js",
     "watch-sass": "nodemon -e scss -x \"npm run css\""
   },
   "babel": {

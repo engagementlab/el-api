@@ -1,5 +1,5 @@
 {
-  "name": "@engagementlab/api-init",
+  "name": "@engagementlab/core",
   "description": "Content API for Engagement Lab web apps.",
   "author": "Johnny Richardson <johnny@elab.emerson.edu> (https://github.com/johnnycrich)",
   "contributors": [

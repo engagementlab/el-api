@@ -19,7 +19,7 @@ const {
     Markdown,
 } = require('@keystonejs/fields-markdown');
 
-const AzureAdapter = require('../../../init/adapters/Azure');
+const AzureAdapter = require('../../../core/adapters/Azure');
 
 const fileAdapter = new AzureAdapter({
     accountName: process.env.AZURE_STORAGE_ACCOUNT,

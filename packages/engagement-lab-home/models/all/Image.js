@@ -8,7 +8,7 @@
  * ==========
  */
 
-const CloudinaryImage = require('../../../init/fields/CloudinaryImage');
+const CloudinaryImage = require('../../../core/fields/CloudinaryImage');
 
 const Image = cloudinary => {
     /**

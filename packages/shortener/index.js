@@ -107,9 +107,15 @@ module.exports = () => {
         res.send(shortUrl);
     });
 
-    //   Nginx rules sends all elab.works/ urls here
-    router.get('/go/:url', (req, res) => {
-        // TODO: Do redirect here.
+    // Nginx rules sends all elab.works/ urls here
+    router.get('/go/:shorturl', async (req, res) => {
+        // Find original of by short url
+        const data = await Link.find({shortUrl: req.params.shorturl}, 'originalUrl').exec();
+
+        // TODO: Track click
+
+        // Send
+        res.redirect(data[0].originalUrl);
     });
 
     return router;

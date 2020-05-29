@@ -11,7 +11,7 @@ RUN yarn global add lerna
 RUN ls 
 COPY package.json lerna.json yarn.lock ./
 
-COPY packages/init ./packages/init
+COPY packages/core ./packages/core
 COPY packages/engagement-lab-home ./packages/engagement-lab-home
 
 # ENV MONGO_HOST "host.docker.internal"

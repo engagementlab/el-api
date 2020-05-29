@@ -23,7 +23,7 @@ const {
 // Inherit Listing fields
 const Listing = require('../shared/Listing');
 
-const AzureAdapter = require('../../../init/adapters/Azure');
+const AzureAdapter = require('../../../core/adapters/Azure');
 
 const Publication = cloudinary => {
     /**

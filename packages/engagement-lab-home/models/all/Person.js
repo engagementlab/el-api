@@ -19,7 +19,7 @@ const {
     Markdown,
 } = require('@keystonejs/fields-markdown');
 
-const Name = require('../../../init/fields/Name');
+const Name = require('../../../core/fields/Name');
 
 const Person = cloudinary => {
     /**

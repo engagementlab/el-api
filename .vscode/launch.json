@@ -10,7 +10,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/packages/init/app.js"
+            "program": "${workspaceFolder}/packages/core/app.js"
         },
         {
             "type": "node",
