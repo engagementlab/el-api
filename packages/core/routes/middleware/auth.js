@@ -3,7 +3,7 @@
  * Developed by Engagement Lab, 2020
  *
  * @author Johnny Richardson
- * CMS authentication middleware
+ * Core authentication middleware
  * ==========
  */
 const ciMode = process.env.NODE_ENV === 'ci';
@@ -51,8 +51,8 @@ module.exports = {
    * @function
    */
   callback: (req, res) => {
-
     passport.authenticate(ciMode ? 'mocked' : 'google', (error, user, info) => {
+      console.log(error, info, user);
       if (error) {
         res.status(401).send(error);
         return;
@@ -83,7 +83,7 @@ module.exports = {
   },
 
   /**
-   *  Check if user is logged in
+   * Check if user is logged in
    * @function
    */
   isAllowed: (req, res, next) => {

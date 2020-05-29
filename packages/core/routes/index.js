@@ -12,13 +12,6 @@ const ciMode = process.env.NODE_ENV === 'ci';
 const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
-const parser = require('body-parser');
-
-// Passport
-const passport = require('passport');
-const AuthStrategy = ciMode ?
-    require('passport-mocked').Strategy :
-    require('passport-google-oauth20').Strategy;
 
 // Build utils
 const utils = require('../build/utils')();
@@ -29,6 +22,9 @@ const admin = require('./middleware/admin');
 
 // User model
 const User = require('../models/User');
+
+// Passport config
+const Passport = require('../passport');
 
 /**
  * Middleware for landing/errors
@@ -77,59 +73,8 @@ module.exports = buildsDir => {
         })
     );
 
-    const bodyParser = parser;
-    // Support json encoded bodies
-    router.use(bodyParser.json());
-    // Support encoded bodies
-    router.use(
-        bodyParser.urlencoded({
-            extended: true,
-        })
-    );
-
-    /**
-     * Google oauth2/passport config
-     */
-    passport.serializeUser((user, done) => {
-        done(null, user);
-    });
-    passport.deserializeUser((user, done) => {
-        done(null, user);
-    });
-
-    const strategy = new AuthStrategy({
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.AUTH_CALLBACK_URL,
-            passReqToCallback: true,
-        },
-        (request, accessToken, refreshToken, profile, done) => {
-            // Verify user allowed
-            const email = ciMode ? process.env.DEV_EMAIL : profile.emails[0].value;
-            User.findOne({
-                    email,
-                },
-                (err, user) => {
-                    if (err) {
-                        global.logger.error(`Login error: ${err}`);
-                        return done(err);
-                    }
-                    if (!user) {
-                        global.logger.error(
-                            `Login error: user not found for email ${profile.emails[0].value}`
-                        );
-                        return done(err);
-                    }
-                    return done(err, user);
-                }
-            );
-        }
-    );
-
-    passport.use(strategy);
-
-    router.use(passport.initialize());
-    router.use(passport.session());
+    // Passport init for router
+    Passport(router);
 
     // Static files
     router.use('/style/:file', (req, res) =>
@@ -141,7 +86,7 @@ module.exports = buildsDir => {
     router.get('/', authentication.isAllowed, landing);
 
     // Admin page
-    router.get('/admin', admin.landing);
+    router.get('/admin', authentication.isAllowed, admin.landing);
     router.post('/admin/edit', admin.userCrud);
 
     // Errors
@@ -162,7 +107,7 @@ module.exports = buildsDir => {
     // Create route in router for all builds
     allDirs.forEach(name => {
         router.get(`/${name}`, authentication.isAllowedInApp, (req, res) => {
-            // Send index for this CMS 
+            // Send index for this CMS
             res.redirect(`/cms/@/${name}`);
         });
 

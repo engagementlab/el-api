@@ -59,7 +59,7 @@ const boot = config => {
         /**
          * Use middleware for GraphQL instance of URL shortener service 
          */
-        config.app.use('/shortener', elShortener());
+        // config.app.use('/shortener', elShortener());
 
         /**
          * Get port from environment and store in Express.
@@ -69,7 +69,6 @@ const boot = config => {
         /**
          * Listen on provided port w/ both keystone instance and API routes
          */
-        // console.log(shortener);
         server = config.app.use([middleware, config.routes]).listen(port, () => {
             global.logger.info(
                 colors.bgCyan.bold.black(
@@ -175,14 +174,7 @@ const init = callback => {
         global.logger.error(e);
         throw new Error(e);
     }
-
-    /**
-     *    Load all possible apps from sibling packages (config defined in app.json)
-     */
-    // const appConfigs = fs.readFileSync(appsJson);
-    // packages = JSON.parse(appConfigs);
-    // global.elasti = undefined;
-
+    
     start(productionMode);
 };
 
