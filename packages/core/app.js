@@ -11,10 +11,15 @@
  *
  * ==========
  */
-const colors = require('colors');
 
-// Base API server
-const server = require('./server');
+/**
+ * @typedef {Object} Utils
+ * @property {Object} Auth - Authentication middleware
+ * @property {function} Passport - Passport configuration middleware
+ * @property {Object} Server - Various utilities for express server instances
+ */
+
+const colors = require('colors');
 
 // Create logger
 require('./logger');
@@ -24,14 +29,12 @@ require('./logger');
  * which serves all data APIs and CMS instances.
  * Otherwise, just expose core utilities.
  */
-if (process.env.SERVER_MODE === true || process.argv.indexOf('--server') > -1)
-    server();
-else {
-    /**
-     * @typedef {Object} Utils
-     * @property {Object} Auth - Authentication middleware
-     * @property {function} Passport - Passport configuration middleware
-     */
+if (process.env.SERVER_MODE === true || process.argv.indexOf('--server') > -1) {
+    // Base API server
+    // eslint-disable-next-line global-require
+    require('./server')();
+} else {
+
     /**
      * Engagement Lab Content and Data API Core Utilities
      * @type Utils - Core Utilities
@@ -41,6 +44,8 @@ else {
         Auth: require('./utils/auth'),
         // eslint-disable-next-line global-require
         Passport: require('./utils/passport'),
+        // eslint-disable-next-line global-require
+        Server: require('./utils/server'),
     };
     global.logger.info(
         `${colors.bgGreen.bold.blue('Core')}: Utils ready for use. (${

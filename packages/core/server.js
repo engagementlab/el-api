@@ -30,7 +30,7 @@ const colors = require('colors');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const cors = require('cors');
 
-const ServerUtils = require('./utils');
+const ServerUtils = require('./utils/server');
 const keystone = require('./keystone');
 const buildsRouter = require('./routes');
 
