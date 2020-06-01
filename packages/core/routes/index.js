@@ -17,14 +17,14 @@ const session = require('express-session');
 const utils = require('../build/utils')();
 
 // Middleware
-const authentication = require('./middleware/auth');
+const authentication = require('../utils/auth');
 const admin = require('./middleware/admin');
 
 // User model
 const User = require('../models/User');
 
 // Passport config
-const Passport = require('../passport');
+const Passport = require('../utils/passport');
 
 /**
  * Middleware for landing/errors
@@ -83,14 +83,14 @@ module.exports = buildsDir => {
     router.use('/@', express.static(binPath));
 
     // Landing page (app selection)
-    router.get('/', authentication.isAllowed, landing);
+    router.get('/', authentication.isAllowed(), landing);
 
     // Admin page
-    router.get('/admin', authentication.isAllowed, admin.landing);
+    router.get('/admin', authentication.isAllowed(), admin.landing);
     router.post('/admin/edit', admin.userCrud);
 
     // Errors
-    router.get('/error/:type?', authentication.isAllowed, landing);
+    router.get('/error/:type?', authentication.isAllowed(), landing);
 
     /**
      * Authentication

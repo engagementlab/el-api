@@ -25,18 +25,16 @@ if (process.env.NODE_ENV !== 'ci') {
 
 const path = require('path');
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const colors = require('colors');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const cors = require('cors');
 
 const ServerUtils = require('./utils');
 const keystone = require('./keystone');
 const buildsRouter = require('./routes');
 
 const elShortener = require('../shortener');
-
-// Create logger
-require('./logger');
 
 let app;
 let server;
@@ -174,7 +172,7 @@ const init = callback => {
         global.logger.error(e);
         throw new Error(e);
     }
-    
+
     start(productionMode);
 };
 
