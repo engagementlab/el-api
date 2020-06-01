@@ -11,7 +11,6 @@ const ciMode = process.env.NODE_ENV === 'ci';
 
 const fs = require('fs');
 const express = require('express');
-const session = require('express-session');
 
 // Build utils
 const utils = require('../build/utils')();
@@ -62,16 +61,6 @@ module.exports = buildsDir => {
         })
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name);
-
-    // Session store
-    //    TODO: mongostore for prod
-    router.use(
-        session({
-            secret: process.env.SESSION_COOKIE,
-            resave: true,
-            saveUninitialized: false,
-        })
-    );
 
     // Passport init for router
     Passport(router);

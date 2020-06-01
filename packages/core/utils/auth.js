@@ -51,35 +51,38 @@ module.exports = {
      * @function
      */
     callback: (req, res) => {
-        passport.authenticate(ciMode ? 'mocked' : 'google', (error, user, info) => {
-            console.log(error, info, user);
-            if (error) {
-                res.status(401).send(error);
-                return;
-            }
-            if (!user) {
-                res.status(401).send(info);
-                return;
-            }
-
-            // Log user in
-            req.logIn(user, logInErr => {
-                if (logInErr) {
-                    res.status(500).send(logInErr);
-                    return logInErr;
+        try {
+            passport.authenticate(ciMode ? 'mocked' : 'google', (error, user, info) => {
+                if (error) {
+                    res.status(401).send(error);
+                    return;
+                }
+                if (!user) {
+                    res.status(401).send(info);
+                    return;
                 }
 
-                // Explicitly save the session before redirecting!
-                req.session.save(() => {
-                    // Ensure user has permissions for this CMS
-                    const allowed = ciMode || !UrlAllowed(user.permissions, req.session.redirectTo);
-                    if (req.session.redirectTo === 'cms/' || allowed) {
-                        res.redirect(req.session.redirectTo || '/');
-                    } else res.redirect('/cms/error?type=permission');
+                // Log user in
+                req.logIn(user, logInErr => {
+                    if (logInErr) {
+                        res.status(500).send(logInErr);
+                        return logInErr;
+                    }
+
+                    // Explicitly save the session before redirecting!
+                    req.session.save(() => {
+                        // Ensure user has permissions for this CMS
+                        const allowed = ciMode || !UrlAllowed(user.permissions, req.session.redirectTo);
+                        if (req.session.redirectTo === 'cms/' || allowed) {
+                            res.redirect(req.session.redirectTo || '/');
+                        } else res.redirect('/cms/error?type=permission');
+                    });
+                    return null;
                 });
-                return null;
-            });
-        })(req, res);
+            })(req, res);
+        } catch (e) {
+            throw new Error(e);
+        }
     },
 
     /**

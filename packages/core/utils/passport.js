@@ -10,6 +10,7 @@ const ciMode = process.env.NODE_ENV === 'ci';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 const parser = require('body-parser');
+const session = require('express-session');
 const passport = require('passport');
 const AuthStrategy = ciMode ?
     require('passport-mocked').Strategy :
@@ -54,6 +55,16 @@ const Passport = router => {
                 }
             );
         }
+    );
+
+    // Session store
+    //    TODO: mongostore for prod
+    router.use(
+        session({
+            secret: process.env.SESSION_COOKIE,
+            resave: true,
+            saveUninitialized: false,
+        })
     );
 
     /**

@@ -15,9 +15,9 @@
 /**
  * Module dependencies.
  */
+
 const path = require('path');
 const express = require('express');
-const mongoose = require('mongoose');
 const colors = require('colors');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const cors = require('cors');
@@ -25,8 +25,6 @@ const cors = require('cors');
 const ServerUtils = require('./utils/server');
 const keystone = require('./keystone');
 const buildsRouter = require('./routes');
-
-const elShortener = require('../shortener');
 
 let app;
 let server;
@@ -45,11 +43,6 @@ const boot = config => {
             const cmsRouter = buildsRouter(path.join(__dirname, '../../bin'));
             config.app.use('/cms', cmsRouter);
         }
-
-        /**
-         * Use middleware for GraphQL instance of URL shortener service 
-         */
-        // config.app.use('/shortener', elShortener());
 
         /**
          * Get port from environment and store in Express.
@@ -137,33 +130,6 @@ const init = callback => {
 
     const productionMode =
         process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
-
-    /**
-     *    Create DB connection for admin database, which contains CMS privileges, etc.
-     */
-    const dbAddress =
-        process.env.NODE_ENV !== 'production' ?
-        process.env.MONGO_ADMIN_URI :
-        process.env.MONGO_CLOUD_ADMIN_URI;
-    if (!dbAddress)
-        global.logger.error(
-            `Please provide ${
-                process.env.NODE_ENV === 'production' ? 'MONGO' : 'MONGO_CLOUD'
-            }_ADMIN_URI.`
-        );
-    try {
-        if (process.env.NODE_ENV !== 'production')
-            global.logger.info(`Connecting to admin DB at ${process.env.MONGO_ADMIN_URI}`);
-
-        mongoose.connect(dbAddress, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-        });
-    } catch (e) {
-        global.logger.error(e);
-        throw new Error(e);
-    }
 
     start(productionMode);
 };
