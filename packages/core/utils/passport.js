@@ -8,6 +8,7 @@
  */
 const ciMode = process.env.NODE_ENV === 'ci';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 const parser = require('body-parser');
 const passport = require('passport');
 const AuthStrategy = ciMode ?
@@ -16,12 +17,12 @@ const AuthStrategy = ciMode ?
 
 
 // User model
-const User = require('./models/User');
+const User = require('../models/User');
 
 /**
  * Apply passport authentication config to router
  * @function
- * @param {express.Router} router - Full URL being accessed
+ * @param {express.Router} router - express Router instance to enable for.
  *
  */
 const Passport = router => {
