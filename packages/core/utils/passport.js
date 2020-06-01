@@ -26,7 +26,6 @@ const User = require('../models/User');
  *
  */
 const Passport = router => {
-
     const bodyParser = parser;
     const strategy = new AuthStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,

@@ -19,6 +19,14 @@
  * @property {Object} Server - Various utilities for express server instances
  */
 
+// Load .env vars if not in CI environment
+if (process.env.NODE_ENV !== 'ci') {
+    // eslint-disable-next-line global-require
+    require('dotenv').config({
+        path: `${__dirname}/.env`,
+    });
+}
+
 const colors = require('colors');
 
 // Create logger

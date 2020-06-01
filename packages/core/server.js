@@ -15,14 +15,6 @@
 /**
  * Module dependencies.
  */
-// Load .env vars if not in CI environment
-if (process.env.NODE_ENV !== 'ci') {
-    // eslint-disable-next-line global-require
-    require('dotenv').config({
-        path: `${__dirname}/.env`,
-    });
-}
-
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
