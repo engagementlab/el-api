@@ -72,11 +72,15 @@ const boot = config => {
     });
 };
 
-const start = (productionMode, appName) => {
+const init = (callback, appPackageName) => {
+    if (callback) startCallback = callback;
+
+    const productionMode =
+        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
     // If server defined, close current one
     if (server) server.close();
 
-    const currentApp = !appName ? 'home' : appName;
+    const currentApp = !appPackageName ? 'home' : appPackageName;
 
     app = express();
     app.use(express.json());
@@ -105,6 +109,7 @@ const start = (productionMode, appName) => {
     const packagePath = `@engagementlab/${currentApp}`;
 
     // Pass our route importer util, DB string prefix to package
+    // eslint-disable-next-line global-require,import/no-dynamic-require
     const packageInit = require(packagePath);
     packageInit({
         importer: ServerUtils.routeImporter,
@@ -125,13 +130,10 @@ const start = (productionMode, appName) => {
     });
 };
 
-const init = callback => {
-    if (callback) startCallback = callback;
-
-    const productionMode =
-        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
-
-    start(productionMode);
-};
-
+/**
+ * Create an express server, serving either one or all content packages and CMS instance(s)
+ * @module
+ * @param {function} [callback] - Optional callback
+ * @param {string} [appPackageName] - Optional name of content packakge to mount
+ */
 module.exports = init;
