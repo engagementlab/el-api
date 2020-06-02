@@ -27,20 +27,22 @@ function App() {
   if (error) return <h2><p>Error :(</p><p>{JSON.stringify(error)}</p></h2>;
 
   return (
-    <div className="App">
-      <Box color="text.primary" width="75%">
+    <div>
+    <h2><img className="App-logo" alt="Small ELab logo" src="https://res.cloudinary.com/engagement-lab-home/image/upload/v1543874087/logos/logo-sm.svg" /> Engagement Lab URL Shortener</h2>
+      <div className="App">
+        <Box color="text.primary" width="75%">
+          { loading ? 
+              <p>Loading...</p> :
+              (
+                <p>
+                  <Add updated={() => refetch()} />
+                  <List data={data.getLinks} />
+                </p>
+              )
+          }
 
-        { loading ? 
-            <p>Loading...</p> :
-            (
-              <p>
-                <Add updated={() => refetch()} />
-                <List data={data.getLinks} />
-              </p>
-            )
-        }
-
-      </Box>
+        </Box>
+      </div>
     </div>
   );
 }

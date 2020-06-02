@@ -1,14 +1,26 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip } from '@material-ui/core';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider } from '@material-ui/core';
 
 import { FileCopyOutlined, Link, LaunchOutlined } from "@material-ui/icons";
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import MuiAlert from '@material-ui/lab/Alert';
 
+const theme = createMuiTheme({
+    typography: {
+        fontFamily: 'LunchtypeRegular',
+    }
+});
 const useStyles = makeStyles({
+    header: {
+        fontSize: 'large',
+        fontWeight: 'bold',
+    },
+    link: {
+        color: 'black',
+    },
     table: {
         minWidth: 650,
     },
@@ -52,21 +64,28 @@ export default function DenseTable(props) {
 
     }
 
+    // Close snackbar after 'copied' notifier
     const snackbarClose = (event, reason) => {
-
         setCopied(false);
-
     };
 
+    // Shorten original url if too long
+    const trimUrl = (url) => {
+
+        return (url.length > 40) ? `${url.substring(0, 40)}...` : url;
+
+    }
+
   return (
+    <ThemeProvider theme={theme}>
      <TableContainer component={Paper}>
 
          <Table className={classes.table} size="small" aria-label="list of all links">
              <TableHead>
                  <TableRow>
-                     <TableCell>Label</TableCell>
-                     <TableCell>Short URL <span className={classes.shortLabel}>elab.works/...</span></TableCell>
-                     <TableCell>Original URL <LaunchOutlined size="small" /></TableCell>
+                     <TableCell className={classes.header}>Label</TableCell>
+                     <TableCell className={classes.header}>Short URL <span className={classes.shortLabel}>elab.works/...</span></TableCell>
+                     <TableCell className={classes.header}>Original URL <LaunchOutlined size="small" /></TableCell>
                      {/* <TableCell align="right">Clicks</TableCell> */}
                  </TableRow>
              </TableHead>
@@ -86,7 +105,7 @@ export default function DenseTable(props) {
                          <span id={`hidden-${row.id}`} className={classes.invisible}>https://elab.works/{row.shortUrl}</span>
                          <span id={`label-${row.id}`}>{row.shortUrl}</span>
                      </TableCell>
-                     <TableCell><a href={row.originalUrl} target="_blank">{row.originalUrl}</a></TableCell>
+                     <TableCell><a href={row.originalUrl} target="_blank" rel="noreferrer" className={classes.link}>{trimUrl(row.originalUrl)}</a></TableCell>
                      {/* <TableCell align="right">{row.clicks}</TableCell> */}
                  </TableRow>
                  ))}
@@ -98,5 +117,6 @@ export default function DenseTable(props) {
             </Snackbar>
          </Table>
      </TableContainer>
+     </ThemeProvider>
   );
 }

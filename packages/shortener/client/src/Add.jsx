@@ -4,15 +4,24 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Mutation } from '@apollo/react-components';
 
-import { Box, Fab, Snackbar, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Tooltip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Box, Fab, Snackbar, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Tooltip, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, withStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import Zoom from '@material-ui/core/Zoom';
 import AddIcon from '@material-ui/icons/Add';
 import MuiAlert from '@material-ui/lab/Alert';
 
+
+const theme = createMuiTheme({
+    typography: {
+        fontFamily: 'LunchtypeRegular'
+    }
+});
 const styles = theme => ({
+    header: {
+        fontWeight: 'bold',
+    },
     rootUrl: {
       color: 'grey',
     },
@@ -24,17 +33,19 @@ const styles = theme => ({
     }
   });
 
+// QL mutation for adding links
 const ADD_LINK = gql`
     mutation AddLink($label: String!, $originalUrl: String!, $shortUrl: String!) {
-    addLink(label: $label, originalUrl: $originalUrl, shortUrl: $shortUrl) {
-        id
-        originalUrl
-        shortUrl
-        label
+        addLink(label: $label, originalUrl: $originalUrl, shortUrl: $shortUrl) {
+            id
+            originalUrl
+            shortUrl
+            label
+        }
     }
-}
 `;
 
+// Alert for success/fail
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -163,7 +174,6 @@ class Add extends PureComponent {
 
     linkAdded = () => {
         
-        
         this.setState({
             isValid: false,
             labelHelper: '',
@@ -239,92 +249,77 @@ class Add extends PureComponent {
     } = this.state;
 
     return (
-        <Mutation mutation={ADD_LINK} errorPolicy="all" onCompleted={this.linkAdded} onError={this.handleError}>
-            {(addLink, { data, mutationErr }) => (
-            
+        <ThemeProvider theme={theme}>
+            <Mutation mutation={ADD_LINK} errorPolicy="all" onCompleted={this.linkAdded} onError={this.handleError}>
+                {(addLink, { data, mutationErr }) => (
+
                 <Box>
                     <TableContainer component={Paper}>
                         <Table size="medium" aria-label="form to add link">
                             <TableBody>
                                 <TableRow key="Add">
                                     <TableCell>
-                                        <TextField 
-                                            id="add-label" 
-                                            aria-label="field to input label" 
-                                            label="Label" 
-                                            value={labelInput}
-                                            error={labelHelper !== null}
-                                            helperText={labelHelper} 
-                                            onChange={(e) => this.measureLabel(e)} 
-                                        />
+                                        <TextField id="add-label" aria-label="field to input label" label="Label"
+                                            value={labelInput} error={labelHelper !==null} helperText={labelHelper}
+                                            onChange={(e)=> this.measureLabel(e)}
+                                            />
                                     </TableCell>
                                     <TableCell>
-                                        <Tooltip title={`${this.isMac ? '⌘' : 'Ctrl'} - V`} arrow disableHoverListener disableTouchListener>
-                                            <TextField 
-                                                id="add-url" 
-                                                label="URL"
-                                                value={urlInput}
-                                                error={urlError !== null}
-                                                helperText={urlError} 
-                                                onChange={(e) => this.generateLink(e)}
-                                            />
+                                        <Tooltip title={`${this.isMac ? '⌘' : 'Ctrl' } - V`} arrow
+                                            disableHoverListener disableTouchListener>
+                                            <TextField id="add-url" label="URL" value={urlInput} error={urlError
+                                                !==null} helperText={urlError} onChange={(e)=> this.generateLink(e)}
+                                                />
                                         </Tooltip>
                                     </TableCell>
                                     <TableCell>
-                                        <TextField 
-                                                id="short-url" 
-                                                label="Short URL"
-                                                value={shortUrl}
-                                                placeholder={shortUrlGenerated}
-                                                error={this.shortUrlCount > this.shortUrlMax || shortUrlError}
-                                                helperText={shortUrlHelper}
-                                                onChange={(e) => this.measureShortUrl(e)}
-                                                InputProps={{ 
-                                                    startAdornment: <span id="url-prefix" className={classes.rootUrl}>elab.works/</span>,
-                                                    endAdornment: <input id="url-full" readOnly={true} className={classes.hidden} value={urlFull} />
-                                                }}
+                                        <TextField id="short-url" label="Short URL" value={shortUrl}
+                                            placeholder={shortUrlGenerated} error={this.shortUrlCount>
+                                            this.shortUrlMax || shortUrlError}
+                                            helperText={shortUrlHelper}
+                                            onChange={(e) => this.measureShortUrl(e)}
+                                            InputProps={{ 
+                                                startAdornment: <span id="url-prefix" className={classes.rootUrl}>elab.works/</span>,
+                                                endAdornment: <input id="url-full" readOnly={true} className={classes.hidden} value={urlFull} />
+                                            }}
                                             />
-                                        <Zoom in={isValid}>
-                                            <Fab 
-                                                id="btn-add"
-                                                size="small" 
-                                                color="secondary" 
-                                                aria-label="add"
-                                                data-clipboard-target="#url-full"
-                                                className={classes.fab}
-                                                onClick={e => {
+                                            <Zoom in={isValid}>
+                                                <Fab id="btn-add" size="small" color="secondary" aria-label="add"
+                                                    data-clipboard-target="#url-full" className={classes.fab}
+                                                    onClick={e=> {
                                                     e.preventDefault();
                                                     addLink({
-                                                        variables: { 
-                                                            originalUrl: urlInput,
-                                                            shortUrl,
-                                                            label: labelInput, 
-                                                        },
+                                                    variables: {
+                                                    originalUrl: urlInput,
+                                                    shortUrl,
+                                                    label: labelInput,
+                                                    },
                                                     });
-                                            }}>
-                                                <AddIcon />
-                                            </Fab>
-                                        </Zoom>
+                                                    }}>
+                                                    <AddIcon />
+                                                </Fab>
+                                            </Zoom>
 
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
-                        
+
                     <Snackbar open={error} autoHideDuration={3000} onClose={this.snackbarClose}>
                         <Alert severity="error">
                             {errorHelper}
                         </Alert>
-                    </Snackbar>    
+                    </Snackbar>
                     <Snackbar open={success} autoHideDuration={4500} onClose={this.snackbarClose}>
                         <Alert severity="success">
                             Link added!
                         </Alert>
                     </Snackbar>
                 </Box>
-            )}
-        </Mutation>
+                )}
+            </Mutation>
+        </ThemeProvider>
     );
   }
 }
