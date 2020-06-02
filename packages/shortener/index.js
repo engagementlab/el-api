@@ -11,18 +11,20 @@ const {
     ApolloError,
     gql,
 } = require('apollo-server-express');
-const RandExp = require('randexp');
-const colors = require('colors');
-const express = require('express');
-
-const connection = require('./db')();
-const Link = require('./Link')(connection);
 
 const {
     Auth,
     Passport,
     Server,
 } = require('../core')(__dirname);
+
+const path = require('path');
+const colors = require('colors');
+const express = require('express');
+const RandExp = require('randexp');
+
+const connection = require('./db')();
+const Link = require('./Link')(connection);
 
 const Shortener = () => {
     const typeDefs = gql `
@@ -102,15 +104,17 @@ const Shortener = () => {
     // Passport init for router
     Passport(router);
 
-    router.use(express.static('client/build/static'));
-    router.get('/', Auth.isAllowed('/login'), (req, res) => {
+    // Static files for production
+    router.use('/static', express.static('client/build/static'));
+    router.use('/manifest.json', (req, res) => res.sendFile(`${__dirname}/client/build/manifest.json`));
+    router.get('/', (req, res) => {
         if (process.env.NODE_ENV !== 'production')
             res.send('Not prod');
         else
             res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
     });
 
-    router.get('/generate', Auth.isAllowed('/login'), (req, res) => {
+    router.get('/generate', (req, res) => {
         // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
         const shortUrl = new RandExp(/([a-z0-9]{4,4})/).gen().toLowerCase();
 
@@ -119,17 +123,29 @@ const Shortener = () => {
 
     // Nginx rules sends all elab.works/ urls here
     router.get('/go/:shorturl', async (req, res) => {
-        // Find original of by short url
-        const data = await Link.find({
+
+        try {
+
+
+            // Find original of by short url
+            const data = await Link.findOneAndUpdate({
                 shortUrl: req.params.shorturl,
-            },
-            'originalUrl'
-        ).exec();
+            }, {
+                $inc: {
+                    clicks: 1,
+                },
+            }, {
+                'fields': 'originalUrl',
+            }).exec();
 
-        // TODO: Track click
+            // TODO: Track click
+            console.log(data);
 
-        // Send
-        res.redirect(data[0].originalUrl);
+            // Send
+            res.redirect(data.originalUrl);
+        } catch (e) {
+            res.status(500).send('Something went wrong redirecting you. Sorry!');
+        }
     });
 
     /**
