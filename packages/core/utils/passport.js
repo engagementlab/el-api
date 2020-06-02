@@ -11,11 +11,13 @@ const ciMode = process.env.NODE_ENV === 'ci';
 // eslint-disable-next-line import/no-extraneous-dependencies
 const parser = require('body-parser');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const mongoose = require('mongoose');
+
 const passport = require('passport');
 const AuthStrategy = ciMode ?
     require('passport-mocked').Strategy :
     require('passport-google-oauth20').Strategy;
-
 
 // User model
 const User = require('../models/User');
@@ -57,15 +59,28 @@ const Passport = router => {
         }
     );
 
-    // Session store
-    //    TODO: mongostore for prod
-    router.use(
-        session({
-            secret: process.env.SESSION_COOKIE,
-            resave: true,
-            saveUninitialized: false,
-        })
-    );
+    // Session store (mongostore for prod)
+    if (process.env.NODE_ENV === 'development') {
+        router.use(
+            session({
+                secret: process.env.SESSION_COOKIE,
+                resave: true,
+                saveUninitialized: false,
+            })
+        );
+    } else {
+        const mongooseConnection = mongoose.connections[0];
+        router.use(
+            session({
+                saveUninitialized: false,
+                resave: false,
+                secret: process.env.SESSION_COOKIE,
+                store: new MongoStore({
+                    mongooseConnection,
+                }),
+            })
+        );
+    }
 
     /**
      * Google oauth2/passport config
