@@ -81,7 +81,7 @@ const Core = path => {
 
         /**
          * Engagement Lab Content and Data API Core Utilities
-         * @type Utils - Core Utilities
+         * @type Utils
          */
         return {
             // eslint-disable-next-line global-require

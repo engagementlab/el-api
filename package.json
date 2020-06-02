@@ -11,7 +11,7 @@
     "ci": "start-server-and-test start-ci http://localhost:3000 test",
     "css": "node-sass --include-path scss ./packages/core/styles/ --output ./bin --output-style compressed",
     "dev": "nodemon ./packages/core/app.js --server --trace-warnings",
-    "docs": "jsdoc2md -c .jsdoc.json > api.md",
+    "docs": "jsdoc2md --files 'packages/core/**.js' > api.md",
     "fix": "eslint --fix ./",
     "inspect": "nodemon --inspect ./packages/core/app.js",
     "start": "node ./packages/core/app.js",

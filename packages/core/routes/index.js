@@ -27,6 +27,7 @@ const Passport = require('../utils/passport');
 
 /**
  * Middleware for landing/errors
+ * @function
  */
 const landing = (req, res) => {
     const appsAllowed = req.session.passport.user.permissions;
@@ -48,9 +49,7 @@ const landing = (req, res) => {
  * @param {string} buildsDir - Path to root builds directory (bin)
  */
 module.exports = buildsDir => {
-    /**
-     * Get all build directories for CMS builds
-     */
+    // Get all build directories for CMS builds
     const binPath = buildsDir;
 
     // Get all builds
