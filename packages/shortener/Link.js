@@ -3,15 +3,21 @@
  * Developed by Engagement Lab, 2020
  *
  * @author Johnny Richardson
- * Link model 
  * ==========
  */
+//
 const mongoose = require('mongoose');
 
 const {
     Schema,
 } = mongoose;
 
+/**
+ * Link mongoose model
+ * @module
+ * @param connection Mongoose connection to apply to
+ * @returns {mongoose.Model} 
+ */
 module.exports = connection => {
     const linkSchema = new Schema({
         originalUrl: {

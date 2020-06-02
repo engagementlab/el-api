@@ -15,6 +15,7 @@
     "chai-graphql": "^4.0.0"
   },
   "scripts": {
-    "build": "cd client; npm run build;"
+    "build": "cd client; npm run build;",
+    "docs": "jsdoc2md --files '*.js' > api.md"
   }
 }

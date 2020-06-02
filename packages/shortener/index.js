@@ -26,23 +26,36 @@ const RandExp = require('randexp');
 const connection = require('./db')();
 const Link = require('./Link')(connection);
 
+/**
+ * Instantiates Shortener's express server, apollo instance.
+ * @name Shortener
+ * @module
+ */
 const Shortener = () => {
-    const typeDefs = gql `
-    type Link {
-      id: ID!
-      originalUrl: String
-      shortUrl: String
-      label: String
-    }
-    type Query {
-      getLinks: [Link]
-    }
-    type Mutation {
-      addLink(originalUrl: String!, shortUrl: String!, label: String!): Link
-    }
-  `;
 
-    const resolvers = {
+    /**
+     * App's GraphQL types
+     */
+    const TypeDefs = gql `
+        type Link {
+            id: ID!
+            originalUrl: String
+            shortUrl: String
+            label: String
+            clicks: Number
+        }
+        type Query {
+            getLinks: [Link]
+        }
+        type Mutation {
+            addLink(originalUrl: String!, shortUrl: String!, label: String!): Link
+        }
+    `;
+
+    /**
+     * App's GraphQL resolvers
+     */
+    const Resolvers = {
         Query: {
             getLinks: async () =>
                 Link.find({})
@@ -66,11 +79,12 @@ const Shortener = () => {
         },
     };
 
-    // The ApolloServer constructor requires two parameters: your schema
-    // definition and your set of resolvers.
-    const apollo = new ApolloServer({
-        typeDefs,
-        resolvers,
+    /**
+     * App's Apollo server instance
+     */
+    const Apollo = new ApolloServer({
+        typeDefs: TypeDefs,
+        resolvers: Resolvers,
         formatError: err => {
             // Dupe index errors
             if (err.extensions && err.extensions.exception.code === 11000) {
@@ -99,7 +113,7 @@ const Shortener = () => {
     const router = express.Router();
 
     // Mount apollo middleware (/graphql)
-    router.use(apollo.getMiddleware());
+    router.use(Apollo.getMiddleware());
 
     // Passport init for router
     Passport(router);
@@ -126,8 +140,7 @@ const Shortener = () => {
 
         try {
 
-
-            // Find original of by short url
+            // Find original of by short url and increment clicks
             const data = await Link.findOneAndUpdate({
                 shortUrl: req.params.shorturl,
             }, {
@@ -138,10 +151,7 @@ const Shortener = () => {
                 'fields': 'originalUrl',
             }).exec();
 
-            // TODO: Track click
-            console.log(data);
-
-            // Send
+            // Send user to URL
             res.redirect(data.originalUrl);
         } catch (e) {
             res.status(500).send('Something went wrong redirecting you. Sorry!');
