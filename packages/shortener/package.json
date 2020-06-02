@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "chai-graphql": "^4.0.0"
+  },
+  "scripts": {
+    "build": "cd client; npm run build;"
   }
 }

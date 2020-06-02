@@ -10,13 +10,21 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const url = 'mongodb://localhost/elab-admin';
+/**
+ * Create DB connection for admin database, which contains links collection.
+ * 
+ */
+const dbAddress =
+    process.env.NODE_ENV !== 'production' ?
+    process.env.MONGO_ADMIN_URI :
+    process.env.MONGO_CLOUD_ADMIN_URI;
 module.exports = () => {
     try {
 
-        const conn = mongoose.createConnection(url, {
+        const conn = mongoose.createConnection(dbAddress, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
+            useFindAndModify: false,
         });
         mongoose.set('useCreateIndex', true);
         return conn;

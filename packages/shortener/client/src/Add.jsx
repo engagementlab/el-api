@@ -19,9 +19,6 @@ const theme = createMuiTheme({
     }
 });
 const styles = theme => ({
-    header: {
-        fontWeight: 'bold',
-    },
     rootUrl: {
       color: 'grey',
     },
