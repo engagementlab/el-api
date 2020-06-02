@@ -121,7 +121,7 @@ const Shortener = () => {
     // Static files for production
     router.use('/static', express.static('client/build/static'));
     router.use('/manifest.json', (req, res) => res.sendFile(`${__dirname}/client/build/manifest.json`));
-    router.get('/', (req, res) => {
+    router.get('/', Auth.isAllowed('/login'), (req, res) => {
         if (process.env.NODE_ENV !== 'production')
             res.send('Not prod');
         else
