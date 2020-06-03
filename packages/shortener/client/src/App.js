@@ -16,9 +16,11 @@ function App() {
       {
           getLinks {
               id
+              date
               label
               shortUrl
               originalUrl
+              user
           }
       }
   `;

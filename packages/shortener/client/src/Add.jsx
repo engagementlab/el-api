@@ -114,7 +114,7 @@ class Add extends PureComponent {
             return;
         }
 
-        fetch('http://localhost:3000/shortener/generate')
+        fetch(`${process.env.REACT_APP_SERVER_URI}/generate`)
             .then((response) => {
                 return response.text();
             }).then((data) => {
