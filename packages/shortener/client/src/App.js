@@ -36,10 +36,10 @@ function App() {
           { loading ? 
               <p>Loading...</p> :
               (
-                <p>
+                <div>
                   <Add updated={() => refetch()} />
                   <List data={data.getLinks} />
-                </p>
+                </div>
               )
           }
 

@@ -7,6 +7,9 @@
  * ==========
  */
 const {
+    GraphQLScalarType,
+} = require('graphql');
+const {
     ApolloServer,
     ApolloError,
     gql,
@@ -27,6 +30,18 @@ const connection = require('./db')();
 const Link = require('./Link')(connection);
 
 /**
+ * Custom scalar type for Dates in schema
+ */
+const DateType = new GraphQLScalarType({
+    name: 'Date',
+    description: 'Date and time field.',
+    serialize(value) {
+        const result = new Date(value).toDateString();
+        return result;
+    },
+});
+
+/**
  * Instantiates Shortener's express server, apollo instance.
  * @name Shortener
  * @module
@@ -36,6 +51,8 @@ const Shortener = () => {
      * App's GraphQL types
      */
     const TypeDefs = gql `
+    scalar Date
+
     type Link {
       id: ID!
       originalUrl: String
@@ -43,6 +60,7 @@ const Shortener = () => {
       label: String
       clicks: Int,
       user: String,
+      date: Date
     }
     type Query {
       getLinks: [Link]
@@ -79,6 +97,7 @@ const Shortener = () => {
                 }
             },
         },
+        Date: DateType,
     };
 
     /**

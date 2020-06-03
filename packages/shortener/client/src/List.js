@@ -4,7 +4,8 @@ import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ThemeProvider } from '@material-ui/core';
 
 import { FileCopyOutlined, Link, LaunchOutlined } from "@material-ui/icons";
-import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+import { IconButton, Popover } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import MuiAlert from '@material-ui/lab/Alert';
 
@@ -41,8 +42,10 @@ function Alert(props) {
 }
 
 export default function DenseTable(props) {
-  const classes = useStyles();
-  const [copied, setCopied] = React.useState(false);
+
+    const classes = useStyles();
+    const [copied, setCopied] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     /**
      * Copy URL to clipboard
@@ -69,24 +72,56 @@ export default function DenseTable(props) {
         setCopied(false);
     };
 
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+        console.log(anchorEl)
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+        console.log('close')
+    };
+
     // Shorten original url if too long
     const trimUrl = (url) => {
-
         return (url.length > 40) ? `${url.substring(0, 40)}...` : url;
-
     }
+
+    const open = Boolean(anchorEl);
 
   return (
     <ThemeProvider theme={theme}>
      <TableContainer component={Paper}>
 
-         <Table className={classes.table} size="small" aria-label="list of all links">
+                         
+     <Popover
+                id="info"
+                open={open}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                onClose={handlePopoverClose}
+                disableRestoreFocus
+            > 
+            Info
+            </Popover>
+         <Table className={classes.table} size="small" aria-label="list of all links"
+                            
+                            aria-owns={open ? 'mouse-over-popover' : undefined}
+                            aria-haspopup="true"
+                            onMouseEnter={handlePopoverOpen}
+                            onMouseLeave={handlePopoverClose}>
              <TableHead>
                  <TableRow>
                      <TableCell className={classes.header}>Label</TableCell>
                      <TableCell className={classes.header}>Short URL <span className={classes.shortLabel}>elab.works/...</span></TableCell>
                      <TableCell className={classes.header}>Original URL <LaunchOutlined size="small" /></TableCell>
-                     {/* <TableCell align="right">Clicks</TableCell> */}
                  </TableRow>
              </TableHead>
              <TableBody>
@@ -106,10 +141,17 @@ export default function DenseTable(props) {
                          <span id={`label-${row.id}`}>{row.shortUrl}</span>
                      </TableCell>
                      <TableCell><a href={row.originalUrl} target="_blank" rel="noreferrer" className={classes.link}>{trimUrl(row.originalUrl)}</a></TableCell>
-                     {/* <TableCell align="right">{row.clicks}</TableCell> */}
+                     <TableCell
+                             align="right" data-info={`Added on ${row.date} by ${row.user || '??'}`}>
+
+                        <InfoIcon 
+                            />
+                            {/* </div> */}
+                    </TableCell>
                  </TableRow>
                  ))}
-             </TableBody> 
+             </TableBody>
+             
             <Snackbar open={copied} autoHideDuration={1000} onClose={snackbarClose}>
                 <Alert severity="success">
                     Copied
