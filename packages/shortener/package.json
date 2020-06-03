@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@engagementlab/core": "^0.0.5",
     "apollo-server-express": "^2.13.1",
     "randexp": "^0.5.3"
   },
@@ -16,6 +17,9 @@
   },
   "scripts": {
     "build": "cd client; npm run build;",
-    "docs": "jsdoc2md --files '*.js' > api.md"
+    "client": "cd client; npm run start;",
+    "dev": "npm-run-all -p server client;",
+    "docs": "jsdoc2md --files '*.js' > api.md",
+    "server": "nodemon"
   }
 }
