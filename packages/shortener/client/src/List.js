@@ -7,6 +7,7 @@ import { FileCopyOutlined, Link, LaunchOutlined } from "@material-ui/icons";
 import InfoIcon from '@material-ui/icons/Info';
 import { IconButton, Popover } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import MuiAlert from '@material-ui/lab/Alert';
 
 const theme = createMuiTheme({
@@ -14,27 +15,31 @@ const theme = createMuiTheme({
         fontFamily: 'LunchtypeRegular',
     }
 });
-const useStyles = makeStyles({
-    header: {
-        fontSize: 'large',
-        fontWeight: 'bold',
-    },
-    link: {
-        color: 'black',
-    },
-    table: {
-        minWidth: 650,
-    },
-    shortLabel:  {
-        color: 'grey',
-        fontSize: 'x-small',
-    },
-    invisible: {
-        display: 'inline-block',
-        color: 'white',
-        width: 0,
-    }
-});
+const useStyles = makeStyles(theme => ({
+        header: {
+            fontSize: 'large',
+            fontWeight: 'bold',
+        },
+        invisible: {
+            display: 'inline-block',
+            color: 'white',
+            width: 0,
+        },
+        link: {
+            color: 'black',
+        },
+        popover: {
+            padding: theme.spacing(2),
+        },
+        table: {
+            minWidth: 650,
+        },
+        shortLabel:  {
+            color: 'grey',
+            fontSize: 'x-small',
+        }
+    })
+);
 
 
 function Alert(props) {
@@ -46,6 +51,7 @@ export default function DenseTable(props) {
     const classes = useStyles();
     const [copied, setCopied] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [popoverData, setPopoverData] = React.useState(null);
 
     /**
      * Copy URL to clipboard
@@ -73,13 +79,13 @@ export default function DenseTable(props) {
     };
 
     const handlePopoverOpen = (event) => {
+        const data = event.currentTarget.dataset;
         setAnchorEl(event.currentTarget);
-        console.log(anchorEl)
+        setPopoverData({date: data.date, clicks: data.clicks});
     };
 
     const handlePopoverClose = () => {
         setAnchorEl(null);
-        console.log('close')
     };
 
     // Shorten original url if too long
@@ -91,74 +97,69 @@ export default function DenseTable(props) {
 
   return (
     <ThemeProvider theme={theme}>
-     <TableContainer component={Paper}>
+        <TableContainer component={Paper}>
 
-                         
-     <Popover
-                id="info"
-                open={open}
-                anchorEl={anchorEl}
-                anchorOrigin={{
+            <Popover id="info" open={open} anchorEl={anchorEl} anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
+                    horizontal: 'center',
+                }} transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'left',
-                }}
-                onClose={handlePopoverClose}
-                disableRestoreFocus
-            > 
-            Info
+                    horizontal: 'center',
+                }} onClose={handlePopoverClose}>
+                {popoverData
+                ?
+                <Typography className={classes.popover}>{popoverData.date} <br /> <em>{popoverData.clicks ?
+                        popoverData.clicks : '0'} clicks</em></Typography>
+                : null
+                }
             </Popover>
-         <Table className={classes.table} size="small" aria-label="list of all links"
-                            
-                            aria-owns={open ? 'mouse-over-popover' : undefined}
-                            aria-haspopup="true"
-                            onMouseEnter={handlePopoverOpen}
-                            onMouseLeave={handlePopoverClose}>
-             <TableHead>
-                 <TableRow>
-                     <TableCell className={classes.header}>Label</TableCell>
-                     <TableCell className={classes.header}>Short URL <span className={classes.shortLabel}>elab.works/...</span></TableCell>
-                     <TableCell className={classes.header}>Original URL <LaunchOutlined size="small" /></TableCell>
-                 </TableRow>
-             </TableHead>
-             <TableBody>
-                 {/* Data from Graph */}
-                 {props.data.map((row) => (
-                 <TableRow key={row.label}>
-                     <TableCell>
-                         {row.label}
-                     </TableCell>
-                     <TableCell>
-                        <IconButton aria-label="copy url" onClick={e=>
-                            { copyUrl(document.getElementById(`hidden-${row.id}`)); }
-                        }>
-                            <FileCopyOutlined />
-                        </IconButton>
-                         <span id={`hidden-${row.id}`} className={classes.invisible}>https://elab.works/{row.shortUrl}</span>
-                         <span id={`label-${row.id}`}>{row.shortUrl}</span>
-                     </TableCell>
-                     <TableCell><a href={row.originalUrl} target="_blank" rel="noreferrer" className={classes.link}>{trimUrl(row.originalUrl)}</a></TableCell>
-                     <TableCell
-                             align="right" data-info={`Added on ${row.date} by ${row.user || '??'}`}>
+            
+            <Table className={classes.table} size="small" aria-label="list of all links">
+                <TableHead>
+                    <TableRow>
+                        <TableCell className={classes.header}>Label</TableCell>
+                        <TableCell className={classes.header}>Short URL <span
+                                className={classes.shortLabel}>elab.works/...</span></TableCell>
+                        <TableCell className={classes.header}>Original URL
+                            <LaunchOutlined size="small" />
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {/* Data from Graph */}
+                    {props.data.map((row) => (
+                    <TableRow key={row.label}>
+                        <TableCell>
+                            {row.label}
+                        </TableCell>
+                        <TableCell>
+                            <IconButton aria-label="copy url" onClick={e=>
+                                { copyUrl(document.getElementById(`hidden-${row.id}`)); }
+                                }>
+                                <FileCopyOutlined />
+                            </IconButton>
+                            <span id={`hidden-${row.id}`}
+                                className={classes.invisible}>https://elab.works/{row.shortUrl}</span>
+                            <span id={`label-${row.id}`}>{row.shortUrl}</span>
+                        </TableCell>
+                        <TableCell><a href={row.originalUrl} target="_blank" rel="noreferrer"
+                                className={classes.link}>{trimUrl(row.originalUrl)}</a></TableCell>
+                        <TableCell align="right">
+                            <InfoIcon id={`info-${row.id}`} data-date={`Added on ${row.date} by ${row.user || '??' }`}
+                                data-clicks={row.clicks} aria-owns={open ? 'mouse-over-popover' : undefined}
+                                aria-haspopup="true" onClick={handlePopoverOpen} />
+                        </TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
 
-                        <InfoIcon 
-                            />
-                            {/* </div> */}
-                    </TableCell>
-                 </TableRow>
-                 ))}
-             </TableBody>
-             
-            <Snackbar open={copied} autoHideDuration={1000} onClose={snackbarClose}>
-                <Alert severity="success">
-                    Copied
-                </Alert>
-            </Snackbar>
-         </Table>
-     </TableContainer>
-     </ThemeProvider>
+                <Snackbar open={copied} autoHideDuration={1000} onClose={snackbarClose}>
+                    <Alert severity="success">
+                        Copied
+                    </Alert>
+                </Snackbar>
+            </Table>
+        </TableContainer>
+    </ThemeProvider>
   );
 }

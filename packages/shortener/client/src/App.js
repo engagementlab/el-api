@@ -21,6 +21,7 @@ function App() {
               shortUrl
               originalUrl
               user
+              clicks
           }
       }
   `;
