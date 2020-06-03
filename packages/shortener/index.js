@@ -16,7 +16,7 @@ const {
     Auth,
     Passport,
     Server,
-} = require('../core')(__dirname);
+} = require('@engagementlab/core')(__dirname);
 
 const path = require('path');
 const colors = require('colors');
@@ -32,25 +32,25 @@ const Link = require('./Link')(connection);
  * @module
  */
 const Shortener = () => {
-
     /**
      * App's GraphQL types
      */
     const TypeDefs = gql `
-        type Link {
-            id: ID!
-            originalUrl: String
-            shortUrl: String
-            label: String
-            clicks: Number
-        }
-        type Query {
-            getLinks: [Link]
-        }
-        type Mutation {
-            addLink(originalUrl: String!, shortUrl: String!, label: String!): Link
-        }
-    `;
+    type Link {
+      id: ID!
+      originalUrl: String
+      shortUrl: String
+      label: String
+      clicks: Int,
+      user: String,
+    }
+    type Query {
+      getLinks: [Link]
+    }
+    type Mutation {
+      addLink(originalUrl: String!, shortUrl: String!, label: String!): Link
+    }
+  `;
 
     /**
      * App's GraphQL resolvers
@@ -65,10 +65,12 @@ const Shortener = () => {
                 .exec(),
         },
         Mutation: {
-            addLink: async (_, args) => {
+            addLink: async (_, args, context) => {
                 try {
                     const response = await Link.create({
                         date: Date.now(),
+                        // Cache name of user adding
+                        user: context.userName,
                         ...args,
                     });
                     return response;
@@ -105,30 +107,53 @@ const Shortener = () => {
 
             // Otherwise return the original error.  The error can also
             // be manipulated in other ways, so long as it's returned.
+            global.logger.error(err);
             return err;
+        },
+        context: ({
+            req,
+        }) => {
+            // Get logged in user's name per QL execution on non-dev
+            let userName = null;
+            if (process.env.NODE_ENV !== 'development')
+                userName = req.user ? req.user.name : null;
+
+            return {
+                userName,
+            };
+
         },
     });
 
     const app = express();
     const router = express.Router();
 
-    // Mount apollo middleware (/graphql)
-    router.use(Apollo.getMiddleware());
-
     // Passport init for router
     Passport(router);
 
+    // Mount apollo middleware (/graphql)
+    router.use(Apollo.getMiddleware());
+
     // Static files for production
     router.use('/static', express.static('client/build/static'));
-    router.use('/manifest.json', (req, res) => res.sendFile(`${__dirname}/client/build/manifest.json`));
+    router.use('/manifest.json', (req, res) =>
+        res.sendFile(`${__dirname}/client/build/manifest.json`)
+    );
     router.get('/', Auth.isAllowed('/login'), (req, res) => {
-        if (process.env.NODE_ENV !== 'production')
-            res.send('Not prod');
-        else
-            res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+        if (process.env.NODE_ENV !== 'production') res.send('Not prod');
+        else res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
     });
 
     router.get('/generate', (req, res) => {
+        // X-origin
+        res.header('Access-Control-Allow-Origin', `http://localhost:${process.env.PORT_CLIENT}`);
+        res.header('Access-Control-Allow-Methods', 'GET');
+        res.header('Access-Control-Expose-Headers', 'Content-Length');
+        res.header(
+            'Access-Control-Allow-Headers',
+            'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method'
+        );
+
         // Generate random link in format of: 0-4 characters, mix of a-z and 0-9
         const shortUrl = new RandExp(/([a-z0-9]{4,4})/).gen().toLowerCase();
 
@@ -137,9 +162,7 @@ const Shortener = () => {
 
     // Nginx rules sends all elab.works/ urls here
     router.get('/go/:shorturl', async (req, res) => {
-
         try {
-
             // Find original of by short url and increment clicks
             const data = await Link.findOneAndUpdate({
                 shortUrl: req.params.shorturl,
@@ -148,7 +171,7 @@ const Shortener = () => {
                     clicks: 1,
                 },
             }, {
-                'fields': 'originalUrl',
+                fields: 'originalUrl',
             }).exec();
 
             // Send user to URL
@@ -164,7 +187,6 @@ const Shortener = () => {
     router.get('/callback', Auth.callback);
     router.get('/login', Auth.login);
 
-
     /**
      * Get port from environment and store in Express.
      */
@@ -172,7 +194,9 @@ const Shortener = () => {
 
     app.use(router).listen(port);
 
-    global.logger.info(`${colors.bgCyan.magenta.blue('Shortener')}: Ready on port ${port}.`);
+    global.logger.info(
+        `${colors.bgCyan.magenta.blue('Shortener')}: Ready on port ${port}.`
+    );
 };
 
 module.exports = Shortener();

@@ -42,6 +42,9 @@ module.exports = connection => {
         clicks: {
             type: Number,
         },
+        user: {
+            type: String,
+        },
     });
 
     return connection.model('Link', linkSchema);
