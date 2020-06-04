@@ -250,7 +250,7 @@ class Add extends PureComponent {
             <Mutation mutation={ADD_LINK} errorPolicy="all" onCompleted={this.linkAdded} onError={this.handleError}>
                 {(addLink, { data, mutationErr }) => (
 
-                <Box>
+                <Box boxShadow={2} my={1}>
                     <TableContainer component={Paper}>
                         <Table size="medium" aria-label="form to add link">
                             <TableBody>

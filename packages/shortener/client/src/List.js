@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
         link: {
             color: 'black',
         },
+        info: {
+            cursor: 'pointer',
+        },
         popover: {
             padding: theme.spacing(2),
         },
@@ -145,9 +148,13 @@ export default function DenseTable(props) {
                         <TableCell><a href={row.originalUrl} target="_blank" rel="noreferrer"
                                 className={classes.link}>{trimUrl(row.originalUrl)}</a></TableCell>
                         <TableCell align="right">
-                            <InfoIcon id={`info-${row.id}`} data-date={`Added on ${row.date} by ${row.user || '??' }`}
-                                data-clicks={row.clicks} aria-owns={open ? 'mouse-over-popover' : undefined}
-                                aria-haspopup="true" onClick={handlePopoverOpen} />
+                            <InfoIcon id={`info-${row.id}`} 
+                                className={classes.info}
+                                data-date={`Added on ${row.date} by ${row.user || '??' }`}
+                                data-clicks={row.clicks}
+                                aria-owns={open ? 'mouse-over-popover' : undefined}
+                                aria-haspopup="true"
+                                onClick={handlePopoverOpen} />
                         </TableCell>
                     </TableRow>
                     ))}

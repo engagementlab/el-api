@@ -26,6 +26,11 @@ const colors = require('colors');
 const express = require('express');
 const RandExp = require('randexp');
 
+const {
+    Analytics,
+} = require('analytics');
+const googleAnalytics = require('@analytics/google-analytics').default;
+
 const connection = require('./db')();
 const Link = require('./Link')(connection);
 
@@ -48,6 +53,19 @@ const DateType = new GraphQLScalarType({
  */
 const Shortener = () => {
     /**
+     * Analytics
+     */
+    const analytics = Analytics({
+        app: 'Engagement Lab Website',
+        version: 2.5,
+        plugins: [
+            googleAnalytics({
+                trackingId: process.env.GA_TRACKING_ID,
+            })
+        ],
+    });
+
+    /**
      * App's GraphQL types
      */
     const TypeDefs = gql `
@@ -58,8 +76,8 @@ const Shortener = () => {
       originalUrl: String
       shortUrl: String
       label: String
-      clicks: Int,
-      user: String,
+      clicks: Int
+      user: String
       date: Date
     }
     type Query {
@@ -140,7 +158,6 @@ const Shortener = () => {
             return {
                 userName,
             };
-
         },
     });
 
@@ -165,7 +182,10 @@ const Shortener = () => {
 
     router.get('/generate', (req, res) => {
         // X-origin
-        res.header('Access-Control-Allow-Origin', `http://localhost:${process.env.PORT_CLIENT}`);
+        res.header(
+            'Access-Control-Allow-Origin',
+            `http://localhost:${process.env.PORT_CLIENT}`
+        );
         res.header('Access-Control-Allow-Methods', 'GET');
         res.header('Access-Control-Expose-Headers', 'Content-Length');
         res.header(
@@ -190,8 +210,14 @@ const Shortener = () => {
                     clicks: 1,
                 },
             }, {
-                fields: 'originalUrl',
+                fields: 'originalUrl label',
             }).exec();
+
+            // Track click in GA
+            analytics.track('Shortener Click', {
+                label: data.label,
+                url: data.originalUrl,
+            });
 
             // Send user to URL
             res.redirect(data.originalUrl);

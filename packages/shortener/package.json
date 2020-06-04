@@ -8,7 +8,9 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@analytics/google-analytics": "^0.4.0",
     "@engagementlab/core": "^0.0.5",
+    "analytics": "^0.5.1",
     "apollo-server-express": "^2.13.1",
     "randexp": "^0.5.3"
   },
