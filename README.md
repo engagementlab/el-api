@@ -1,6 +1,6 @@
-#Engagement Lab API
+# Engagement Lab API
 
-![EL-Bootstrapper logo](https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1551303051/logos/logo-bootstrapper.png) "EL-Bootstrapper logo"
+![EL-Bootstrapper logo](https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1551303051/logos/logo-bootstrapper.png)
 
 ### This repository is still in a _beta_ phase; use in production is cautioned.
 
