@@ -1,6 +1,8 @@
-# Engagement Lab Content API
+#Engagement Lab API
 
-### This repository is still in an _alpha_ state and is not intended for use in production.
+![EL-Bootstrapper logo](https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_150/v1551303051/logos/logo-bootstrapper.png "EL-Bootstrapper logo"
+
+### This repository is still in a _beta_ phase; use in production is cautioned.
 
 [![Build Status](https://travis-ci.org/engagementlab/el-api.svg?branch=master)](https://travis-ci.org/engagementlab/el-api)
 [![codecov](https://codecov.io/gh/engagementlab/el-api/branch/master/graph/badge.svg)](https://codecov.io/gh/engagementlab/el-api)

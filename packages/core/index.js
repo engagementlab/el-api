@@ -59,7 +59,7 @@ const Core = path => {
 
     try {
         if (process.env.NODE_ENV !== 'production')
-            global.logger.info(`Connecting to admin DB at ${process.env.MONGO_ADMIN_URI}`);
+            global.logger.info(`Connecting to admin DB at ${dbAddress}`);
 
         mongoose.connect(dbAddress, {
             useNewUrlParser: true,
