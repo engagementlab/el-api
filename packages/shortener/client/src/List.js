@@ -122,7 +122,8 @@ export default function DenseTable(props) {
                     <TableRow>
                         <TableCell className={classes.header}>Label</TableCell>
                         <TableCell className={classes.header}>Short URL <span
-                                className={classes.shortLabel}>elab.works/...</span></TableCell>
+                                className={classes.shortLabel}>{
+                                    `${process.env.REACT_APP_ENV === 'qa' ? 'qa.' : ''}elab.works`}/...</span></TableCell>
                         <TableCell className={classes.header}>Original URL
                             <LaunchOutlined size="small" />
                         </TableCell>
@@ -142,7 +143,7 @@ export default function DenseTable(props) {
                                 <FileCopyOutlined />
                             </IconButton>
                             <span id={`hidden-${row.id}`}
-                                className={classes.invisible}>https://elab.works/{row.shortUrl}</span>
+                                className={classes.invisible}>{`${process.env.REACT_APP_ENV === 'qa' ? 'qa.' : ''}elab.works/`}{row.shortUrl}</span>
                             <span id={`label-${row.id}`}>{row.shortUrl}</span>
                         </TableCell>
                         <TableCell><a href={row.originalUrl} target="_blank" rel="noreferrer"
