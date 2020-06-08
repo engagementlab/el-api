@@ -10,12 +10,14 @@
 
 const {
     Text,
+    Slug,
     Url,
     DateTime,
 } = require('@keystonejs/fields');
 const {
     Markdown,
 } = require('@keystonejs/fields-markdown');
+const CloudinaryImage = require('../../../core/fields/CloudinaryImage');
 
 const Event = cloudinary => {
     /**
@@ -48,11 +50,11 @@ const Event = cloudinary => {
             yearPickerType: 'auto',
             adminDoc: 'You must specify a valid start time, or the date will not save properly.',
         },
-        // images: {
-        //         type: CloudinaryImages,
-        //         label: 'Event Images',
-        //         folder: 'homepage-2.0/events',
-        // },
+        image: {
+            type: CloudinaryImage,
+            adapter: cloudinary,
+            folder: 'homepage-2.0/events',
+        },
         shortDescription: {
             type: Text,
             adminDoc: 'Shown on event index page. Limit 200 characters.',
@@ -60,13 +62,13 @@ const Event = cloudinary => {
 
             max: 200,
         },
-        // description: {
-        //         type: Markdown,
-        //         label: 'Long Description',
-        //         adminDoc: 'Shown on individual event page. No character limit.',
-        //         isRequired: true,
-        //         
-        // },
+        description: {
+            type: Markdown,
+            label: 'Long Description',
+            adminDoc: 'Shown on individual event page. No character limit.',
+            isRequired: true,
+                
+        },
         eventUrl: {
             type: Url,
             label: 'Event URL',
@@ -92,6 +94,9 @@ const Event = cloudinary => {
             default: Date.now,
             noedit: true,
             hidden: true,
+        },
+        key: {
+            type: Slug,
         },
 
     };
