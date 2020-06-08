@@ -1,6 +1,6 @@
 {
   "name": "el-api",
-  "private": true,
+  "private": false,
   "workspaces": [
     "packages/*"
   ],
