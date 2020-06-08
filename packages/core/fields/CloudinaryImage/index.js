@@ -1,12 +1,9 @@
 const {
   CloudinaryImage,
 } = require('@keystonejs/fields');
-// const ImageBlock = require('./ImageBlock');
-
 const {
   Implementation,
   MongoIntegerInterface,
-  // KnexIntegerInterface,
 } = require('./Implementation');
 
 module.exports = {
@@ -19,9 +16,5 @@ module.exports = {
   },
   adapters: {
     mongoose: MongoIntegerInterface,
-    // knex: KnexIntegerInterface,
   },
-  // blocks: {
-  //   image: ImageBlock,
-  // },
 };
