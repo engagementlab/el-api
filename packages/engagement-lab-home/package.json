@@ -5,7 +5,7 @@
     "Ralph Drake <ralph@ralphdrake.com>"
   ],
   "description": "Engagement Lab home CMS models/lists and content API routes.",
-  "version": "2.4.3-alpha.1",
+  "version": "2.4.4",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
