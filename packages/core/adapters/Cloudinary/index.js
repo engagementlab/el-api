@@ -80,6 +80,14 @@ module.exports = class CloudinaryAdapter {
         });
     }
 
+    publicId({
+        _meta: {
+            public_id,
+        } = {},
+    } = {}) {
+        return public_id || null;
+    }
+
     publicUrl({
         _meta: {
             secure_url,

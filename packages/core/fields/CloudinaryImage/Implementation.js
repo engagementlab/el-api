@@ -63,7 +63,7 @@ class CloudinaryImage extends File.implementation {
       }`,
 
       `extend type ${this.graphQLOutputType} {
-        publicUrlTransformed(transformation: CloudinaryImageFormat): String
+        publicId: String
       }`
     ];
   }
@@ -82,6 +82,7 @@ class CloudinaryImage extends File.implementation {
         if (itemValues.id) itemValues.id = itemValues.id.toString();
 
         return {
+          publicId: this.fileAdapter.publicId(itemValues),
           publicUrl: this.fileAdapter.publicUrl(itemValues),
           publicUrlTransformed: ({
               transformation,
