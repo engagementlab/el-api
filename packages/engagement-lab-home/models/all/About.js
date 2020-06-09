@@ -97,6 +97,7 @@ const About = cloudinary => {
         label: 'About Page',
         singular: 'About Page',
         path: 'about',
+        // itemQueryName: 'aboutPage',
         adminConfig: {
             defaultColumns: 'label',
         },

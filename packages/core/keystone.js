@@ -38,7 +38,7 @@ const cloudinaryAdapter = new CloudinaryAdapter({
     apiSecret: process.env.CLOUDINARY_SECRET,
     folder: process.env.CLOUDINARY_DIR,
 });
-const apiPath = '/cms/api';
+const apiPath = '/ql';
 
 const KeystoneApp = (ksConfig, callback) => {
     // Retrieve info for all packages
@@ -151,7 +151,7 @@ const KeystoneApp = (ksConfig, callback) => {
     const playgroundApp =
         new GraphQLPlaygroundApp({
             graphiqlPath: '/graphiql',
-            apiPath: `http://localhost:3000/cms/api/?schema=home`,
+            apiPath: `http://localhost:3000/ql/?schema=home`,
             schemaName: 'home',
         });
 

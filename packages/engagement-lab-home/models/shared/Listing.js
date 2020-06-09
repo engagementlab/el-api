@@ -9,8 +9,9 @@
  */
 
 const {
-    Relationship,
     CloudinaryImage,
+    Relationship,
+    Slug,
 } = require('@keystonejs/fields');
 
 const safeString = str => str.toLowerCase().replace(/\s+/g, '-').replace(',', '');
@@ -47,6 +48,9 @@ const Listing = cloudinary => {
             indexed: {
                 type: Boolean,
                 hidden: true,
+            },
+            key: {
+                type: Slug,
             },
         },
         safeName: () => safeString(this.name),

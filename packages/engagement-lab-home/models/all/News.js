@@ -10,6 +10,7 @@
 
 const {
     DateTime,
+    Slug,
     Url,
 } = require('@keystonejs/fields');
 const {
@@ -26,7 +27,7 @@ const News = cloudinary => {
             type: String,
             label: 'Title',
             isRequired: true,
-            index: true,            
+            index: true,
         },
         url: {
             type: Url,
@@ -36,6 +37,9 @@ const News = cloudinary => {
         },
         datePosted: {
             type: DateTime,
+        },
+        key: {
+            type: Slug,
         },
     };
 

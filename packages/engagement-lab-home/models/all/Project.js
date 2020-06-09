@@ -10,8 +10,8 @@
  */
 
 const {
-    Select,
     Relationship,
+    Select,
     Text,
     Url,
 } = require('@keystonejs/fields');

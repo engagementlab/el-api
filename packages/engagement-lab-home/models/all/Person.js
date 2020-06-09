@@ -10,8 +10,9 @@
 
 const {
     CloudinaryImage,
-    Select,
     Relationship,
+    Select,
+    Slug,
     Text,
     Url,
 } = require('@keystonejs/fields');
@@ -138,6 +139,9 @@ const Person = cloudinary => {
             type: String,
             label: 'Phone',
             note: 'This will display on the person\'s individual page',
+        },
+        key: {
+            type: Slug,
         },
     };
     const options = {

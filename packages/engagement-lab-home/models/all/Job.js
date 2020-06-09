@@ -9,6 +9,7 @@
  */
 
 const {
+    Slug,
     Url,
 } = require('@keystonejs/fields');
 const {
@@ -47,6 +48,9 @@ const Job = cloudinary => {
             note: 'Link to Emerson job posting. Must be in format "http://www.something.org".',
             isRequired: true,
 
+        },
+        key: {
+            type: Slug,
         },
     };
 

@@ -12,9 +12,10 @@
  */
 
 const {
-    Text,
-    Relationship,
     CloudinaryImage,
+    Relationship,
+    Slug,
+    Text,
 } = require('@keystonejs/fields');
 
 const Initiative = cloudinary => {
@@ -58,6 +59,9 @@ const Initiative = cloudinary => {
             isRequired: true,
             many: true,
 
+        },
+        key: {
+            type: Slug,
         },
     };
 
