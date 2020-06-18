@@ -178,7 +178,7 @@ const Shortener = () => {
     router.use('/manifest.json', (req, res) =>
         res.sendFile(`${__dirname}/client/build/manifest.json`)
     );
-    router.get('/', Auth.isAllowed('/login'), (req, res) => {
+    router.get('/admin', Auth.isAllowed('/login'), (req, res) => {
         if (process.env.NODE_ENV !== 'production') res.send('Not prod');
         else res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
     });
@@ -202,8 +202,8 @@ const Shortener = () => {
         res.send(shortUrl);
     });
 
-    // Nginx rules sends all elab.works/ urls here
-    router.get('/go/:shorturl', async (req, res) => {
+    // Short url redirect
+    router.get('/:shorturl', async (req, res) => {
         try {
             // Find original of by short url and increment clicks
             const data = await Link.findOneAndUpdate({
@@ -225,7 +225,7 @@ const Shortener = () => {
             // Send user to URL
             res.redirect(data.originalUrl);
         } catch (e) {
-            res.status(500).send('Something went wrong redirecting you. Sorry!');
+            res.status(500).send(`Something went wrong redirecting you. It appears there is no redirect for "${req.params.shorturl}". Sorry!`);
         }
     });
 
