@@ -127,12 +127,15 @@ const Shortener = () => {
         formatError: err => {
             // Dupe index errors
             if (err.extensions && err.extensions.exception.code === 11000) {
-                const msg = err.extensions.exception.errmsg;
+                let msg = err.extensions.exception.errmsg;
+                // if no errmsg, try keypattern
+                if (!msg)
+                    msg = Object.keys(err.extensions.exception.keyPattern);
                 let type = '';
 
-                if (msg.indexOf('label_1') > -1) type = 'label';
-                else if (msg.indexOf('originalUrl_1') > -1) type = 'url';
-                else if (msg.indexOf('shortUrl_1') > -1) type = 'shorturl';
+                if (msg.indexOf('label') > -1 || msg.indexOf('label_1') > -1) type = 'label';
+                else if (msg.indexOf('originalUrl') > -1 || msg.indexOf('originalUrl_1') > -1) type = 'url';
+                else if (msg.indexOf('shortUrl') > -1 || msg.indexOf('shortUrl_1') > -1) type = 'shorturl';
 
                 return new ApolloError(type, 11000);
             }
