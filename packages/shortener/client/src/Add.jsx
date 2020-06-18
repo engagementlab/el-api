@@ -125,9 +125,11 @@ class Add extends PureComponent {
                     shortUrlGenerated: data,
                     shortUrl: data,
                     shortUrlHelper: '(This can be customized if desired.)',
+                    shortUrlError: false,
                     urlFull: `https://elab.works/${data}`
                 });
-            });
+                this.shortUrlCount = data.length;
+        });
 
     }
 
