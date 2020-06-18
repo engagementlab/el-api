@@ -56,6 +56,7 @@ class Add extends PureComponent {
             errorHelper: '',
             isValid: false,
             labelEntered: false,
+            labelError: false,
             labelHelper: null,
             labelInput: '',
             shortUrl: '',
@@ -80,12 +81,14 @@ class Add extends PureComponent {
         const s = this.state;
         const isValid =
             s.labelEntered &&
-            !s.labelHelper &&
+            !s.labelError &&
             !s.urlError &&
             !s.shortUrlError &&
             s.shortUrlGenerated !== null &&
             (s.urlInput.length >= 8) &&
             (this.shortUrlCount <= this.shortUrlMax);
+
+            console.log(isValid)
 
         this.setState({
             isValid
@@ -134,7 +137,9 @@ class Add extends PureComponent {
             labelInput: evt.target.value,
             labelEntered: true,
             labelHelper: evt.target.value.length === 0 ?
-                'Required' : null
+                'Required' : `${evt.target.value.length} / 30`,
+            labelError: evt.target.value.length === 0 || evt.target.value.length > 30,
+
         });
 
     };
@@ -234,6 +239,7 @@ class Add extends PureComponent {
         errorHelper,
         isValid,
         labelHelper,
+        labelError,
         labelInput,
         shortUrlGenerated,
         shortUrl,
@@ -257,7 +263,7 @@ class Add extends PureComponent {
                                 <TableRow key="Add">
                                     <TableCell>
                                         <TextField id="add-label" aria-label="field to input label" label="Label"
-                                            value={labelInput} error={labelHelper !==null} helperText={labelHelper}
+                                            value={labelInput} error={labelError} helperText={labelHelper}
                                             onChange={(e)=> this.measureLabel(e)}
                                             />
                                     </TableCell>
@@ -286,11 +292,11 @@ class Add extends PureComponent {
                                                     onClick={e=> {
                                                     e.preventDefault();
                                                     addLink({
-                                                    variables: {
-                                                    originalUrl: urlInput,
-                                                    shortUrl,
-                                                    label: labelInput,
-                                                    },
+                                                        variables: {
+                                                            originalUrl: urlInput,
+                                                            shortUrl,
+                                                            label: labelInput,
+                                                        },
                                                     });
                                                     }}>
                                                     <AddIcon />

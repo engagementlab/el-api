@@ -37,9 +37,9 @@ function App() {
 
   return (
     <div>
-    <h2><img className="App-logo" alt="Small ELab logo" src="https://res.cloudinary.com/engagement-lab-home/image/upload/v1543874087/logos/logo-sm.svg" /> Engagement Lab URL Shortener</h2>
       <div className="App">
         <Box className={classes.root} color="text.primary" width="75%">
+          <h2><img className="App-logo" alt="Small ELab logo" src="https://res.cloudinary.com/engagement-lab-home/image/upload/v1543874087/logos/logo-sm.svg" /> Engagement Lab URL Shortener</h2>
           { loading ? 
               <p>Loading...</p> :
               (
