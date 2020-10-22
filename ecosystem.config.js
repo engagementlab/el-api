@@ -12,7 +12,7 @@ module.exports = {
             ref: 'origin/master',
             repo: 'https://github.com/engagementlab/el-api',
             path: '/srv/el-api',
-            'post-deploy': 'yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
+            'post-deploy': 'npm i -g lerna && yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
         },
     },
 };
