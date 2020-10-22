@@ -1,5 +1,6 @@
 module.exports = {
     apps: [{
+        name: 'el-api',
         script: 'packages/core/index.js --server',
         watch: '.',
     }],
