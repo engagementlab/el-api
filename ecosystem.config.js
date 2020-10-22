@@ -1,7 +1,7 @@
 module.exports = {
     apps: [{
         name: 'el-api',
-        script: 'packages/core/index.js --server',
+        script: 'npm start',
         watch: '.',
     }],
 
@@ -12,7 +12,7 @@ module.exports = {
             ref: 'origin/master',
             repo: 'https://github.com/engagementlab/el-api',
             path: '/srv/el-api',
-            'post-deploy': 'npm i -g lerna && yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
+            'post-deploy': 'nvm use && npm i -g lerna && yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
         },
     },
 };
