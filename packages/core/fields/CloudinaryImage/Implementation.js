@@ -1,35 +1,40 @@
 const File = require('../CustomFile');
 
 class CloudinaryImage extends File.implementation {
-  constructor() {
-    super(...arguments);
-    this.graphQLOutputType = 'CloudinaryImage_File';
-  }
+    constructor() {
+        super(...arguments);
+        this.graphQLOutputType = 'CloudinaryImage_File';
+    }
 
-  gqlOutputFields() {
-    return [`${this.path}: ${this.graphQLOutputType}`];
-  }
+    gqlOutputFields() {
+        return [`${this.path}: ${this.graphQLOutputType}`];
+    }
 
-  extendAdminMeta(meta) {
-    // Overwrite so we have only the original meta
-    return meta;
-  }
+    extendAdminMeta(meta) {
+        const {
+            many,
+        } = this;
+        return {
+            ...meta,
+            many,
+        };
+    }
 
-  getFileUploadType() {
-    return 'Upload';
-  }
+    getFileUploadType() {
+        return 'Upload';
+    }
 
-  getGqlAuxTypes({
-    schemaName,
-  }) {
-    return [
-      ...super.getGqlAuxTypes({
+    getGqlAuxTypes({
         schemaName,
-      }),
-      `
+    }) {
+        return [
+            ...super.getGqlAuxTypes({
+                schemaName,
+            }),
+            `
       """Mirrors the formatting options [Cloudinary provides](https://cloudinary.com/documentation/image_transformation_reference).
       All options are strings as they ultimately end up in a URL."""
-      input CloudinaryImageFormat {
+      input CloudinaryImageFormatCustom {
         # Rewrites the filename to be this pretty string. Do not include '/' or '.'
         prettyName: String
         width: String
@@ -62,42 +67,42 @@ class CloudinaryImage extends File.implementation {
         transformation: String
       }`,
 
-      `extend type ${this.graphQLOutputType} {
+            `extend type ${this.graphQLOutputType} {
         publicId: String
       }`
-    ];
-  }
+        ];
+    }
 
-  // Called on `User.avatar` for example
-  gqlOutputFieldResolvers() {
-    return {
-      [this.path]: item => {
-        const itemValues = item[this.path];
-        if (!itemValues) {
-          return null;
-        }
-
-        // FIXME: This can hopefully be removed once graphql 14.1.0 is released.
-        // https://github.com/graphql/graphql-js/pull/1520
-        if (itemValues.id) itemValues.id = itemValues.id.toString();
-
+    // Called on `User.avatar` for example
+    gqlOutputFieldResolvers() {
         return {
-          publicId: this.fileAdapter.publicId(itemValues),
-          publicUrl: this.fileAdapter.publicUrl(itemValues),
-          publicUrlTransformed: ({
-              transformation,
-            }) =>
-            this.fileAdapter.publicUrlTransformed(itemValues, transformation),
-          ...itemValues,
+            [this.path]: item => {
+                const itemValues = item[this.path];
+                if (!itemValues) {
+                    return null;
+                }
+
+                // FIXME: This can hopefully be removed once graphql 14.1.0 is released.
+                // https://github.com/graphql/graphql-js/pull/1520
+                if (itemValues.id) itemValues.id = itemValues.id.toString();
+
+                return {
+                    publicId: this.fileAdapter.publicId(itemValues),
+                    publicUrl: this.fileAdapter.publicUrl(itemValues),
+                    publicUrlTransformed: ({
+                            transformation,
+                        }) =>
+                        this.fileAdapter.publicUrlTransformed(itemValues, transformation),
+                    ...itemValues,
+                };
+            },
         };
-      },
-    };
-  }
+    }
 }
 
 
 module.exports = {
-  Implementation: CloudinaryImage,
-  MongoIntegerInterface: File.adapters.mongoose,
-  // KnexIntegerInterface: KnexCloudinaryImageInterface,
+    Implementation: CloudinaryImage,
+    MongoIntegerInterface: File.adapters.mongoose,
+    // KnexIntegerInterface: KnexCloudinaryImageInterface,
 };
