@@ -52,7 +52,8 @@ const boot = config => {
         /**
          * Listen on provided port w/ both keystone instance and API routes
          */
-        server = config.app.use([middleware, config.routes]).listen(port, () => {
+        config.app.use(`/${config.package.schema}`, config.routes);
+        server = config.app.use([middleware]).listen(port, () => {
             global.logger.info(
                 colors.bgCyan.bold.black(
                     `Content API for "${config.package.name}" started (${
@@ -134,6 +135,6 @@ const init = (callback, appPackageName) => {
  * Create an express server, serving either one or all content packages and CMS instance(s)
  * @module
  * @param {function} [callback] - Optional callback
- * @param {string} [appPackageName] - Optional name of content packakge to mount
+ * @param {string} [appPackageName] - Optional name of content package to mount
  */
 module.exports = init;

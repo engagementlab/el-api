@@ -14,11 +14,11 @@
     "docs": "jsdoc2md --files 'packages/core/**.js' > api.md",
     "fix": "eslint --fix ./",
     "inspect": "nodemon --inspect ./packages/core/",
-    "start": "node ./packages/core/",
+    "start": "node ./packages/core/ --server",
     "start-ci": "./node_modules/.bin/nyc yarn run start",
     "test": "./node_modules/.bin/mocha --exit ./packages/**/tests/*.js",
     "watch": "npm-run-all --parallel watch-js watch-sass",
-    "watch-js": "nodemon ./packages/core/",
+    "watch-js": "nodemon ./packages/core/ --server",
     "watch-sass": "nodemon -e scss -x \"npm run css\""
   },
   "babel": {
