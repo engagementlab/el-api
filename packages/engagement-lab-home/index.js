@@ -49,7 +49,6 @@ module.exports = config => {
             mongoose.model(m.name, new mongoose.Schema(m.schema));
         });
         const appRoutes = routes(config.importer, mongoose);
-        // TODO: give all routes a namespace prefix, e.g. 'homepage/'
         packageConfig.Routes = appRoutes;
         resolve(packageConfig);
         global.logger.info('🚀 Homepage API ready');

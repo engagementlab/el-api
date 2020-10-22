@@ -5,13 +5,16 @@
     "Ralph Drake <ralph@ralphdrake.com>"
   ],
   "description": "Engagement Lab home CMS models/lists and content API routes.",
-  "version": "2.4.4",
+  "version": "2.4.7",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "test": "../../node_modules/.bin/mocha ./tests/*.js"
   },
   "dependencies": {
-    "@keystonejs/fields-markdown": "^5.1.11"
+    "@keystonejs/fields-markdown": "^5.1.11",
+    "@mailchimp/mailchimp_marketing": "^3.0.15",
+    "@slack/web-api": "^5.13.0",
+    "mailgun-js": "^0.22.0"
   }
 }
