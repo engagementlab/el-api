@@ -3,7 +3,7 @@
  * @copyright Engagement Lab at Emerson College, 2020
  *
  * @author Johnny Richardson
- * @file Route to retrieve get involved/contact data
+ * @file Route to retrieve privacy policy data
  *
  * ==========
  */
@@ -12,13 +12,13 @@ const BuildData = async (req, res) => {
         db,
     } = res.locals;
 
-    const contact = db.model('Contact');
-    const fields = 'name blurb students community -_id';
+    const privacy = db.model('Privacy');
+    const fields = 'content.html lastUpdated -_id';
 
 
     try {
-        // Get contact text
-        const query = contact.findOne({}, fields);
+        // Get privacy text
+        const query = privacy.findOne({}, fields);
         // Execute queries
         const data = await query.exec();
 

@@ -11,11 +11,12 @@ const express = require('express');
 
 const Routes = (importer, db) => {
     const router = express.Router();
-    const productionMode = process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
+    const productionMode =
+        process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
 
     // Import Route Controllers
     const importRoutes = importer(__dirname);
-    const routes = importRoutes('get');
+    const routes = importRoutes('all');
 
     // Setup Route Bindings
     // CORS
@@ -36,25 +37,20 @@ const Routes = (importer, db) => {
         else next();
     });
 
-    router.get('/get/about', routes.about);
-    router.get('/get/events/:key?', routes.event.data);
-    router.get('/get/homepage', routes.homepage);
-    router.get('/get/initiative/:key', routes.initiative.data);
-    router.get('/get/contact', routes.contact);
-    router.get('/get/jobs', routes.jobs);
-    router.get('/get/masters/:key?', routes.masters);
-    router.get('/get/privacy', routes.privacy);
-    router.get('/get/projects/:key?', routes.project.data);
-    router.get('/get/publications/:key?', routes.publication.data);
+    // router.get('/get/about', routes.about);
+    // router.get('/get/events/:key?', routes.event.data);
+    // router.get('/get/homepage', routes.homepage);
+    // router.get('/get/initiative/:key', routes.initiative.data);
+    //   router.get('/get/contact', routes.contact);
+    // router.get('/get/jobs', routes.jobs);
+    // router.get('/get/masters/:key?', routes.masters);
+    // router.get('/get/privacy', routes.privacy);
+    // router.get('/get/projects/:key?', routes.project.data);
+    // router.get('/get/publications/:key?', routes.publication.data);
 
-    // router.get('/get/search/:string', routes.search);
-    // router.get('/get/team/:key?', routes.team.data);
+    router.post('/post/contact', routes.contact.send);
+    router.post('/post/newsletter/:email', routes.newsletter.signup);
 
-    // router.get('/keys/events', routes.event.keys);
-    // router.get('/keys/initiatives', routes.initiative.keys);
-    // router.get('/keys/projects', routes.project.keys);
-    // router.get('/keys/publications', routes.publication.keys);
-    // router.get('/keys/team', routes.team.keys);
     return router;
 };
 
