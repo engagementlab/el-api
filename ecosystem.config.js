@@ -13,7 +13,7 @@ module.exports = {
             ref: 'origin/master',
             repo: 'https://github.com/engagementlab/el-api',
             path: '/srv/el-api',
-            'post-setup': 'nvm use && npm i -g lerna && npm i -g yarn',
+            'post-setup': 'nvm use && npm i -g lerna && npm i -g yarn && pm2 start ecosystem.config.js',
             'post-deploy': 'nvm use && yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
         },
     },
