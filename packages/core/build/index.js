@@ -102,7 +102,7 @@ module.exports = (() => {
             // Call CMS distributable static generator for the current package
             const child = spawn('npm', [
                 'run',
-                'build',
+                'build-cms',
                 '--',
                 `--entry=${__dirname}/generator.js`,
                 `--out=${outDir}`,
@@ -121,7 +121,7 @@ module.exports = (() => {
             child.on('exit', (err, info) => {
                 if (err !== 0) {
                     global.logger.error(
-                        `⛔ Uncaught error for ${colors.yellow(pkg.name)} process (code: ${err}).`
+                        `⛔ Uncaught error for ${colors.yellow(pkg.name)} process (code: ${err}) ${info}.`
                     );
                 } else {
                     global.logger.info(
@@ -137,6 +137,10 @@ module.exports = (() => {
                     }
                 }
             });
+            child.stderr.on('data', errout => 
+                global.logger.error(
+                    `⛔ Output for ${colors.yellow(pkg.name)}: ${errout.toString()}.`
+                ));
         } catch (err) {
             global.logger.error(err);
         }

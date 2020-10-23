@@ -13,7 +13,7 @@
   "version": "0.0.6",
   "private": false,
   "scripts": {
-    "build": "keystone build",
+    "build-cms": "keystone build",
     "clean": "kill -9 $(lsof -t -i:3000)",
     "dev": "nodemon --server",
     "start": "node index.js",
