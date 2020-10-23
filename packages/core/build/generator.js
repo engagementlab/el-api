@@ -109,6 +109,7 @@ const CmsBuild = (currentApp, allApps) => {
             schemaNames: Object.keys(schemaAdapters),
             adapters: schemaAdapters,
             defaultAdapter: Object.keys(schemaAdapters)[0],
+            cookieSecret: process.env.SESSION_COOKIE,
         });
 
         modelsMerged.forEach(model => {
