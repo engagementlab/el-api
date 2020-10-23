@@ -2,7 +2,8 @@ module.exports = {
     apps: [{
         name: 'el-api',
         script: 'npm start',
-        watch: '.',
+        exec_interpreter: '/home/node/.nvm/versions/node/v14/bin/node',
+        env_: {"NODE_ENV": "production",},
     }],
 
     deploy: {
@@ -12,7 +13,8 @@ module.exports = {
             ref: 'origin/master',
             repo: 'https://github.com/engagementlab/el-api',
             path: '/srv/el-api',
-            'post-deploy': 'nvm use && npm i -g lerna && yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
+            'post-setup': 'nvm use && npm i -g lerna && npm i -g yarn',
+            'post-deploy': 'nvm use && yarn run bootstrap && pm2 reload ecosystem.config.js --env production',
         },
     },
 };
