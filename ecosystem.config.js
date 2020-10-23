@@ -2,7 +2,7 @@ module.exports = {
     apps: [{
         name: 'el-api',
         script: 'npm start',
-        exec_interpreter: '/home/node/.nvm/versions/node/v14/bin/node',
+        exec_interpreter: '/home/node/.nvm/versions/node/v14.14.0/bin/node',
         env_: {"NODE_ENV": "production",},
     }],
 
