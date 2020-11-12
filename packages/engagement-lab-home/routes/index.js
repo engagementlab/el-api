@@ -20,10 +20,8 @@ const Routes = (importer, db) => {
 
     // Setup Route Bindings
     // CORS
-    const corsPort = productionMode ? 1864 : 4200;
-
     router.all('/*', (req, res, next) => {
-        res.header('Access-Control-Allow-Origin', `http://localhost:${corsPort}`);
+        res.header('Access-Control-Allow-Origin', process.env.CORS_DOMAIN);
         res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, HEAD, PUT');
         res.header('Access-Control-Expose-Headers', 'Content-Length');
         res.header(
