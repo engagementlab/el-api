@@ -9,6 +9,7 @@
  */
 
 const {
+    Checkbox,
     Text,
     Slug,
     Url,
@@ -27,12 +28,12 @@ const Event = cloudinary => {
     const fields = {
 
         enabled: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Enabled',
             adminDoc: 'Will never appear on site if not enabled',
         },
         name: {
-            type: String,
+            type: Text,
             isRequired: true,
 
             index: true,
@@ -75,18 +76,18 @@ const Event = cloudinary => {
             adminDoc: 'Must be in format "http://www.something.org".',
         },
         showButton: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Show URL link as button',
         },
         buttonTxt: {
-            type: String,
+            type: Text,
             label: 'Label text on button',
             dependsOn: {
                 showButton: true,
             },
         },
         additionalURL: {
-            type: String,
+            type: Text,
             label: 'Summary Blog Post URL (current not used)',
         },
         createdAt: {

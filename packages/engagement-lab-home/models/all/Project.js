@@ -10,6 +10,7 @@
  */
 
 const {
+    Checkbox,
     Relationship,
     Select,
     Text,
@@ -26,22 +27,22 @@ const Project = cloudinary => {
      */
     const fields = {
         enabled: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Enabled',
             adminDoc: 'Determines if this project appears on the live site.',
         },
         featured: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Featured',
             adminDoc: 'Determines if this project appears on the home page in the featured project slider.',
         },
         archived: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Archived',
             adminDoc: 'Determines if this project appears as archived (must also be "enabled").',
         },
         customUrl: {
-            type: String,
+            type: Text,
             label: 'Custom URL',
             adminDoc: 'Must be format of "projecturl". Overrides default "/projects/projectname".',
         },
@@ -131,7 +132,7 @@ const Project = cloudinary => {
 		                                                adminDoc: 'Will appear in \'Downloads\' column on individual project page if "Show Files" ticked.',
 		                                        }, */
         showFiles: {
-            type: Boolean,
+            type: Checkbox,
         },
 
     };

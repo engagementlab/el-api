@@ -10,8 +10,8 @@
  */
 
 const {
+    Checkbox,
     DateTime,
-    File,
     Relationship,
     Text,
     Url,
@@ -33,7 +33,7 @@ const Publication = cloudinary => {
 
     const fields = {
         title: {
-            type: String,
+            type: Text,
             label: 'Title',
             isRequired: true,
             initial: true,
@@ -41,12 +41,12 @@ const Publication = cloudinary => {
             note: 'This is the link text for article/chapter urls, and the link text to individual pages for books and guides.',
         },
         enabled: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Enabled',
             note: 'Determines if this publication appears on the live site.',
         },
         indexed: {
-            type: Boolean,
+            type: Checkbox,
         },
         form: {
             type: Relationship,
@@ -62,7 +62,7 @@ const Publication = cloudinary => {
             initial: true,
         },
         author: {
-            type: String,
+            type: Text,
             label: 'Author Name(s)',
             isRequired: true,
             initial: true,
@@ -83,7 +83,7 @@ const Publication = cloudinary => {
             note: 'This displays on the individual publication page under \'About\'',
         },
         context: {
-            type: String,
+            type: Text,
             note: 'Where this publication appears, e.g. "Journal Of Civic Media Vol. 1 Issue 3".',
         },
 
@@ -101,12 +101,12 @@ const Publication = cloudinary => {
             note: 'This is a link or file.',
         },
         purchaseUrls: {
-            type: String,
+            type: Text,
             label: 'Link to view publication',
             note: 'Must be in format "http://www.something.org"',
         },
         downloadUrls: {
-            type: String,
+            type: Text,
             label: 'Link to download publication',
             note: 'Must be in format "http://www.something.org"',
         },
@@ -118,7 +118,7 @@ const Publication = cloudinary => {
         },
  */
         isArticle: {
-            type: Boolean,
+            type: Checkbox,
             hidden: true,
             noedit: true,
             default: false,

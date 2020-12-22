@@ -9,7 +9,9 @@
  */
 
 const {
+    Checkbox,
     Slug,
+    Text,
     Url,
 } = require('@keystonejs/fields');
 const {
@@ -23,12 +25,12 @@ const Job = cloudinary => {
      */
     const fields = {
         enabled: {
-            type: Boolean,
+            type: Checkbox,
             label: 'Enabled',
             note: 'Will never appear on site if not enabled',
         },
         title: {
-            type: String,
+            type: Text,
             label: 'Title',
             isRequired: true,
 

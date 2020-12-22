@@ -19,14 +19,14 @@ const Contact = cloudinary => {
      */
     const fields = {
         name: {
-            type: String,
+            type: Text,
             default: 'Contact/Get Involved Page',
             hidden: true,
             isRequired: true,
 
         },
         blurb: {
-            type: String,
+            type: Text,
             label: 'Page Blurb',
             isRequired: true,
 

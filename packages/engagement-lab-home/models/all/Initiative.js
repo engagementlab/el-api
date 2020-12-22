@@ -25,7 +25,7 @@ const Initiative = cloudinary => {
      */
     const fields = {
         name: {
-            type: String,
+            type: Text,
             label: 'Initiative Name',
             isRequired: true,
 
@@ -33,7 +33,7 @@ const Initiative = cloudinary => {
             adminDoc: 'This is the name or title of the directory',
         },
         description: {
-            type: String,
+            type: Text,
             isRequired: true,
 
             adminDoc: 'This displays next to/near the initiative name',

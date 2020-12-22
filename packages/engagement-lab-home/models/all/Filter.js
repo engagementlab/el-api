@@ -9,67 +9,69 @@
  */
 
 const {
-  Select,
+    Checkbox,
+    Select,
+    Text,
 } = require('@keystonejs/fields');
 
 const Filter = cloudinary => {
-  /**
+    /**
    * Model Fields
    * @memberof Filter
    */
-  const fields = {
-    name: {
-      type: String,
-      isRequired: true,
+    const fields = {
+        name: {
+            type: Text,
+            isRequired: true,
 
-      index: true,
-    },
-    category: {
-      type: Select,
-      label: 'Category of Filter',
-      options: 'Person, Format, Keyword, Cohort',
-      isRequired: true,
-    },
-    appears: {
-      type: Select,
-      label: 'Destination',
-      note: 'Where will this filter apply?',
-      options: 'Project, Publication',
-      dependsOn: {
-        category: ['Format', 'Keyword'],
-      },
-    },
-    contactEmail: {
-      type: String,
-      label: 'Email',
-      required: false,
-      dependsOn: {
-        category: 'Person',
-      },
-    },
-    current: {
-      type: Boolean,
-      label: 'Is this the current cohort?',
-      note: "Cohort will appear on the people page as 'Current'",
-      required: false,
-      dependsOn: {
-        category: 'Cohort',
-      },
-    },
-    previous: {
-      type: Boolean,
-      label: 'Is this the most recent but not current cohort?',
-      note: "Cohort will appear on the people page as 'Most Recent'",
-      required: false,
-      dependsOn: {
-        category: 'Cohort',
-      },
-    },
-  };
+            index: true,
+        },
+        category: {
+            type: Select,
+            label: 'Category of Filter',
+            options: 'Person, Format, Keyword, Cohort',
+            isRequired: true,
+        },
+        appears: {
+            type: Select,
+            label: 'Destination',
+            note: 'Where will this filter apply?',
+            options: 'Project, Publication',
+            dependsOn: {
+                category: ['Format', 'Keyword'],
+            },
+        },
+        contactEmail: {
+            type: Text,
+            label: 'Email',
+            required: false,
+            dependsOn: {
+                category: 'Person',
+            },
+        },
+        current: {
+            type: Checkbox,
+            label: 'Is this the current cohort?',
+            note: "Cohort will appear on the people page as 'Current'",
+            required: false,
+            dependsOn: {
+                category: 'Cohort',
+            },
+        },
+        previous: {
+            type: Checkbox,
+            label: 'Is this the most recent but not current cohort?',
+            note: "Cohort will appear on the people page as 'Most Recent'",
+            required: false,
+            dependsOn: {
+                category: 'Cohort',
+            },
+        },
+    };
 
-  return {
-    fields,
-  };
+    return {
+        fields,
+    };
 };
 
 /**

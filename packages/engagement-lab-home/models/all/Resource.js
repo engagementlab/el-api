@@ -14,6 +14,7 @@ const {
     DateTime,
     File,
     Select,
+    Text,
 } = require('@keystonejs/fields');
 const {
     Markdown,
@@ -34,7 +35,7 @@ const Resource = cloudinary => {
      */
     const fields = {
         name: {
-            type: String,
+            type: Text,
             label: 'Resource Name',
             isRequired: true,
             initial: true,
@@ -49,7 +50,7 @@ const Resource = cloudinary => {
         },
 
         url: {
-            type: String,
+            type: Text,
             label: 'URL',
             dependsOn: {
                 type: ['video', 'article', 'blog post'],
@@ -58,7 +59,7 @@ const Resource = cloudinary => {
         },
 
         summary: {
-            type: String,
+            type: Text,
             label: 'Summary',
             dependsOn: {
                 type: ['article', 'blog post'],
@@ -72,7 +73,7 @@ const Resource = cloudinary => {
             },
         },
         author: {
-            type: String,
+            type: Text,
             label: 'Author',
             dependsOn: {
                 type: ['article', 'blog post'],

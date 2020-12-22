@@ -10,7 +10,6 @@
 
 const {
     Text,
-    Relationship,
     CloudinaryImage,
 } = require('@keystonejs/fields');
 
@@ -21,19 +20,19 @@ const About = cloudinary => {
      */
     const fields = {
         name: {
-            type: String,
+            type: Text,
             default: 'About Page',
             hidden: true,
             isRequired: true,
 
         },
         tagline: {
-            type: String,
+            type: Text,
             isRequired: true,
 
         },
         missionStatement: {
-            type: String,
+            type: Text,
             label: 'Mission Statement',
             isRequired: true,
 
