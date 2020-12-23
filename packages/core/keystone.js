@@ -109,7 +109,7 @@ const KeystoneApp = (ksConfig, callback) => {
     const keystone = new Keystone({
         // Name of CMS to load in dev instance
         name: ksConfig.package.name,
-        schemaNames: Object.keys(schemaAdapters),
+        schemaNames: Object.keys(schemaAdapters).concat(['public']),
         adapters: schemaAdapters,
         defaultAdapter: Object.keys(schemaAdapters)[0],
         cookieSecret: process.env.SESSION_COOKIE,
