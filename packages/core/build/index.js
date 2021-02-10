@@ -80,8 +80,8 @@ module.exports = (() => {
     let packages = [];
 
     /*
-                        Handle app arguments
-                        */
+        Handle app arguments
+    */
     // List all package names in repo
     if (argv.list) {
         utils.GetPackagesData(true);
@@ -139,7 +139,7 @@ module.exports = (() => {
             });
             child.stderr.on('data', errout => 
                 global.logger.error(
-                    `⛔ Output for ${colors.yellow(pkg.name)}: ${errout.toString()}.`
+                    `>> Output for ${colors.yellow(pkg.name)}: ${errout.toString()}.`
                 ));
         } catch (err) {
             global.logger.error(err);

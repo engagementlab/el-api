@@ -145,7 +145,7 @@ const CmsBuild = (currentApp, allApps) => {
             apps: [
                 new AdminUIApp({
                     adminPath: `/cms/@/${currentAppConfig.package.schema}`,
-                    apiPath: `http://localhost:3000/cms/api/?schema=${currentAppConfig.package.schema}`,
+                    apiPath: `http://localhost:3000/ql/?schema=${currentAppConfig.package.schema}`,
                     graphiqlPath: '/graphiql',
                     schemaName: currentAppConfig.package.schema,
                 })
