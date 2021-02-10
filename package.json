@@ -11,7 +11,7 @@
     "build-cms": "keystone build",
     "ci": "start-server-and-test start-ci http://localhost:3000 test",
     "css": "node-sass --include-path scss ./packages/core/styles/ --output ./bin --output-style compressed",
-    "dev": "nodemon ./packages/core/ --server --trace-warnings --inspect",
+    "dev": "nodemon --inspect=0.0.0.0:9229 ./packages/core/index.js --server --trace-warnings",
     "docs": "jsdoc2md --files 'packages/core/**.js' > api.md",
     "fix": "eslint --fix ./",
     "inspect": "nodemon --inspect ./packages/core/",
