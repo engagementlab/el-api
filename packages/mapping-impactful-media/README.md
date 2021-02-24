@@ -1,0 +1,1 @@
+Content module for [Mapping Impactful Media](mappingimpactfulml.org/). This module has no API routes for data since the client's Azure functions query the mongo cluster that the CMS writes to. Repo for client app/API [here](https://github.com/engagementlab/mapping-impactful-media).

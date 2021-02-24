@@ -1,0 +1,11 @@
+{
+  "name": "@engagementlab/mapping-impactful-media",
+  "version": "0.0.1",
+  "description": "CMS models for Mapping Impactful Media project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "author": "",
+  "license": "ISC"
+}
