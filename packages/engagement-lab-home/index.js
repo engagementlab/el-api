@@ -39,7 +39,7 @@ module.exports = config => {
         // Create DB connection and import API routes if not generating CMS build
         const dbAddress = `${config.dbPrefix}${pkgData.database}?retryWrites=true&w=majority`;
 
-        mongoose.connect(dbAddress, {
+        mongoose.createConnection(dbAddress, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
