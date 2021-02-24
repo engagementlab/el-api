@@ -81,7 +81,7 @@ const init = (callback, appPackageName) => {
     // If server defined, close current one
     if (server) server.close();
 
-    const currentApp = !appPackageName ? 'home' : appPackageName;
+    const currentApp = !appPackageName ? 'engagement-lab-home' : appPackageName;
 
     app = express();
     app.use(express.json());

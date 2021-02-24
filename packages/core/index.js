@@ -21,6 +21,9 @@
 
 const colors = require('colors');
 const mongoose = require('mongoose');
+const {
+    argv,
+} = require('yargs');
 
 // Create logger
 require('./logger');
@@ -100,10 +103,11 @@ const Core = path => {
  * which serves all data APIs and CMS instances.
  * Otherwise, just expose core utilities.
  */
-if (process.env.SERVER_MODE === true || process.argv.indexOf('--server') > -1) {
+
+if (process.env.SERVER_MODE === true || argv.server) {
     // Base API server
     // eslint-disable-next-line global-require
     Core();
-    require('./server')();
+    require('./server')(null, argv.package);
 } else
     module.exports = Core;

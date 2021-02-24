@@ -59,7 +59,7 @@ const GetPackagesData = (list, pkgNames) => {
     }
     global.logger.info(
         `\n\n🌮 ${colors.green.underline(
-            'Packages loaded:'
+            'Package(s) loaded:'
         )} ${namesStr}`
     );
     return namesObj;
