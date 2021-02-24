@@ -125,7 +125,7 @@ const KeystoneApp = (ksConfig, callback) => {
         // Check if model key already present in global CMS lists
         if (Object.keys(allLists).indexOf(thisKey) > -1) {
             // If present, mutate key w/ adaptername prefix
-            thisKey = `${model.adapterName}__${thisKey}`;
+            thisKey = `${model.adapterName.replace(/-/g, '')}__${thisKey}`;
         }
         allLists[thisKey] = model;
     });
