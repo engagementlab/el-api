@@ -83,15 +83,15 @@ const KeystoneApp = (ksConfig, callback) => {
     // Create admin UI app if on dev
     adminApps.push(
         new AdminUIApp({
-            adminPath: `/cms/${schemaName}`,
+            // Name of CMS to load in dev instance
+            name: ksConfig.package.name,
+            adminPath: `/cms`,
             apiPath: `/ql/?schema=${schemaName}`,
             schemaName,
         })
     );
 
     const keystone = new Keystone({
-        // Name of CMS to load in dev instance
-        name: ksConfig.package.name,
         schemaNames: Object.keys(schemaAdapters).concat(['public']),
         adapters: schemaAdapters,
         defaultAdapter: Object.keys(schemaAdapters)[0],

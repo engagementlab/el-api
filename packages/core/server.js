@@ -52,11 +52,13 @@ const boot = config => {
         /**
          * Listen on provided port w/ both keystone instance and API routes
          */
-        config.app.use(`/${config.package.schema}`, config.routes);
+        if(config.routes)
+            config.app.use(`/
+            ${config.package.schema}`, config.routes);
         server = config.app.use([middleware]).listen(port, () => {
             global.logger.info(
                 colors.bgCyan.bold.black(
-                    `Content API for "${config.package.name}" started (${
+                    `Content API/CMS for "${config.package.name}" started (${
                         config.production ? 'Production' : 'Development'
                     } Mode).`
                 )
@@ -116,6 +118,7 @@ const init = (callback, appPackageName) => {
         importer: ServerUtils.routeImporter,
         dbPrefix,
     }).then(pkg => {
+
         // Export all models, routes, config for this app
         const bootConfig = {
             app,
