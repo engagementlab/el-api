@@ -17,15 +17,20 @@ const models = require('./models')();
  * @returns {object} Package's routes, models, config.
  */
 module.exports = config => {
-    const dataFile = fs.readFileSync(`${__dirname}/config.json`);
-    const pkgData = JSON.parse(dataFile);
-    const packageConfig = {
-        Routes: null,
-        Models: models,
-        Config: pkgData,
-    };
 
-    // Just return config data and data models
-    global.logger.simple.info('🆗 Mapping Impactful Media config loaded.');
-    return packageConfig;
+    return new Promise(resolve => {
+        const dataFile = fs.readFileSync(`${__dirname}/config.json`);
+        const pkgData = JSON.parse(dataFile);
+        const packageConfig = {
+            Routes: null,
+            Models: models,
+            Config: pkgData,
+        };
+
+        // Just return config data and data models
+        global.logger.simple.info('🆗 Mapping Impactful Media config loaded.');
+        resolve(packageConfig);
+        global.logger.info('🚀 Homepage API ready');
+    });
+    
 };
