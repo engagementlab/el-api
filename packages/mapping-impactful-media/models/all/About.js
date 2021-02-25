@@ -40,14 +40,13 @@ const About = cloudinary => {
      */
     const options = {
         label: 'About Page',
-        singular: 'MIM About Page',
+        singular: 'About Page',
         path: 'about',
-        listQueryName: 'MimAboutPage',
         adminConfig: {
             defaultColumns: 'label',
         },
         access: {
-            create: false,
+            create: true,
             delete: false,
         },
     };
