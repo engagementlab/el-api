@@ -105,10 +105,10 @@ const CmsBuild = (currentApp, allApps) => {
         });
 
         const keystone = new Keystone({
-            name: currentAppConfig.package.name,
             schemaNames: Object.keys(schemaAdapters),
             adapters: schemaAdapters,
             defaultAdapter: Object.keys(schemaAdapters)[0],
+            adapter: schemaAdapters[currentAppConfig.package.schema],
             cookieSecret: process.env.SESSION_COOKIE,
         });
 
@@ -145,8 +145,9 @@ const CmsBuild = (currentApp, allApps) => {
             apps: [
                 new AdminUIApp({
                     adminPath: `/cms/@/${currentAppConfig.package.schema}`,
-                    apiPath: `http://localhost:3000/ql/?schema=${currentAppConfig.package.schema}`,
+                    apiPath: `http://localhost:${process.env.API_PORT || 3000}/ql/?schema=${currentAppConfig.package.schema}`,
                     graphiqlPath: '/graphiql',
+                    name: currentAppConfig.package.name,
                     schemaName: currentAppConfig.package.schema,
                 })
             ],
