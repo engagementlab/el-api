@@ -35,6 +35,9 @@ const userSchema = new Schema({
     lastLogin: {
         type: Date,
     },
+    photo: {        
+        type: String,
+    },
 });
 
 /**

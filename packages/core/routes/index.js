@@ -76,6 +76,11 @@ module.exports = buildsDir => {
     // Admin page
     router.get('/admin', authentication.isAllowed(), admin.landing);
     router.post('/admin/edit', admin.userCrud);
+    
+    // Send user to other CMS
+    router.get('/go/:dir?', (req, res) => {
+        res.redirect(`/cms/${req.params.dir}`);
+    });
 
     // Errors
     router.get('/error/:type?', authentication.isAllowed(), landing);
@@ -101,14 +106,17 @@ module.exports = buildsDir => {
 
         // We also need a route to render index for all intermediates as per react-dom-router
         router.get(`/@/${name}*`, authentication.isAllowedInApp, (req, res) => {
+            const userPic = req.session.passport.user.photo;
             const appsAllowed = req.session.passport.user.permissions;
             const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
             res.render('cms', {
                 schema: name,
                 apps: appsInfo,
+                userPic,
             });
         });
     });
+
 
     // If on dev or CI instance, create dev user if none
     if (process.env.NODE_ENV === 'development' || ciMode) {

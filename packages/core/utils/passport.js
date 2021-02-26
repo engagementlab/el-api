@@ -31,32 +31,34 @@ const User = require('../models/User');
 const Passport = router => {
     const bodyParser = parser;
     const strategy = new AuthStrategy({
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.AUTH_CALLBACK_URL,
-            passReqToCallback: true,
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.AUTH_CALLBACK_URL,
+        passReqToCallback: true,
+    },
+    (request, accessToken, refreshToken, profile, done) => {
+        console.log(profile.photos[0].value);
+        // Verify user allowed
+        const email = ciMode ? process.env.DEV_EMAIL : profile.emails[0].value;
+        User.findOneAndUpdate({
+            email,
         },
-        (request, accessToken, refreshToken, profile, done) => {
-            // Verify user allowed
-            const email = ciMode ? process.env.DEV_EMAIL : profile.emails[0].value;
-            User.findOne({
-                    email,
-                },
-                (err, user) => {
-                    if (err) {
-                        global.logger.error(`Login error: ${err}`);
-                        return done(err);
-                    }
-                    if (!user) {
-                        global.logger.error(
-                            `Login error: user not found for email ${profile.emails[0].value}`
-                        );
-                        return done(err);
-                    }
-                    return done(err, user);
-                }
-            );
+        {photo: profile.photos[0].value,},
+        (err, user) => {
+            if (err) {
+                global.logger.error(`Login error: ${err}`);
+                return done(err);
+            }
+            if (!user) {
+                global.logger.error(
+                    `Login error: user not found for email ${profile.emails[0].value}`
+                );
+                return done(err);
+            }
+            return done(err, user);
         }
+        );
+    }
     );
 
     // Session store (mongostore for prod)
