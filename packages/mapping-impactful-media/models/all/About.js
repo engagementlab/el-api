@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /**
  * Mapping Impactful Media CMS
  *
@@ -10,8 +11,10 @@
 
 const {
     Text,
-    CloudinaryImage,
 } = require('@keystonejs/fields');
+const {
+    CloudinaryImage,
+} = require('@keystonejs/fields-cloudinary-image');
 
 const About = cloudinary => {
     /**
@@ -40,8 +43,10 @@ const About = cloudinary => {
      */
     const options = {
         label: 'About Page',
-        singular: 'About Page',
+        singular: 'MIM About',
         path: 'about',
+        listQueryName: 'MimAboutPages',
+        itemQueryName: 'MimAboutPage',
         adminConfig: {
             defaultColumns: 'label',
         },
