@@ -101,8 +101,11 @@ module.exports = buildsDir => {
 
         // We also need a route to render index for all intermediates as per react-dom-router
         router.get(`/@/${name}*`, authentication.isAllowedInApp, (req, res) => {
+            const appsAllowed = req.session.passport.user.permissions;
+            const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
             res.render('cms', {
                 schema: name,
+                apps: appsInfo,
             });
         });
     });
@@ -111,20 +114,20 @@ module.exports = buildsDir => {
     if (process.env.NODE_ENV === 'development' || ciMode) {
         try {
             User.findOne({
-                    email: process.env.DEV_EMAIL,
-                },
-                (err, user) => {
-                    if (err) throw new Error(err);
-                    global.logger.info(process.env.DEV_EMAIL);
+                email: process.env.DEV_EMAIL,
+            },
+            (err, user) => {
+                if (err) throw new Error(err);
+                global.logger.info(process.env.DEV_EMAIL);
 
-                    if (!user) {
-                        global.logger.info('Create dev user.');
-                        User.create({
-                            email: process.env.DEV_EMAIL,
-                            name: 'Dev User',
-                        });
-                    }
+                if (!user) {
+                    global.logger.info('Create dev user.');
+                    User.create({
+                        email: process.env.DEV_EMAIL,
+                        name: 'Dev User',
+                    });
                 }
+            }
             );
         } catch (e) {
             throw new Error(e);

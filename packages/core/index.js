@@ -49,8 +49,8 @@ const Core = path => {
      */
     const dbAddress =
         process.env.NODE_ENV !== 'production' ?
-        process.env.MONGO_ADMIN_URI :
-        process.env.MONGO_CLOUD_ADMIN_URI;
+            process.env.MONGO_ADMIN_URI :
+            process.env.MONGO_CLOUD_ADMIN_URI;
     if (!dbAddress) {
         const err =
             `Please provide ${
@@ -61,7 +61,7 @@ const Core = path => {
     }
 
     try {
-        if (process.env.NODE_ENV !== 'production')
+        if (process.env.NODE_ENV === 'development')
             global.logger.info(`Connecting to admin DB at ${dbAddress}`);
 
         mongoose.connect(dbAddress, {
