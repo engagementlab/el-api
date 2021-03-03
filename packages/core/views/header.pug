@@ -1,15 +1,50 @@
-html
-  block head
-  head
-    title= 'Engagement Lab Content Manager'
-    meta(http-equiv='Content-type' content='text/html; charset=utf-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='stylesheet', href='/cms/style/global', type='text/css')
-    meta(name='robots' content='noindex, nofollow')
+mixin header(nomenu)
+  html
+    head
+      title='Engagement Lab Content Manager'
+      meta(http-equiv='Content-type' content='text/html; charset=utf-8')
+      meta(name='viewport' content='width=device-width, initial-scale=1')
+      meta(name='robots' content='noindex, nofollow')
+      link(rel='stylesheet', href='/cms/style/global', type='text/css')
+      script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js')
+      script(src='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js')
+      script(src='https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js')
+      link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css', type='text/css')
 
-    body
-        div
-        img(src='https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_35/v1543874087/logos/logo-sm.svg') 
-        span Engagement Lab Content Manager
+    body(style='background:#FAFBFB')
+      .ui.grid#header
+        .four.column.row
+          .left.floated.column
+            img(src='https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_55/v1543874087/logos/logo-sm-black.svg') 
+            span Engagement Lab Content Manager
+          
+          if !nomenu
+            .column#profile
+              .ui.inline.dropdown
+                button#open 
+                  img(class='ui circular mini image' src=''+userPic)
 
-        block content
+                .menu
+                  .header Switch App
+                  if apps
+                    each val in Object.keys(apps)
+                      a.item.app(class={active: schema===apps[val].dir})(id=''+apps[val].dir) #{apps[val].name}
+                  if isAdmin
+                    .header Admin
+                    a.item(href='/cms/admin', class={active: onAdmin}) Manage Users
+
+                  .header
+                  .logout
+                    button.negative.ui.button#logout Logout
+
+    script.
+      $('.item.app:not(.active)').click(function(e) {
+        if(e.target.id)
+          window.location = `${window.location.origin}/cms/go/${e.target.id}`;
+      });
+      $('.ui.dropdown')
+        .dropdown();
+      $('#logout').click(function(e) {
+        e.preventDefault();  
+        window.location = `${window.location.origin}/cms/logout`;
+      });
