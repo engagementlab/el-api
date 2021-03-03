@@ -25,8 +25,8 @@ mixin header(nomenu)
                   img(class='ui circular mini image' src=''+userPic)
 
                 .menu
-                  .header Switch App
-                  if apps
+                  if apps && Object.keys(apps).length > 1
+                    .header Switch App
                     each val in Object.keys(apps)
                       a.item.app(class={active: schema===apps[val].dir})(id=''+apps[val].dir) #{apps[val].name}
                   if isAdmin

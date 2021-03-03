@@ -1,29 +1,21 @@
-html
-  head
-    title= 'Engagement Lab Content Manager'
-    meta(http-equiv='Content-type' content='text/html; charset=utf-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    meta(name='robots' content='noindex, nofollow')
-    link(rel='stylesheet', href='/cms/style', type='text/css')
+include ./header.pug
 
-  body
++header()
+
+.ui.segment
+  if notAdmin
+    h3 You do not have permissions for /admin.
+  else
+
+    if noPermission
+      h3 You have no permissions for that app, select another.
+
     div
-      img(src='https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_35/v1543874087/logos/logo-sm.svg') 
-      span Engagement Lab Content Manager
-
-    if notAdmin
-      h3 You do not have permissions for /admin.
+      span Select an app:
+    
+    if noAccess
+      h3 You have no access to any app!
     else
-
-      if noPermission
-        h3 No permissions for app, select another
-
-      div
-        span Select an app
-      
-      if noAccess
-        h3 You have no access to any app!
-      else
-        each val,index in apps
-          div 
-            a(href='/cms/@/' + index) #{val.name}
+      each val,index in apps
+        div 
+          a(href='/cms/@/' + index) #{val.name}

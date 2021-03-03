@@ -39,7 +39,7 @@ link(rel='stylesheet', href='/cms/style/admin', type='text/css')
                         label Email
                         input(type='text', name='email', placeholder='Email')
                     .field
-                        .ui.checkbox
+                        .ui.toggle.checkbox
                             input(type='checkbox', tabindex='0') 
                             label Is Admin
                     .field
@@ -50,6 +50,9 @@ link(rel='stylesheet', href='/cms/style/admin', type='text/css')
                     button.ui.button.positive(type='button') Add
 
         .ui.divider
+
+        div
+            h4 Manage Existing Users
 
         .ui.styled.accordion
             each user,index in users
@@ -65,7 +68,7 @@ link(rel='stylesheet', href='/cms/style/admin', type='text/css')
                                 each val,index in apps
                                     option(value=val.dir) #{val.name}
                         .column
-                            .ui.checkbox#admin(data-children-count='1')
+                            .ui.toggle.checkbox.admin
                                 input(type='checkbox' checked=user.isAdmin)
                                 label Is Admin
                         button.negative.ui.button.delete(type='submit') Delete User
@@ -102,7 +105,7 @@ script.
         }
     });
     
-    $('.checkbox#admin input').change(function() {
+    $('.checkbox.admin input').change(function() {
         let body = {
             userId: $(this).closest('.user.content').attr('id'),
             isAdmin: this.checked,
@@ -110,7 +113,7 @@ script.
         makeRequest(body);
     });
 
-    $('.delete').click(function() {
+    $('button.delete').click(function() {
         let yes = confirm('Are you sure?!');
         if(!yes) return;
         let body = {
@@ -119,9 +122,7 @@ script.
         };
         makeRequest(body);
     });
-    console.log($('#add button'))
     $('#add button').click(function(e) {
-        console.log(e)
         if(!$('.ui.form').form('is valid')) {
             $('.ui.form').form('validate form');
             return;
@@ -146,9 +147,10 @@ script.
                         'Content-Type': 'application/json'
                     },
                 }).then(function (response) {
-                    if(response.status === 500) return response;
+                    console.log(response)
                     return response.json()
                 }).then(function (data) {
+                    console.log(data)
                     let id = data.msg;
                     if(data.status === 500) id = 'error'; 
                     TweenMax.fromTo('#'+id, .6, {
