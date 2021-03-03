@@ -21,10 +21,13 @@ module.exports = {
     landing: (req, res) => {
         // Get all apps
         const appsInfo = utils.GetPackagesData(false);
+        const userPic = req.session.passport.user.photo;
         User.find({}, (err, users) => {
             res.render('admin', {
                 apps: appsInfo,
+                onAdmin: true,
                 users,
+                userPic,
             });
         });
     },
