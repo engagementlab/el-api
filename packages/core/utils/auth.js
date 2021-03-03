@@ -72,7 +72,7 @@ module.exports = {
                     // Explicitly save the session before redirecting!
                     req.session.save(() => {
                         // Ensure user has permissions for this CMS
-                        const allowed = ciMode || !UrlAllowed(user.permissions, req.session.redirectTo);
+                        const allowed = UrlAllowed(user.permissions, req.session.redirectTo) || ciMode;
                         if (req.session.redirectTo === 'cms/' || allowed) {
                             res.redirect(req.session.redirectTo || '/');
                         } else res.redirect('/cms/error?type=permission');

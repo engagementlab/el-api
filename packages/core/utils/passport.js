@@ -37,7 +37,6 @@ const Passport = router => {
         passReqToCallback: true,
     },
     (request, accessToken, refreshToken, profile, done) => {
-        console.log(profile.photos[0].value);
         // Verify user allowed
         const email = ciMode ? process.env.DEV_EMAIL : profile.emails[0].value;
         User.findOneAndUpdate({
