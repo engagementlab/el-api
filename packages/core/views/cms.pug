@@ -1,39 +1,6 @@
-html
-  head
-    title='Engagement Lab Content Manager'
-    meta(http-equiv='Content-type' content='text/html; charset=utf-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    meta(name='robots' content='noindex, nofollow')
-    link(rel='stylesheet', href='/cms/style/global', type='text/css')
-    script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js')
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css', type='text/css')
+include ./header.pug
 
-  body(style='background:#FAFBFB')
-    .ui.grid(id='header')
-      .four.column.row
-        .left.floated.column
-          img(src='https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,f_auto,w_55/v1543874087/logos/logo-sm-black.svg') 
-          span Engagement Lab Content Manager
-        
-        .right.floated.column.aligned
-          img(class='ui circular mini image' src=''+userPic)
-
-          //- .ui.vertical.menu
-          //-   each val in Object.keys(apps)
-          //-     a.item #{apps[val].name}
-          //-   button.negative.ui.button Logout
-
-    div(id='app')
-    //- Load main bundle for this app's schema
-    script(type='text/javascript' src='/cms/@/' + schema + '/bundle.js')
-    
-    script.
-        $('#app-select').change(function(e) {
-          if(e.target.value)
-            window.location = `${window.location.origin}/cms/go/${e.target.value}`;
-        });
-        $('#logout').click(function(e) {
-          e.preventDefault();  
-          window.location = `${window.location.origin}/cms/logout`;
-        });
++header()
+div(id='app')
+//- Load main bundle for this app's schema
+script(type='text/javascript' src='/cms/@/' + schema + '/bundle.js')
