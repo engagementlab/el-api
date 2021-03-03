@@ -88,11 +88,15 @@ module.exports = buildsDir => {
     /**
      * Authentication
      */
+    router.get('/bye', (req, res) => {
+        res.render('loggedout');
+    });
+
     router.get('/callback', authentication.callback);
 
     router.get('/logout', (req, res) => {
         req.logout();
-        res.redirect('/');
+        res.redirect('/cms/bye');
     });
 
     router.get('/login', authentication.login);
@@ -108,11 +112,13 @@ module.exports = buildsDir => {
         router.get(`/@/${name}*`, authentication.isAllowedInApp, (req, res) => {
             const userPic = req.session.passport.user.photo;
             const appsAllowed = req.session.passport.user.permissions;
+            const {isAdmin,} = req.session.passport.user;
             const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
             res.render('cms', {
                 schema: name,
                 apps: appsInfo,
                 userPic,
+                isAdmin,
             });
         });
     });
