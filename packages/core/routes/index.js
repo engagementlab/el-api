@@ -31,6 +31,7 @@ const Passport = require('../utils/passport');
  */
 const landing = (req, res) => {
     const appsAllowed = req.session.passport.user.permissions;
+    const userPic = req.session.passport.user.photo;
     const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
     const errPermission = req.query.type === 'permission';
     const errAdmin = req.query.type === 'not-admin';
@@ -40,6 +41,7 @@ const landing = (req, res) => {
         noAccess: appsInfo.length === 0,
         noPermission: errPermission,
         notAdmin: errAdmin,
+        userPic,
     });
 };
 

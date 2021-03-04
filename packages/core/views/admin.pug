@@ -140,14 +140,13 @@ script.
 
     function makeRequest(body) {
         
-        fetch('http://localhost:3000/cms/admin/edit', {
+        fetch(`${window.location.origin}/cms/admin/edit`, {
                     method: 'post',
                     body: JSON.stringify(body),
                     headers: {
                         'Content-Type': 'application/json'
                     },
                 }).then(function (response) {
-                    console.log(response)
                     return response.json()
                 }).then(function (data) {
                     console.log(data)
