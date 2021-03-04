@@ -7,6 +7,8 @@
  * ==========
  */
 
+const { version } = require('../package.json');
+
 const ciMode = process.env.NODE_ENV === 'ci';
 
 const fs = require('fs');
@@ -25,13 +27,13 @@ const User = require('../models/User');
 // Passport config
 const Passport = require('../utils/passport');
 
+
 /**
  * Middleware for landing/errors
  * @function
  */
 const landing = (req, res) => {
     const appsAllowed = req.session.passport.user.permissions;
-    const userPic = req.session.passport.user.photo;
     const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
     const errPermission = req.query.type === 'permission';
     const errAdmin = req.query.type === 'not-admin';
@@ -41,7 +43,6 @@ const landing = (req, res) => {
         noAccess: appsInfo.length === 0,
         noPermission: errPermission,
         notAdmin: errAdmin,
-        userPic,
     });
 };
 
@@ -65,6 +66,13 @@ module.exports = buildsDir => {
 
     // Passport init for router
     Passport(router);
+
+    // For all routes...
+    router.get('*', (req, res, next) => {
+        res.locals.userPic = req.session.passport.user.photo;
+        res.locals.version = version;
+        next();
+    });
 
     // Static files
     router.use('/style/:file', (req, res) =>
@@ -112,19 +120,17 @@ module.exports = buildsDir => {
 
         // We also need a route to render index for all intermediates as per react-dom-router
         router.get(`/@/${name}*`, authentication.isAllowedInApp, (req, res) => {
-            const userPic = req.session.passport.user.photo;
+            // const userPic = req.session.passport.user.photo;
             const appsAllowed = req.session.passport.user.permissions;
             const {isAdmin,} = req.session.passport.user;
             const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
             res.render('cms', {
                 schema: name,
                 apps: appsInfo,
-                userPic,
                 isAdmin,
             });
         });
     });
-
 
     // If on dev or CI instance, create dev user if none
     if (process.env.NODE_ENV === 'development' || ciMode) {
