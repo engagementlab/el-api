@@ -7,12 +7,12 @@
  * ==========
  */
 
-const { version } = require('../package.json');
-
 const ciMode = process.env.NODE_ENV === 'ci';
 
 const fs = require('fs');
 const express = require('express');
+
+const { version } = require('../package.json');
 
 // Build utils
 const utils = require('../build/utils')();
@@ -33,7 +33,7 @@ const Passport = require('../utils/passport');
  * @function
  */
 const landing = (req, res) => {
-    const appsAllowed = req.session.passport.user.permissions;
+    const appsAllowed = req.session.passport ? req.session.passport.user.permissions : [];
     const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
     const errPermission = req.query.type === 'permission';
     const errAdmin = req.query.type === 'not-admin';
@@ -69,7 +69,9 @@ module.exports = buildsDir => {
 
     // For all routes...
     router.get('*', (req, res, next) => {
-        res.locals.userPic = req.session.passport.user.photo;
+        if(req.session.passport && req.session.passport.user)
+            res.locals.userPic = req.session.passport.user.photo;
+
         res.locals.version = version;
         next();
     });
@@ -84,7 +86,7 @@ module.exports = buildsDir => {
     router.get('/', authentication.isAllowed(), landing);
 
     // Admin page
-    router.get('/admin', authentication.isAllowed(), admin.landing);
+    router.get('/admin', authentication.isAdmin, admin.landing);
     router.post('/admin/edit', admin.userCrud);
     
     // Send user to other CMS
@@ -120,9 +122,13 @@ module.exports = buildsDir => {
 
         // We also need a route to render index for all intermediates as per react-dom-router
         router.get(`/@/${name}*`, authentication.isAllowedInApp, (req, res) => {
-            // const userPic = req.session.passport.user.photo;
-            const appsAllowed = req.session.passport.user.permissions;
-            const {isAdmin,} = req.session.passport.user;
+            let appsAllowed = [];
+            let isAdmin = false;
+            if(req.session.passport) {
+                appsAllowed = req.session.passport.user.permissions;
+                isAdmin = req.session.passport.user.isAdmin;
+            }
+
             const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
             res.render('cms', {
                 schema: name,
