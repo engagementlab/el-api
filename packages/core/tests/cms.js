@@ -92,7 +92,7 @@ describe('Mock user is logged in.', () => {
     });
 
     it('User tries to load \"engagement-lab-home\" CMS non-React router and is redirected,', done => {
-        request.get('/cms/home').end((err, res) => {
+        request.get('/cms/engagement-lab-home').end((err, res) => {
             expect(res.statusCode).to.equal(302);
             expect(res.header.location).to.be.a('string', '/cms/@/home');
             done(err);
@@ -100,17 +100,17 @@ describe('Mock user is logged in.', () => {
     });
 
     it('User can load \"engagement-lab-home\" CMS,', done => {
-        request.get('/cms/@/home/').end((err, res) => {
+        request.get('/cms/@/engagement-lab-home/').end((err, res) => {
             expect(res.statusCode).to.equal(200);
             done(err);
         });
     });
 
-    it('CMS logout route redirects server root,', done => {
+    it('CMS logout route redirects "bye" page,', done => {
         request.get('/cms/logout').end((err, res) => {
             expect(res.statusCode).to.equal(302);
 
-            expect(res.header.location).to.be.a('string', '/');
+            expect(res.header.location).to.be.a('string', '/cms/bye');
             done(err);
         });
     });
