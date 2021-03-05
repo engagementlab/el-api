@@ -39,10 +39,11 @@ const Passport = router => {
     (request, accessToken, refreshToken, profile, done) => {
         // Verify user allowed
         const email = ciMode ? process.env.DEV_EMAIL : profile.emails[0].value;
+        const photoUri = profile.photos ? profile.photos[0].value : undefined;
         User.findOneAndUpdate({
             email,
         },
-        {photo: profile.photos[0].value,},
+        {photo: photoUri,},
         (err, user) => {
             if (err) {
                 global.logger.error(`Login error: ${err}`);

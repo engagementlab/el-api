@@ -72,7 +72,7 @@ module.exports = {
                     // Explicitly save the session before redirecting!
                     req.session.save(() => {
                         // Ensure user has permissions for this CMS
-                        const allowed = UrlAllowed(user.permissions, req.session.redirectTo) || ciMode;
+                        const allowed = ciMode || UrlAllowed(user.permissions, req.session.redirectTo);
                         if (req.session.redirectTo === 'cms/' || allowed) {
                             res.redirect(req.session.redirectTo || '/');
                         } else res.redirect('/cms/error?type=permission');
@@ -94,6 +94,8 @@ module.exports = {
         return (req, res, next) => {
             // Cache URL to bring user to after auth
             req.session.redirectTo = req.originalUrl;
+
+            console.log('not allowed?', req.isAuthenticated())
 
             if (req.isAuthenticated()) next();
             else res.redirect(redirectPath || '/cms/login');
@@ -120,7 +122,8 @@ module.exports = {
 
     // Check if user is admin
     isAdmin: (req, res, next) => {
-        if (req.session.passport.user.isAdmin) next();
+        // In ci env, user is fake
+        if (ciMode || req.session.passport.user.isAdmin) next();
         else res.redirect('/cms/error?type=not-admin');
     },
 };
