@@ -23,8 +23,8 @@ const GetPackagesData = (list, pkgNames) => {
     let namesStr = '';
     const namesObj = {};
 
-    // Do not include 'init' package, and only package(s) specified if any
-    let dirsFiltered = dirs.filter(name => name !== 'init');
+    // Do not include 'core' package, and only package(s) specified if any
+    let dirsFiltered = dirs.filter(name => name !== 'core');
     if (pkgNames) {
         const pkgArr = pkgNames.split(',');
         dirsFiltered = dirsFiltered.filter(name => pkgArr.indexOf(name) > -1);
@@ -38,6 +38,7 @@ const GetPackagesData = (list, pkgNames) => {
             const configData = JSON.parse(
                 fs.readFileSync(path.join(pkgsPath, name, 'config.json'))
             );
+
             // Obj for usage in build gen and API mount
             namesObj[configData.schema] = {
                 name: configData.name,
