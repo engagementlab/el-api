@@ -71,6 +71,10 @@ module.exports = {
 
                     // Explicitly save the session before redirecting!
                     req.session.save(() => {
+                        // If user is going to non-CMS, Passport has already found them, just let them in
+                        if(req.session.redirectTo.indexOf('cms') === -1)
+                            res.redirect(req.session.redirectTo || '/');
+                            
                         // Ensure user has permissions for this CMS
                         const allowed = ciMode || UrlAllowed(user.permissions, req.session.redirectTo);
                         if (req.session.redirectTo === 'cms/' || allowed) {
@@ -94,8 +98,6 @@ module.exports = {
         return (req, res, next) => {
             // Cache URL to bring user to after auth
             req.session.redirectTo = req.originalUrl;
-
-            console.log('not allowed?', req.isAuthenticated())
 
             if (req.isAuthenticated()) next();
             else res.redirect(redirectPath || '/cms/login');

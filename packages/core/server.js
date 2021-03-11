@@ -53,8 +53,8 @@ const boot = config => {
          * Listen on provided port w/ both keystone instance and API routes
          */
         if(config.routes)
-            config.app.use(`/
-            ${config.package.schema}`, config.routes);
+            config.app.use(`/${config.package.schema}`, config.routes);
+            
         server = config.app.use([middleware]).listen(port, () => {
             global.logger.info(
                 colors.bgCyan.bold.black(
