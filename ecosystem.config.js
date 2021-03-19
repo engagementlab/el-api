@@ -11,7 +11,7 @@ module.exports = {
         production: {
             user: 'node',
             host: '199.94.80.32',
-            ref: 'origin/master',
+            ref: 'origin/main',
             repo: 'https://github.com/engagementlab/el-api',
             path: '/srv/el-api',
             'post-setup': 'nvm use && npm i -g lerna yarn && npm i -g node-sass && yarn run bootstrap && yarn run build && yarn run css && pm2 start ecosystem.config.js',
