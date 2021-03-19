@@ -12,6 +12,8 @@
 const {
     Text,
 } = require('@keystonejs/fields');
+const { Markdown } = require('@keystonejs/fields-markdown');
+
 const {
     CloudinaryImage,
 } = require('@keystonejs/fields-cloudinary-image');
@@ -24,15 +26,14 @@ const About = cloudinary => {
     const fields = {
         name: {
             type: Text,
-            default: 'About Page',
-            hidden: true,
+            efaultValuee: 'About Page',
+            access: false,
             isRequired: true,
 
         },
-        tagline: {
-            type: Text,
+        body: {
+            type: Markdown,
             isRequired: true,
-
         },
     };
 
@@ -43,6 +44,7 @@ const About = cloudinary => {
      */
     const options = {
         label: 'About Page',
+        plural: 'About',
         singular: 'MIM About',
         path: 'about',
         listQueryName: 'MimAboutPages',
@@ -51,7 +53,7 @@ const About = cloudinary => {
             defaultColumns: 'label',
         },
         access: {
-            create: true,
+            create: false,
             delete: false,
         },
     };
