@@ -149,7 +149,6 @@ script.
                 }).then(function (response) {
                     return response.json()
                 }).then(function (data) {
-                    console.log(data)
                     let id = data.msg;
                     if(data.status === 500) id = 'error'; 
                     TweenMax.fromTo('#'+id, .6, {

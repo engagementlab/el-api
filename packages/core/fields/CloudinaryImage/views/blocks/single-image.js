@@ -143,7 +143,6 @@ export let getSchema = ({ blocks }) => ({
         return;
       }
     }
-    console.log(error);
   },
   data: {
     alignment(value) {
