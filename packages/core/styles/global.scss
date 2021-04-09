@@ -2,27 +2,21 @@
 
 @font-face {
   font-family: 'LunchtypeRegular';
-  src: url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-regular-webfont.woff2')
-      format('woff2'),
+  src: url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-regular-webfont.woff2') format('woff2'),
     /* Super modern browsers */
-      url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-regular-webfont.woff')
-      format('woff'),
+    url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-regular-webfont.woff') format('woff'),
     /* Modern browsers */
-      url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943478/homepage-2.0/fonts/Lunchtype22-Regular.ttf')
-      format('truetype');
+    url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943478/homepage-2.0/fonts/Lunchtype22-Regular.ttf') format('truetype');
   /* Safari, Android, iOS */
 }
 
 @font-face {
   font-family: 'LunchtypeMedium';
-  src: url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-medium-webfont.woff2')
-      format('woff2'),
+  src: url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-medium-webfont.woff2') format('woff2'),
     /* Super modern browsers */
-      url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-medium-webfont.woff')
-      format('woff'),
+    url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943334/homepage-2.0/fonts/lunchtype22-medium-webfont.woff') format('woff'),
     /* Modern browsers */
-      url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943478/homepage-2.0/fonts/Lunchtype22-Medium.ttf')
-      format('truetype');
+    url('https://res.cloudinary.com/engagement-lab-home/raw/upload/v1543943478/homepage-2.0/fonts/Lunchtype22-Medium.ttf') format('truetype');
   /* Safari, Android, iOS */
 }
 
@@ -61,39 +55,50 @@ h1 {
   //   position: fixed;
   margin: -1rem 0 0 0;
 
-  #version  {
+  #version {
     font-size: xx-small;
     font-style: italic;
   }
 
   #profile {
     justify-content: end;
+
     #open {
       background: none;
       border: none;
       cursor: pointer;
     }
   }
+
   .row {
     background-color: #000;
   }
+
   .column {
     display: flex;
     justify-content: flex-start;
     align-items: center;
   }
+
   .menu {
     .active {
       cursor: default;
     }
+
     .logout {
       display: flex;
       justify-content: end;
-      
+
     }
   }
+
   span {
     color: white !important;
+  }
+
+  #deploy {
+    font-weight: bold;
+    color: #f72923;
   }
 }
 
@@ -102,4 +107,20 @@ h1 {
   border: 4px solid #000 !important;
   background: white !important;
   color: black !important;
+}
+
+#deployed {
+  display: none;
+  position: fixed !important;
+  top: 0;
+  right: 1%;
+  z-index: 100;
+}
+
+.modal {
+  .description {
+    padding: 2rem;
+  }
+
+  // #deploy-btn { visibility: hidden;}
 }
