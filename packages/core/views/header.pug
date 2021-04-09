@@ -64,9 +64,11 @@ mixin header(nomenu)
         e.preventDefault();
         window.location = `${window.location.origin}/cms/logout`;
       });
-      $('#enable-deploy').click(function (e) {
-        console.log($(e.currentTarget).attr('checked'))
-        $('#deploy-btn').show();
+      $('#enable-deploy input').change(function() {
+        if(this.checked)
+          $('#deploy-btn').show();
+        else
+          $('#deploy-btn').hide();
       });
 
       $('#deploy-btn').click(function (e) {
