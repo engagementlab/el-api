@@ -1,11 +1,18 @@
 /**
  * Engagement Lab Content and Data API
- * Developed by Engagement Lab, 2020
+ * Developed by Engagement Lab, 2020-21
  *
  * @author Johnny Richardson
  * Admin actions middleware
  * ==========
  */
+const fs = require('fs');
+const {
+    exec,
+} = require('child_process');
+const {
+    sign,
+} = require('crypto');
 
 // Build utils
 const utils = require('../../build/utils')();
@@ -99,6 +106,42 @@ module.exports = {
         } catch (saveErr) {
             global.logger.error(saveErr);
             res.status(500).send(saveErr.toString());
+        }
+
+    },
+
+    /**
+     * Dump specified QA database and then override corresponding Production database
+     * @function
+     */
+    transferDb: (req, res) => {
+        try {
+            // Remove previous local backup
+            if(fs.existsSync(`./db/${req.params.db}`))
+                fs.rmdirSync(`./db/${req.params.db}`, { recursive: true, force: true});
+
+            // First, dump current QA DB to local dir
+            exec(`mongodump --uri ${process.env.MONGO_CLOUD_URI}${req.params.db} --out ./db`, dumpErr => {
+                if (!dumpErr) {
+                    // Then, if no errors, drop Prod DB and restore via backup just made
+                    exec(`mongorestore --drop --uri ${process.env.MONGO_CLOUD_PROD_URI} -d ${req.params.db} ./db/${req.params.db} 2>> log.txt`, restoreErr => {
+                        if (!restoreErr)
+                            res.status(200).send({
+                                msg: 'done',
+                            });
+                        else {
+                            global.logger.error(restoreErr);
+                            res.status(500);
+                        }
+                    });
+                } else {
+                    global.logger.error(dumpErr);
+                    res.status(500);
+                }
+            });
+
+        } catch (err) {
+            console.log(`exception: ${  err}`);
         }
 
     },
