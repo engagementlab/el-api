@@ -10,7 +10,7 @@
     "url": "https://github.com/engagementlab/el-api/issues"
   },
   "homepage": "https://github.com/engagementlab/el-api#readme",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "scripts": {
     "build-cms": "keystone build",
