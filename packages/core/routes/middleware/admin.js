@@ -10,9 +10,6 @@ const fs = require('fs');
 const {
     exec,
 } = require('child_process');
-const {
-    sign,
-} = require('crypto');
 
 // Build utils
 const utils = require('../../build/utils')();
@@ -117,8 +114,11 @@ module.exports = {
     transferDb: (req, res) => {
         try {
             // Remove previous local backup
-            if(fs.existsSync(`./db/${req.params.db}`))
-                fs.rmdirSync(`./db/${req.params.db}`, { recursive: true, force: true});
+            if (fs.existsSync(`./db/${req.params.db}`))
+                fs.rmdirSync(`./db/${req.params.db}`, {
+                    recursive: true,
+                    force: true,
+                });
 
             // First, dump current QA DB to local dir
             exec(`mongodump --uri ${process.env.MONGO_CLOUD_URI}${req.params.db} --out ./db`, dumpErr => {
@@ -131,17 +131,24 @@ module.exports = {
                             });
                         else {
                             global.logger.error(restoreErr);
-                            res.status(500);
+                            res.status(500).send({
+                                err: restoreErr,
+                            });
                         }
                     });
                 } else {
                     global.logger.error(dumpErr);
-                    res.status(500);
+                    res.status(500).send({
+                        err: dumpErr,
+                    });
                 }
             });
 
         } catch (err) {
-            console.log(`exception: ${  err}`);
+            global.logger.error(err);
+            res.status(500).send({
+                err,
+            });
         }
 
     },

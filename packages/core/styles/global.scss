@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Overpass:400,600,900');
+@import url('https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300&family=Overpass:wght@400;600;900&display=swap');
 
 @font-face {
   font-family: 'LunchtypeRegular';
@@ -98,7 +98,7 @@ h1 {
 
   #deploy {
     font-weight: bold;
-    color: #f72923;
+    color: #00ab9e;
   }
 }
 
@@ -120,6 +120,15 @@ h1 {
 .modal {
   .description {
     padding: 2rem;
+
+    #error {
+      display: none;
+      font-weight: bold;
+      color: #f72923;
+      #details {
+        font-family: 'Overpass Mono', monospace!important;
+      }
+    }
   }
 
   #deploy-btn { 
