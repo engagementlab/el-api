@@ -12,11 +12,9 @@
 const {
     Text,
 } = require('@keystonejs/fields');
-const { Markdown } = require('@keystonejs/fields-markdown');
-
 const {
-    CloudinaryImage,
-} = require('@keystonejs/fields-cloudinary-image');
+    Markdown,
+} = require('@keystonejs/fields-markdown');
 
 const Home = cloudinary => {
     /**
@@ -29,9 +27,20 @@ const Home = cloudinary => {
             defaultValue: 'Home Page',
             access: false,
             isRequired: true,
-
         },
         intro: {
+            type: Markdown,
+            isRequired: true,
+        },
+        about: {
+            type: Markdown,
+            isRequired: true,
+        },
+        partners: {
+            type: Markdown,
+            isRequired: true,
+        },
+        facebook: {
             type: Markdown,
             isRequired: true,
         },
