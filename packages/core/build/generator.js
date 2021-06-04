@@ -44,12 +44,8 @@ const CmsBuild = (currentApp, allApps) => {
     // Create DB prefix for app
     let dbPrefix = 'mongodb://localhost';
     const env = process.env.NODE_ENV;
-    if (env !== 'development') {
-        if (env === 'staging' || env === 'ci')
-            dbPrefix = process.env.MONGO_CLOUD_STAGING_URI;
-        else
-            dbPrefix = process.env.MONGO_CLOUD_URI;
-    }
+    if (env !== 'development')
+        dbPrefix = process.env.MONGO_CLOUD_URI;
 
     try {
         // Array to hold all model references
