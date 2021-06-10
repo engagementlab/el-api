@@ -3,7 +3,7 @@ const File = require('../CustomFile');
 class CloudinaryImage extends File.implementation {
     constructor() {
         super(...arguments);
-        this.graphQLOutputType = 'CloudinaryImage_File';
+        this.graphQLOutputType = 'CloudinaryImage_FileCustom';
     }
 
     gqlOutputFields() {
