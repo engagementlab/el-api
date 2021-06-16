@@ -12,11 +12,15 @@
 const {
     Text,
 } = require('@keystonejs/fields');
-const { Markdown, } = require('@keystonejs/fields-markdown');
+const {
+    Markdown,
+} = require('@keystonejs/fields-markdown');
 
 const {
     CloudinaryImage,
 } = require('@keystonejs/fields-cloudinary-image');
+
+const marked = require('marked');
 
 const About = cloudinary => {
     /**
@@ -26,7 +30,7 @@ const About = cloudinary => {
     const fields = {
         name: {
             type: Text,
-            efaultValuee: 'About Page',
+            defaultValue: 'About Page',
             access: false,
             isRequired: true,
         },
@@ -39,6 +43,17 @@ const About = cloudinary => {
             isRequired: true,
         },
         phase1: {
+            label: 'Phase 1',
+            type: Markdown,
+            isRequired: true,
+        },
+        phase2: {
+            label: 'Phase 2',
+            type: Markdown,
+            isRequired: true,
+        },
+        phase3: {
+            label: 'Phase 3',
             type: Markdown,
             isRequired: true,
         },
@@ -65,7 +80,25 @@ const About = cloudinary => {
         },
     };
 
+    const hooks = {
+        resolveInput: async ({
+            operation,
+            existingItem,
+            originalInput,
+            resolvedData,
+            context,
+            listKey,
+            fieldPath,
+        }) => {
+            const renderedData = resolvedData;
+            console.log(renderedData)
+            renderedData['phase1'] = marked(renderedData['phase1'])
+            return resolvedData
+        },
+    };
+
     return {
+        hooks,
         fields,
         options,
     };
