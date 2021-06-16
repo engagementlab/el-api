@@ -134,6 +134,7 @@ const KeystoneApp = (ksConfig, callback) => {
             fields: list.fields,
             ...list.options,
             adapterName: list.adapterName,
+            hooks: list.hooks,
         });
     });
 
