@@ -57,6 +57,28 @@ const About = cloudinary => {
             type: Markdown,
             isRequired: true,
         },
+        phase1Html: {
+            type: Text,
+            label: 'The following data is for development purposes.',
+            adminConfig: {
+                isReadOnly: true,
+            },
+            adminDoc: 'Phase 1 Render',
+        },
+        phase2Html: {
+            type: Text,
+            label: 'Phase 1 Render',
+            adminConfig: {
+                isReadOnly: true,
+            },
+        },
+        phase3Html: {
+            type: Text,
+            label: 'Phase 3 Render',
+            adminConfig: {
+                isReadOnly: true,
+            },
+        },
     };
 
     /**
@@ -90,10 +112,12 @@ const About = cloudinary => {
             listKey,
             fieldPath,
         }) => {
+            // Convert applicable markdown fields to HTML
             const renderedData = resolvedData;
-            console.log(renderedData)
-            renderedData['phase1'] = marked(renderedData['phase1'])
-            return resolvedData
+            if (renderedData.phase1) renderedData.phase1Html = marked(renderedData.phase1);
+            if (renderedData.phase2) renderedData.phase2Html = marked(renderedData.phase2);
+            if (renderedData.phase3) renderedData.phase3Html = marked(renderedData.phase3);
+            return resolvedData;
         },
     };
 
