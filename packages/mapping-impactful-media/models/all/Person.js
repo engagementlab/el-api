@@ -11,7 +11,9 @@
 
 const {
     Checkbox,
+    Select,
     Text,
+    Url,
 } = require('@keystonejs/fields');
 const {
     CloudinaryImage,
@@ -29,6 +31,13 @@ const Person = cloudinary => {
         },
         title: {
             type: Text,
+        },
+        category: {
+            type: Select,
+            options: ['research', {
+                value: 'namle',
+                label: 'NAMLE',
+            }, 'board', 'design'],
             isRequired: true,
         },
         image: {
@@ -40,6 +49,9 @@ const Person = cloudinary => {
             type: Text,
             isRequired: true,
             isMultiline: true,
+        },
+        website: {
+            type: Url,
         },
         showOnHome: {
             type: Checkbox,
@@ -59,7 +71,7 @@ const Person = cloudinary => {
         listQueryName: 'MimPeople',
         itemQueryName: 'MimPerson',
         adminConfig: {
-            defaultColumns: 'title, image',
+            defaultColumns: 'category, title, image',
         },
     };
 
