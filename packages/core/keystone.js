@@ -93,6 +93,9 @@ const KeystoneApp = (ksConfig, callback) => {
         schemaApps[schemaName] = new GraphQLApp({
             apiPath,
             schemaName,
+            apollo: {
+                introspection: true,
+            },
         });
 
         // Create admin UI app if on dev
