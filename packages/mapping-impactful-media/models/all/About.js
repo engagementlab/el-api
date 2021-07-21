@@ -16,10 +16,6 @@ const {
     Markdown,
 } = require('@keystonejs/fields-markdown');
 
-const {
-    CloudinaryImage,
-} = require('@keystonejs/fields-cloudinary-image');
-
 const marked = require('marked');
 
 const About = cloudinary => {
