@@ -13,6 +13,7 @@ const {
     Relationship,
     Text,
 } = require('@keystonejs/fields');
+const ContentRefreshHook = require('../refreshHook');
 
 const TermsPage = cloudinary => {
     /**
@@ -44,8 +45,13 @@ const TermsPage = cloudinary => {
         path: 'terms-page',
         // singular: 'MIM About',
     };
+    const hooks = {
+        // used to force-refresh Gatsby content model on all changes
+        beforeChange: ContentRefreshHook,
+    };
 
     return {
+        hooks,
         fields,
         options,
     };

@@ -18,6 +18,7 @@ const {
 const {
     CloudinaryImage,
 } = require('../../../core/fields');
+const ContentRefreshHook = require('../refreshHook');
 
 const Person = cloudinary => {
     /**
@@ -74,8 +75,13 @@ const Person = cloudinary => {
             defaultColumns: 'category, title, image',
         },
     };
+    const hooks = {
+        // used to force-refresh Gatsby content model on all changes
+        beforeChange: ContentRefreshHook,
+    };
 
     return {
+        hooks,
         fields,
         options,
     };

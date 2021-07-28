@@ -3,13 +3,11 @@
  * Developed by Engagement Lab, 2021
  *
  * @author Johnny Richardson
- * Models/Lists loader
+ * Content model refresh hook
  * ==========
  */
 
-const fs = require('fs');
 const request = require('request');
-const filesDir = require('path').join(__dirname, 'all');
 const ContentRefreshHook = async ({
     operation,
     existingItem,
@@ -26,10 +24,11 @@ const ContentRefreshHook = async ({
     };
         
     function callback(error, response, body) {
-        // if (!error && response.statusCode == 200) {
-        console.log(body);
-        // }
-        console.error(error);
+        if (!error && response.statusCode === 200)
+            console.log(body);
+        else
+            console.error(error);
+
         return resolvedData;
     }
             

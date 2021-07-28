@@ -17,6 +17,7 @@ const {
 } = require('@keystonejs/fields-markdown');
 
 const marked = require('marked');
+const ContentRefreshHook = require('../refreshHook');
 
 const About = cloudinary => {
     /**
@@ -99,6 +100,8 @@ const About = cloudinary => {
     };
 
     const hooks = {
+        // used to force-refresh Gatsby content model on all changes
+        beforeChange: ContentRefreshHook,
         resolveInput: async ({
             operation,
             existingItem,
