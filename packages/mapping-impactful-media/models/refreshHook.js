@@ -17,21 +17,21 @@ const ContentRefreshHook = async ({
     listKey,
     fieldPath,
 }) => {
-        
     const options = {
-        url: 'http://127.0.0.1:8000/__refresh',
+        url:
+      process.env.NODE_ENV === 'production' ?
+          'https://qa.mappingimpactfulml.org/__refresh' :
+          'http://127.0.0.1:8000/__refresh',
         method: 'POST',
     };
-        
+
     function callback(error, response, body) {
-        if (!error && response.statusCode === 200)
-            console.log(body);
-        else
-            console.error(error);
+        if (!error && response.statusCode === 200) console.log(body);
+        else console.error(error);
 
         return resolvedData;
     }
-            
+
     request(options, callback);
 };
 module.exports = ContentRefreshHook;

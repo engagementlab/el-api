@@ -33,5 +33,4 @@ module.exports = config => {
         // Just return config data and data models
         resolve(packageConfig);
     });
-    // return packageConfig;
 };
