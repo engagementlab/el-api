@@ -81,6 +81,11 @@ const Guide = cloudinary => {
             label: '"Process v. outcomes: a note" right blurb',
             isRequired: true,
         },
+        whatElse: {
+            type: Markdown,
+            label: '"What Else You Need To Know" blurb',
+            isRequired: true,
+        },
         map: {
             type: Text,
             label: 'Map Help Text',
@@ -101,7 +106,7 @@ const Guide = cloudinary => {
    * @see https://www.keystonejs.com/api/create-list
    */
     const options = {
-        label: 'Guide General Text',
+        label: 'Guide - Guide General Text',
         singular: 'Guide General Text',
         plural: 'Guide Text',
         path: 'guidegeneral',
