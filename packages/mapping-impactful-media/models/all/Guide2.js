@@ -14,7 +14,7 @@ const { Markdown, } = require('@keystonejs/fields-markdown');
 
 const ContentRefreshHook = require('../refreshHook');
 
-const Guide2 = cloudinary => {
+const Guide2 = () => {
     /**
    * Model Fields
    * @memberof Guide2
@@ -78,6 +78,7 @@ const Guide2 = cloudinary => {
         plural: 'Guide Section 2',
         path: 'guidesection2',
         access: {
+            create: false,
             delete: false,
         },
     };

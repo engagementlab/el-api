@@ -81,6 +81,11 @@ const Guide = cloudinary => {
             label: '"Process v. outcomes: a note" right blurb',
             isRequired: true,
         },
+        standing: {
+            type: Markdown,
+            label: '"Standing On The Shoulders..." text',
+            isRequired: true,
+        },
         whatElse: {
             type: Markdown,
             label: '"What Else You Need To Know" blurb',
@@ -111,6 +116,7 @@ const Guide = cloudinary => {
         plural: 'Guide Text',
         path: 'guidegeneral',
         access: {
+            create: false,
             delete: false,
         },
     };

@@ -14,7 +14,7 @@ const { Markdown, } = require('@keystonejs/fields-markdown');
 
 const ContentRefreshHook = require('../refreshHook');
 
-const Guide4 = cloudinary => {
+const Guide4 = () => {
     /**
    * Model Fields
    * @memberof Guide4
@@ -32,6 +32,42 @@ const Guide4 = cloudinary => {
         },
         introSection2: {
             type: Markdown,
+            label: 'Intro to section 2',
+            isRequired: true,
+        },
+        questions: {
+            type: Markdown,
+            label: '"Questions to Consider" prompt',
+            isRequired: true,
+        },
+        communities: {
+            type: Markdown,
+            label: '"Learning About Communities" text',
+            isRequired: true,
+        },
+        media: {
+            type: Markdown,
+            label: '"Media And Communities" blurb',
+            isRequired: true,
+        },
+        mediaPrompt1: {
+            type: Markdown,
+            label: '"Media representation" prompt',
+            isRequired: true,
+        },
+        mediaPrompt2: {
+            type: Markdown,
+            label: '"Media use" prompt',
+            isRequired: true,
+        },
+        withNotFor: {
+            type: Markdown,
+            label: '"With (And Not For) Communities?" text',
+            isRequired: true,
+        },
+        withNotForPrompt: {
+            type: Markdown,
+            label: '"Hearing Diverse Voices" text',
             isRequired: true,
         },
     };
@@ -47,6 +83,7 @@ const Guide4 = cloudinary => {
         plural: 'Guide Section 4',
         path: 'guidesection4',
         access: {
+            create: false,
             delete: false,
         },
     };

@@ -14,7 +14,7 @@ const { Markdown, } = require('@keystonejs/fields-markdown');
 
 const ContentRefreshHook = require('../refreshHook');
 
-const Guide1 = cloudinary => {
+const Guide1 = () => {
     /**
    * Model Fields
    * @memberof Guide1
@@ -42,7 +42,7 @@ const Guide1 = cloudinary => {
         },
         resourcesPrompt: {
             type: Markdown,
-            label: '"What resources do I have?" text',
+            label: '"What resources do I have?" prompt',
             isRequired: true,
         },
         atStake: {
@@ -56,7 +56,7 @@ const Guide1 = cloudinary => {
             isRequired: true,
         },
     };
-
+    
     /**
    * Model Options
    * @memberof Guide1
