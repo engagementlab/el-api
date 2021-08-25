@@ -45,6 +45,16 @@ const Guide3 = () => {
             label: '"Imagining Alternatives" blurb',
             isRequired: true,
         },
+        where1Blurb: {
+            type: Markdown,
+            label: '"Where Do We Learn About This?" column text',
+            isRequired: true,
+        },
+        where2Blurb: {
+            type: Markdown,
+            label: '"Where Could We Start To Learn About This?" column text',
+            isRequired: true,
+        },
         voice: {
             type: Markdown,
             label: '"Voice, representation, & connection" blurb',
