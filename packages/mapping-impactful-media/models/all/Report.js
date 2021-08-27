@@ -17,9 +17,6 @@ const {
 } = require('@keystonejs/fields-markdown');
 
 const AzureAdapter = require('../../../core/adapters/Azure');
-const {
-    CloudinaryImage,
-} = require('../../../core/fields');
 const CustomFile = require('../../../core/fields/CustomFile');
 
 const ContentRefreshHook = require('../refreshHook');
@@ -45,11 +42,6 @@ const Report = cloudinary => {
         blurb: {
             type: Markdown,
             isRequired: true,
-        },
-        image: {
-            type: CloudinaryImage,
-            adapter: cloudinary,
-            folder: 'mapping-impactful-media',
         },
         reportFile: {
             type: CustomFile,
