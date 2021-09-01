@@ -22,7 +22,7 @@ const GuideEnd = () => {
     const fields = {
         name: {
             type: Text,
-            defaultValue: 'Where Do I Stand?',
+            defaultValue: 'Guide Completed',
             access: false,
             isRequired: true,
         },
