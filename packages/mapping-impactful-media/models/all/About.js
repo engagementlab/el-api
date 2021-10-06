@@ -54,6 +54,11 @@ const About = cloudinary => {
             type: Markdown,
             isRequired: true,
         },
+        contact: {
+            label: 'Contact Info',
+            type: Markdown,
+            isRequired: true,
+        },
         phase1Html: {
             type: Text,
             label: 'The following data is for development purposes.',
@@ -72,6 +77,13 @@ const About = cloudinary => {
         phase3Html: {
             type: Text,
             label: 'Phase 3 Render',
+            adminConfig: {
+                isReadOnly: true,
+            },
+        },
+        contactHtml: {
+            type: Text,
+            label: 'Contact Render',
             adminConfig: {
                 isReadOnly: true,
             },
@@ -116,6 +128,7 @@ const About = cloudinary => {
             if (renderedData.phase1) renderedData.phase1Html = marked(renderedData.phase1);
             if (renderedData.phase2) renderedData.phase2Html = marked(renderedData.phase2);
             if (renderedData.phase3) renderedData.phase3Html = marked(renderedData.phase3);
+            if (renderedData.contact) renderedData.contactHtml = marked(renderedData.contact);
             return resolvedData;
         },
     };
