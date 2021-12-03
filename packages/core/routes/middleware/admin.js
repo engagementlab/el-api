@@ -6,6 +6,7 @@
  * Admin actions middleware
  * ==========
  */
+const {request,} = require("@octokit/request");
 const fs = require('fs');
 const {
     exec,
@@ -151,6 +152,31 @@ module.exports = {
             });
         }
 
+    },
+
+    deployProd: async (req, res) => {
+        const requestWithAuth = request.defaults({
+            headers: {
+                authorization: `token ${process.env.GITHUB_TOKEN}`,
+            },
+        });
+
+        const response = await requestWithAuth('POST /repos/{owner}/{repo}/dispatches', {
+            owner: 'engagementlab',
+            repo: 'engagement-lab-website-2.x',
+            event_type: 'deploy-prod',
+        });
+          
+        if(response.status === 204) {
+            res.status(200).send({
+                msg: 'done',
+            });
+        }
+        else {
+            res.status(500).send({
+                err: 'There was a problem',
+            });
+        }
     },
 
 };

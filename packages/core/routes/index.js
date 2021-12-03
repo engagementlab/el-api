@@ -88,7 +88,8 @@ module.exports = buildsDir => {
     // Admin page
     router.get('/admin', authentication.isAdmin, admin.landing);
     router.post('/admin/edit', admin.userCrud);
-    router.get('/admin/deploy/:db', authentication.isAdmin, admin.transferDb);
+    router.get('/admin/copy/:db', authentication.isAdmin, admin.transferDb);
+    router.get('/admin/deploy/:db?', authentication.isAdmin, admin.deployProd);
     
     // Send user to other CMS
     router.get('/go/:dir?', (req, res) => {

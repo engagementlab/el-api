@@ -45,6 +45,7 @@
     "@keystonejs/fields-content": "^9.0.6",
     "@keystonejs/file-adapters": "^7.0.8",
     "@keystonejs/keystone": "^18.1.0",
+    "@octokit/request": "^5.6.2",
     "chai": "^4.2.0",
     "colors": "^1.4.0",
     "connect-mongo": "^3.2.0",
