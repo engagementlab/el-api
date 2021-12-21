@@ -89,7 +89,7 @@ module.exports = buildsDir => {
     router.get('/admin', authentication.isAdmin, admin.landing);
     router.post('/admin/edit', admin.userCrud);
     router.get('/admin/copy/:db', authentication.isAdmin, admin.transferDb);
-    router.get('/admin/deploy/:db?', authentication.isAdmin, admin.deployProd);
+    router.get('/admin/deploy/:schema', authentication.isAdmin, admin.deployProd);
     
     // Send user to other CMS
     router.get('/go/:dir?', (req, res) => {
@@ -117,6 +117,23 @@ module.exports = buildsDir => {
 
     // Create route in router for all builds
     allDirs.forEach(name => {
+
+        router.get(`/${name}/deploy`, authentication.isAllowedInApp, (req, res) => {
+            let appsAllowed = [];
+            let isAdmin = false;
+            if(req.session.passport) {
+                appsAllowed = req.session.passport.user.permissions;
+                isAdmin = req.session.passport.user.isAdmin;
+            }
+
+            const appsInfo = utils.GetPackagesData(false, appsAllowed.join(','));
+            res.render('deploy', {
+                schema: name,
+                apps: appsInfo,
+                isAdmin,
+            });
+        });
+
         router.get(`/${name}`, authentication.isAllowedInApp, (req, res) => {
             // Send index for this CMS
             res.redirect(`/cms/@/${name}`);
