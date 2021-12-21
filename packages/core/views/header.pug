@@ -58,6 +58,9 @@ mixin header(nomenu)
             | Something went wrong. :(
             br
             span#details
+        .done
+          | The build to production is now being deployed via Github. This can take up to 20 minutes. We are not able to monitor the progress of this here but you can view the status 
+          a#workflow-link.item(href='/', target='_blank') here.
         .actions
           button.ui.button#deploy-btn Deploy
 
@@ -88,30 +91,43 @@ mixin header(nomenu)
             .then(function (response) {
               return response.json();
             }).then(function (data) {
-              if (data.msg === 'done') {
-                $(e.currentTarget).removeClass('loading');
+              if (data.err === undefined) {
+                //- Create link to GH action
+                $('#workflow-link').attr('href', 'https://github.com/engagementlab/'+data.repo+'/actions/runs/'+data.id);
+                $('.done').show();
+                $('.description').hide();
+                $(e.currentTarget).hide();
+                          //- $(e.currentTarget).removeClass('loading');
 
-                $('.ui.modal')
-                  .modal('hide');
-                TweenMax.fromTo('#deployed', .6, {
-                  autoAlpha: 0,
-                  scale: 0
-                }, {
-                  autoAlpha: 1,
-                  scale: 1,
-                  display: 'block',
-                  yoyo: true,
-                  repeat: 1,
-                  repeatDelay: 2,
-                  ease: 'back.out(1.7)'
-                });
+                //- $('.ui.modal')
+                //-   .modal('hide');
+                //- TweenMax.fromTo('#deployed', .6, {
+                //-   autoAlpha: 0,
+                //-   scale: 0
+                //- }, {
+                //-   autoAlpha: 1,
+                //-   scale: 1,
+                //-   display: 'block',
+                //-   yoyo: true,
+                //-   repeat: 1,
+                //-   repeatDelay: 2,
+                //-   ease: 'back.out(1.7)'
+                //- });
               }
               else if (data.err) {
                 $(e.currentTarget).removeClass('loading'); 
                 $('.description #error').show();
-                $('.description #details').text('Undetermined server error.');
+                $('.description #details').text(data.msg);
               }
-            });
+            })
+            //- Catch 
+            .then(function(error) {
+                $(e.currentTarget).hide();
+                $(e.currentTarget).removeClass('loading'); 
+
+                $('.description #error').show();
+                $('.description #details').text(error.msg);
+            })
         }
         catch(err) {
           $(e.currentTarget).removeClass('loading'); 

@@ -117,8 +117,8 @@ h1 {
   z-index: 100;
 }
 
-.modal {
-  .description {
+#deploy {
+  .description, .done {
     padding: 2rem;
 
     #error {
@@ -129,6 +129,10 @@ h1 {
         font-family: 'Overpass Mono', monospace!important;
       }
     }
+  }
+
+  .done {
+    display: none;
   }
 
   #deploy-btn { 
