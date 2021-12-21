@@ -42,6 +42,7 @@ const GetPackagesData = (list, pkgNames) => {
             // Obj for usage in build gen and API mount
             namesObj[configData.schema] = {
                 name: configData.name,
+                repo: configData.repo,
                 dir: name,
             };
             namesStr += `\n    🔸 ${colors.bold(configData.name)} (${colors.yellow(
