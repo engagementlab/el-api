@@ -124,7 +124,7 @@ const Shortener = () => {
                     type = 'label';
                 else if (
                     msg.indexOf('originalUrl') > -1 ||
-          msg.indexOf('originalUrl_1') > -1
+                        msg.indexOf('originalUrl_1') > -1
                 )
                     type = 'url';
                 else if (msg.indexOf('shortUrl') > -1 || msg.indexOf('shortUrl_1') > -1)
