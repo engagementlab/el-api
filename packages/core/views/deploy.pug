@@ -15,15 +15,15 @@ link(rel='stylesheet', href='/cms/style/admin', type='text/css')
                 | to production. Before doing this, please ensure the QA build is free of all content issues and any bugs that may be caused by missing or poor-quality content (e.g. images). This action is not easily reversible, and all content from QA will generally be immediately viewable by all users.
                 p
                 .ui.toggle.checkbox#enable-deploy
-                input(type='checkbox' checked=false)
-                label I Understand
+                    input(type='checkbox' checked=false)
+                    label I Understand
                 p#error 
                     br 
                     | Something went wrong. :(
                     br
                     span#details
-            .done
-                | The build to production is now being deployed via Github. This can take up to 20 minutes. We are not able to monitor the progress of this here but you can view the status 
-                a#workflow-link.item(href='/', target='_blank') here.
-            .actions
-                button.ui.button#deploy-btn Deploy
+                .done
+                    | The build to production is now being deployed via Github. This can take up to 20 minutes. We are not able to monitor the progress of this here but you can view the status 
+                    a#workflow-link.item(href='/', target='_blank') here.
+                .actions
+                    button.ui.button#deploy-btn Deploy

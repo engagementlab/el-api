@@ -37,34 +37,35 @@ mixin header(nomenu)
                     a.item(href='/cms/admin', class={active: onAdmin}) Manage Users
                   if isAdmin
                     .header
-                    a.item.yellow#deploy(href='#', onclick="openDeploy()") Deploy to Production
+                    a.item.yellow#deploy(href='/cms/'+apps[schema].dir+'/deploy') Deploy to Production
                   .logout
                     button.negative.ui.button#logout Logout
-    if isAdmin
-      .ui.modal
-        i.close.icon
-        .header
-          | Deploy to Production 
-        .description
-          | This action will copy the content from the current QA build of 
-          strong #{apps[schema].name} 
-          | to production. Before doing this, please ensure the QA build is free of all content issues and any bugs that may be caused by missing or poor-quality content (e.g. images). This action is not easily reversible, and all content from QA will generally be immediately viewable by all users.
-          p
-          .ui.toggle.checkbox#enable-deploy
-            input(type='checkbox' checked=false)
-            label I Understand
-          p#error 
-            br 
-            | Something went wrong. :(
-            br
-            span#details
-        .done
-          | The build to production is now being deployed via Github. This can take up to 20 minutes. We are not able to monitor the progress of this here but you can view the status 
-          a#workflow-link.item(href='/', target='_blank') here.
-        .actions
-          button.ui.button#deploy-btn Deploy
+    //- if isAdmin
+    //-   .ui.modal.very.padded.text.container#deploy
+    //-     i.close.icon
+    //-     .header
+    //-       | Deploy to Production 
+    //-     .description
+    //-       | This action will copy the content from the current QA build of 
+    //-       strong #{apps[schema].name} 
+    //-       | to production. Before doing this, please ensure the QA build is free of all content issues and any bugs that may be caused by missing or poor-quality content (e.g. images). This action is not easily reversible, and all content from QA will generally be immediately viewable by all users.
+    //-       p
+    //-       .ui.toggle.checkbox#enable-deploy
+    //-         input(type='checkbox' checked=false)
+    //-         label I Understand
+    //-       p#error 
+    //-         br 
+    //-         | Something went wrong. :(
+    //-         br
+    //-         span#details
+    //-     .done
+    //-       | The build to production is now being deployed via Github. This can take up to 20 minutes. We are not able to monitor the progress of this here but you can view the status 
+    //-       a#workflow-link.item(href='/', target='_blank') here.
+    //-     .actions
+    //-       button.ui.button#deploy-btn Deploy
 
     script.
+      $(document).ready(function() {
       $('.item.app:not(.active)').click(function (e) {
         if (e.target.id)
           window.location = `${window.location.origin}/cms/go/${e.target.id}`;
@@ -75,7 +76,7 @@ mixin header(nomenu)
         e.preventDefault();
         window.location = `${window.location.origin}/cms/logout`;
       });
-      $('#enable-deploy input').change(function() {
+      $('#enable-deploy input').prop('checked', false).change(function() {
         if(this.checked)
           $('#deploy-btn').show();
         else
@@ -97,22 +98,6 @@ mixin header(nomenu)
                 $('.done').show();
                 $('.description').hide();
                 $(e.currentTarget).hide();
-                          //- $(e.currentTarget).removeClass('loading');
-
-                //- $('.ui.modal')
-                //-   .modal('hide');
-                //- TweenMax.fromTo('#deployed', .6, {
-                //-   autoAlpha: 0,
-                //-   scale: 0
-                //- }, {
-                //-   autoAlpha: 1,
-                //-   scale: 1,
-                //-   display: 'block',
-                //-   yoyo: true,
-                //-   repeat: 1,
-                //-   repeatDelay: 2,
-                //-   ease: 'back.out(1.7)'
-                //- });
               }
               else if (data.err) {
                 $(e.currentTarget).removeClass('loading'); 
@@ -125,8 +110,10 @@ mixin header(nomenu)
                 $(e.currentTarget).hide();
                 $(e.currentTarget).removeClass('loading'); 
 
-                $('.description #error').show();
-                $('.description #details').text(error.msg);
+                if(error) {
+                  $('.description #error').show();
+                  $('.description #details').text(error.msg);
+                }
             })
         }
         catch(err) {
@@ -140,3 +127,4 @@ mixin header(nomenu)
         $('.ui.modal')
           .modal('show');
       }
+      });
