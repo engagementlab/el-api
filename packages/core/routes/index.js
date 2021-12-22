@@ -118,7 +118,7 @@ module.exports = buildsDir => {
     // Create route in router for all builds
     allDirs.forEach(name => {
 
-        router.get(`/${name}/deploy`, authentication.isAllowedInApp, (req, res) => {
+        router.get(`/${name}/deploy`, authentication.isAdmin, (req, res) => {
             let appsAllowed = [];
             let isAdmin = false;
             if(req.session.passport) {
