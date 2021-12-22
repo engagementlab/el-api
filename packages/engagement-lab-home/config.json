@@ -2,6 +2,7 @@
     "name": "Engagement Lab Home",
     "database": "engagement-lab",
     "schema": "engagement-lab-home",
+    "repo": "engagement-lab-website-2.x",
     "admin_nav": {
         "projects/publications": ["projects", "publications"],
         "programs": ["initiatives", "Masters"],
