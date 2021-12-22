@@ -174,36 +174,40 @@ module.exports = {
             });
         
             
-            // If dispatch to trigger workflow succeeded, get all action runs and pull latest ID, send
+            // If dispatch to trigger workflow succeeded, get all action runs and pull latest ID after a brief delay, send
             if(dispatchResponse.status === 204) {
-            
-                try { 
 
-                    const workflowResponse = await requestWithAuth('GET /repos/{owner}/{repo}/actions/runs?event=repository_dispatch', {
-                        owner: 'engagementlab',
-                        repo: repoName,
-                    });
+                setTimeout(async () => {
                     
-                    if(workflowResponse.status === 204) {
-                        res.status(200).send({
+                    try { 
+                        
+                        const workflowResponse = await requestWithAuth('GET /repos/{owner}/{repo}/actions/runs?event=repository_dispatch', {
+                            owner: 'engagementlab',
                             repo: repoName,
-                            id: workflowResponse.data.workflow_runs[0].id,
                         });
+                        
+                        if(workflowResponse.status === 200) {
+                            res.status(200).send({
+                                repo: repoName,
+                                id: workflowResponse.data.workflow_runs[0].id,
+                            });
+                        }
+                        else {
+                            res.status(500).send({
+                                err: true,
+                                msg: workflowError,
+                            });
+                        }
+                        
                     }
-                    else {
+                    catch(e) {
                         res.status(500).send({
                             err: true,
                             msg: workflowError,
                         });
                     }
 
-                }
-                catch(e) {
-                    res.status(500).send({
-                        err: true,
-                        msg: workflowError,
-                    });
-                }
+                }, 5000);
          
             }    
         }    
