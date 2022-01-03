@@ -126,11 +126,10 @@ module.exports = {
     isAdmin: (req, res, next) => {
         // In ci env, user is fake
         if (ciMode) next();
-        else if (!req.session.passport.user) {
-            
-        // Cache URL to bring user to after auth
-        req.session.redirectTo = req.originalUrl;
-        res.redirect('/cms/login');
+        else if (!req.session.passport || !req.session.passport.user) {   
+            // Cache URL to bring user to after auth
+            req.session.redirectTo = req.originalUrl;
+            res.redirect('/cms/login');
         }
         else if(req.session.passport.user.isAdmin) next();
         else res.redirect('/cms/error?type=not-admin');
