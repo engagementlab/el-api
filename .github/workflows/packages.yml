@@ -33,7 +33,4 @@ jobs:
           git remote set-url origin https://$GH_TOKEN@github.com/engagementlab/el-api.git
           git add *
           git commit --message "Automated updated list of packages in core (GH action #$GHA_RUNNUM) [skip ci]"
-
-          git pull
-          git commit --message "Merge branch 'main' of github.com:engagementlab/el-api into main [skip ci]"
           git push
