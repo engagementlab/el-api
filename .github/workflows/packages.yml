@@ -22,15 +22,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
     
-      - name: Commit  updated list of packages in core
+      - name: Run output script, commit updated list of packages in core
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GHA_RUNNUM: ${{ github.run_number }}
         run: |
+          node ./.github/output.js
           git config --global user.name "ELDevBot"
           git config --global user.email engagementlab@emerson.edu
           git remote set-url origin https://$GH_TOKEN@github.com/engagementlab/el-api.git
-          git add bin/*
+          git add *
           git commit --message "Automated updated list of packages in core (GH action #$GHA_RUNNUM) [skip ci]"
 
           git pull
