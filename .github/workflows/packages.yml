@@ -1,0 +1,38 @@
+name: packages
+on: 
+  push:
+    branches: [main]
+env:
+  CI: true
+jobs:
+  get-packages:
+    name: "Scan packages dir, output all to module"
+    # Do not run on automated commits (interpretation of TravisCI feature)
+    if: "!contains(github.event.head_commit.message, 'skip ci') &&  github.actor != 'dependabot[bot]'"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14]
+    steps:
+      - name: Checkout code on HEAD
+        uses: actions/checkout@v2
+
+      - name: Setup node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+    
+      - name: Commit  updated list of packages in core
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GHA_RUNNUM: ${{ github.run_number }}
+        run: |
+          git config --global user.name "ELDevBot"
+          git config --global user.email engagementlab@emerson.edu
+          git remote set-url origin https://$GH_TOKEN@github.com/engagementlab/el-api.git
+          git add bin/*
+          git commit --message "Automated updated list of packages in core (GH action #$GHA_RUNNUM) [skip ci]"
+
+          git pull
+          git commit --message "Merge branch 'main' of github.com:engagementlab/el-api into main [skip ci]"
+          git push
