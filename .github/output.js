@@ -35,15 +35,7 @@
                 repo: configData.repo,
                 dir: name,
             };
-            namesStr += `\n    🔸 ${colors.bold(configData.name)} (${colors.yellow(
-                name
-            )})`;
         }
     });
-
-    console.info(
-            `Packages found: ${namesStr}`
-    );
-    // console.log(namesObj)
     fs.writeFileSync(path.join(__dirname, '../packages/core/packages-list.js'), `module.exports = ${JSON.stringify(namesObj)}`)
 })();
