@@ -10,6 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const colors = require('colors');
+const packagesList = require('../packages-list');
 
 /**
  * Get config data for all sibling app packages, or for one if name specified.
@@ -18,39 +19,24 @@ const colors = require('colors');
  * @param {string} [pkgNames] - Names of apps for package info to return (comma-seperated)
  */
 const GetPackagesData = (list, pkgNames) => {
-    const pkgsPath = path.join(__dirname, '../../../packages');
-    const dirs = fs.readdirSync(pkgsPath);
     let namesStr = '';
+    const packages = packagesList;
+    let pkgsFiltered = packages;
     const namesObj = {};
 
-    // Do not include 'core' package, and only package(s) specified if any
-    let dirsFiltered = dirs.filter(name => name !== 'core');
     if (pkgNames) {
         const pkgArr = pkgNames.split(',');
-        dirsFiltered = dirsFiltered.filter(name => pkgArr.indexOf(name) > -1);
+        console.log(pkgNames);
+        pkgsFiltered = packages.filter(pkg => pkgArr.indexOf(pkg.dir) > -1);
     }
-
-    dirsFiltered.forEach(name => {
-        if (fs.statSync(path.join(pkgsPath, name)).isDirectory()) {
-            // Skip if no config.json
-            if (!fs.existsSync(path.join(pkgsPath, name, 'config.json'))) return;
-            // Get formal app name
-            const configData = JSON.parse(
-                fs.readFileSync(path.join(pkgsPath, name, 'config.json'))
-            );
-
-            // Obj for usage in build gen and API mount
-            namesObj[configData.schema] = {
-                name: configData.name,
-                repo: configData.repo,
-                dir: name,
-            };
-            namesStr += `\n    🔸 ${colors.bold(configData.name)} (${colors.yellow(
-                name
-            )})`;
-        }
+    
+    Object.keys(pkgsFiltered).forEach(key => {
+        const pkg = pkgsFiltered[key];
+        namesStr += `\n    🔸 ${colors.bold(pkg.name)} (${colors.yellow(
+            pkg.dir
+        )})`;
     });
-
+        
     if (list) {
         global.logger.info(
             `\n\n📦 ${colors.green.underline(
