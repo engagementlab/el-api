@@ -1,0 +1,1 @@
+module.exports = {"engagement-lab-home":{"name":"Engagement Lab Home","repo":"engagement-lab-website-2.x","dir":"engagement-lab-home"},"mapping-impactful-media":{"name":"Mapping Impactful Media","dir":"mapping-impactful-media"}}
