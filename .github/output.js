@@ -9,8 +9,6 @@
 
  const fs = require('fs');
  const path = require('path');
- const colors = require('colors');
-const { dir } = require('console');
  
  /**
  * Get config data for all sibling app packages and then output data to module in ./packages/core.
