@@ -169,6 +169,9 @@ const Shortener = () => {
     router.use('/manifest.json', (req, res) =>
         res.sendFile(`${__dirname}/client/build/manifest.json`)
     );
+    router.get('/', (req, res) => {
+        res.send('This does nothing. Off you go, now.');
+    });
     router.get('/admin', Auth.isAllowed('/admin/login'), (req, res) => {
         if (process.env.NODE_ENV !== 'production') res.send('Not prod');
         else res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
