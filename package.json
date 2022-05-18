@@ -14,6 +14,7 @@
     "dev": "node dev.js",
     "docs": "jsdoc2md --files 'packages/core/**.js' > api.md",
     "fix": "eslint --fix ./",
+    "postinstall": "preconstruct dev",
     "reload": "nodemon ./packages/core/",
     "start": "node ./packages/core/ --server",
     "start-ci": "./node_modules/.bin/nyc yarn run start",
