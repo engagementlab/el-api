@@ -6,12 +6,19 @@
     "Ralph Drake <ralph@ralphdrake.com>"
   ],
   "license": "MIT",
+  "main": "dist/engagementlab-core.cjs.js",
   "bugs": {
     "url": "https://github.com/engagementlab/el-api/issues"
   },
   "homepage": "https://github.com/engagementlab/el-api#readme",
   "version": "1.0.3",
   "private": false,
+  "preconstruct": {
+    "entrypoints": [
+      "index.js",
+      "logger.js"
+    ]
+  },
   "scripts": {
     "build-cms": "keystone build",
     "clean": "kill -9 $(lsof -t -i:3000)",
@@ -32,7 +39,6 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.8.3",
     "@engagementlab/el-scss": "latest",
-    "@engagementlab/test": "^2.4.1-alpha.0",
     "@keystonejs/access-control": "6.3.2",
     "@keystonejs/app-admin-ui": "^7.3.12",
     "@keystonejs/app-graphql": "^6.2.0",
@@ -66,8 +72,8 @@
     "http-errors": "~1.6.3",
     "lerna": "^3.20.2",
     "mocha": "^7.1.1",
-    "mongodb": "^3.6.3",
-    "mongoose": "^5.9.3",
+    "mongodb": "^4.3.1",
+    "mongoose": "^6.2.1",
     "morgan": "~1.9.1",
     "nyc": "^15.0.1",
     "passport": "^0.4.1",
@@ -79,7 +85,6 @@
     "winston": "^3.2.1",
     "yargs": "^15.3.1"
   },
-  "main": "app.js",
   "directories": {
     "test": "tests"
   },

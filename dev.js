@@ -43,7 +43,7 @@ const nodemon = require('nodemon');
 
     // Kick off nodemon
     nodemon({
-        script: './packages/core/index.js',
+        script: './packages/core/src/index.js',
         args: ['--inspect=0.0.0.0:9229', '--server', `--package=${response.value}`, '--trace-warnings'],
     });
 })();
