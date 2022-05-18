@@ -24,18 +24,16 @@ const GetPackagesData = (list, pkgNames) => {
     let pkgsFiltered = packages;
     const namesObj = {};
 
-    if (pkgNames) {
-        const pkgArr = pkgNames.split(',');
-        console.log(pkgNames);
-        pkgsFiltered = packages.filter(pkg => pkgArr.indexOf(pkg.dir) > -1);
-    }
+    // if (pkgNames) {
+    //     pkgsFiltered = packages.filter(pkg => pkgArr.indexOf(pkg.dir) > -1);
+    // }
     
-    Object.keys(pkgsFiltered).forEach(key => {
-        const pkg = pkgsFiltered[key];
-        namesStr += `\n    🔸 ${colors.bold(pkg.name)} (${colors.yellow(
-            pkg.dir
-        )})`;
-    });
+    // Object.keys(pkgsFiltered).forEach(key => {
+    //     const pkg = pkgsFiltered[key];
+    //     namesStr += `\n    🔸 ${colors.bold(pkg.name)} (${colors.yellow(
+    //         pkg.dir
+    //     )})`;
+    // });
         
     if (list) {
         global.logger.info(
@@ -50,7 +48,7 @@ const GetPackagesData = (list, pkgNames) => {
             'Package(s) loaded:'
         )} ${namesStr}`
     );
-    return namesObj;
+    return packages;
 };
 
 /**
