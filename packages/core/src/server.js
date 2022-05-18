@@ -94,7 +94,7 @@ const init = (callback, appPackageName) => {
     );
 
     app.set('view engine', 'pug');
-    app.set('views', `${__dirname}/views`);
+    app.set('views', `${__dirname}/../views`);
 
     let dbPrefix = 'mongodb://localhost/';
     const env = process.env.NODE_ENV;
