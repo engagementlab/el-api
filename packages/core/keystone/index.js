@@ -142,12 +142,15 @@ const KeystoneApp = (ksConfig, callback) => {
     });
 
     const ksApps = [
-        new SchemaRouterApp({
-            apiPath,
-            // Direct each front-end req to respective schema
-            routerFn: req => ((req.query && req.query.schema) ? req.query.schema : 'engagement-lab-home'),
-            apps: schemaApps,
-        })
+      new SchemaRouterApp({
+        apiPath,
+        // Direct each front-end req to respective schema
+        routerFn: (req) =>
+          req.query && req.query.schema
+            ? req.query.schema
+            : 'mapping-impactful-media',
+        apps: schemaApps,
+      }),
     ];
     const playgroundApp =
         new GraphQLPlaygroundApp({

@@ -82,9 +82,10 @@ const init = (callback, appPackageName) => {
         process.argv.slice(2)[0] && process.argv.slice(2)[0] === 'prod';
     // If server defined, close current one
     if (server) server.close();
-
-    const currentApp = !appPackageName ? 'engagement-lab-home' : appPackageName;
-
+    const currentApp = !appPackageName
+    ? 'mapping-impactful-media'
+    : appPackageName;
+    
     app = express();
     app.use(express.json());
     app.use(
@@ -129,6 +130,7 @@ const init = (callback, appPackageName) => {
             path: packagePath,
             production: productionMode,
         };
+    console.log('qefdgsrxvfdgxfgxtfgdrfdg', bootConfig);
 
         boot(bootConfig);
     });
