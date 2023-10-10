@@ -65,6 +65,11 @@ const Guide2 = () => {
             label: '"Caring Ladder" prompt',
             isRequired: true,
         },
+        learningGuide: {
+            type: Markdown,
+            label: '"It\'s Your Turn" text',
+            isRequired: true,
+        },
     };
 
     /**

@@ -20,56 +20,61 @@ const Guide4 = () => {
    * @memberof Guide4
    */
     const fields = {
-        name: {
-            type: Text,
-            defaultValue: 'With And Not For Communities',
-            access: false,
-            isRequired: true,
-        },
-        intro: {
-            type: Markdown,
-            isRequired: true,
-        },
-        introSection2: {
-            type: Markdown,
-            label: 'Intro to section 2',
-            isRequired: true,
-        },
-        questions: {
-            type: Markdown,
-            label: '"Questions to Consider" prompt',
-            isRequired: true,
-        },
-        communities: {
-            type: Markdown,
-            label: '"Learning About Communities" text',
-            isRequired: true,
-        },
-        media: {
-            type: Markdown,
-            label: '"Media And Communities" blurb',
-            isRequired: true,
-        },
-        mediaPrompt1: {
-            type: Markdown,
-            label: '"Media representation" prompt',
-            isRequired: true,
-        },
-        mediaPrompt2: {
-            type: Markdown,
-            label: '"Media use" prompt',
-            isRequired: true,
-        },
-        withNotFor: {
-            type: Markdown,
-            label: '"With (And Not For) Communities?" text',
-            isRequired: true,
-        },
-        withNotForPrompt: {
-            type: Markdown,
-            label: '"Hearing Diverse Voices" text',
-            isRequired: true,
-        },
+      name: {
+        type: Text,
+        defaultValue: 'With And Not For Communities',
+        access: false,
+        isRequired: true,
+      },
+      intro: {
+        type: Markdown,
+        isRequired: true,
+      },
+      introSection2: {
+        type: Markdown,
+        label: 'Intro to section 2',
+        isRequired: true,
+      },
+      questions: {
+        type: Markdown,
+        label: '"Questions to Consider" prompt',
+        isRequired: true,
+      },
+      communities: {
+        type: Markdown,
+        label: '"Learning About Communities" text',
+        isRequired: true,
+      },
+      media: {
+        type: Markdown,
+        label: '"Media And Communities" blurb',
+        isRequired: true,
+      },
+      mediaPrompt1: {
+        type: Markdown,
+        label: '"Media representation" prompt',
+        isRequired: true,
+      },
+      mediaPrompt2: {
+        type: Markdown,
+        label: '"Media use" prompt',
+        isRequired: true,
+      },
+      withNotFor: {
+        type: Markdown,
+        label: '"With (And Not For) Communities?" text',
+        isRequired: true,
+      },
+      withNotForPrompt: {
+        type: Markdown,
+        label: '"Hearing Diverse Voices" text',
+        isRequired: true,
+      },
+      learningGuide: {
+        type: Markdown,
+        label: '"It\'s Your Turn" text',
+        isRequired: true,
+      },
     };
 
     /**

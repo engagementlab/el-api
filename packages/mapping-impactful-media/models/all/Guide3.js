@@ -75,6 +75,11 @@ const Guide3 = () => {
             label: '"Practicing futures" prompt',
             isRequired: true,
         },
+        learningGuide: {
+            type: Markdown,
+            label: '"It\'s Your Turn" text',
+            isRequired: true,
+        },
     };
 
     /**

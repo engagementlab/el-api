@@ -20,46 +20,51 @@ const Guide5 = () => {
    * @memberof Guide5
    */
     const fields = {
-        name: {
-            type: Text,
-            defaultValue: 'Where Do We Stand?',
-            access: false,
-            isRequired: true,
-        },
-        intro: {
-            type: Markdown,
-            isRequired: true,
-        },
-        introSection2: {
-            type: Markdown,
-            label: 'Intro to section 2',
-            isRequired: true,
-        },
-        questions: {
-            type: Markdown,
-            label: '"Questions to Consider" blurb',
-            isRequired: true,
-        },
-        enabling: {
-            type: Markdown,
-            label: '"Enabling Environments" intro',
-            isRequired: true,
-        },
-        capacity: {
-            type: Markdown,
-            label: '"The Capacity To Act" intro',
-            isRequired: true,
-        },
-        margins: {
-            type: Markdown,
-            label: '"From The Margins To The Middle" intro',
-            isRequired: true,
-        },
-        marginsPrompt: {
-            type: Markdown,
-            label: '"From The Margins To The Middle" prompt',
-            isRequired: true,
-        },
+      name: {
+        type: Text,
+        defaultValue: 'Where Do We Stand?',
+        access: false,
+        isRequired: true,
+      },
+      intro: {
+        type: Markdown,
+        isRequired: true,
+      },
+      introSection2: {
+        type: Markdown,
+        label: 'Intro to section 2',
+        isRequired: true,
+      },
+      questions: {
+        type: Markdown,
+        label: '"Questions to Consider" blurb',
+        isRequired: true,
+      },
+      enabling: {
+        type: Markdown,
+        label: '"Enabling Environments" intro',
+        isRequired: true,
+      },
+      capacity: {
+        type: Markdown,
+        label: '"The Capacity To Act" intro',
+        isRequired: true,
+      },
+      margins: {
+        type: Markdown,
+        label: '"From The Margins To The Middle" intro',
+        isRequired: true,
+      },
+      marginsPrompt: {
+        type: Markdown,
+        label: '"From The Margins To The Middle" prompt',
+        isRequired: true,
+      },
+      learningGuide: {
+        type: Markdown,
+        label: '"It\'s Your Turn" text',
+        isRequired: true,
+      },
     };
 
     /**
